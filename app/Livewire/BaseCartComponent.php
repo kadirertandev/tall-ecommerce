@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\UserAddress;
+use App\Traits\AddToCart;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
@@ -17,10 +18,12 @@ use Throwable;
 
 class BaseCartComponent extends Component
 {
+  use AddToCart;
   #[On("add-to-cart")]
   public function addToCart($productID)
   {
-    try {
+    return $this->addToCart2($productID);
+    /* try {
       $product = Product::find($productID);
       if (!auth()->user()) {
         session()->put("guest_cart_product", $product);
@@ -53,7 +56,7 @@ class BaseCartComponent extends Component
           "cart_id" => $cart->id,
           "product_id" => $product["id"],
           "quantity" => 1,
-          "price" => $product["price"] /* - (float) $product["discount_amount"] */ ,
+          "price" => $product["price"] /* - (float) $product["discount_amount"]  ,
           "discount_amount" => $product["discount_amount"],
           "item_total_price" => $product["price"] - (float) $product["discount_amount"],
         ]);
@@ -64,7 +67,7 @@ class BaseCartComponent extends Component
       $this->dispatch("error-with-message", message: $e->getMessage());
     } catch (Throwable $e) {
       $this->dispatch("something-went-wrong");
-    }
+    } */
   }
 
   #[On("remove-form-cart-modal-is-confirmed")]

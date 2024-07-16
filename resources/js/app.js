@@ -8,7 +8,9 @@ window.addEventListener('livewire:navigated', () => {
   initFlowbite();
 });
 
-
+window.addEventListener("add-to-cart-2", function () {
+  console.log(event.detail);
+});
 
 //Cart
 window.addEventListener("added-to-cart", function (event) {

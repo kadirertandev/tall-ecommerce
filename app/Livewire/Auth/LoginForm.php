@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Auth;
 
+use App\Livewire\BaseCartComponent;
 use App\Livewire\Forms\LoginForm as FormsLoginForm;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
+use App\Traits\AddToCart;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Livewire\Component;
@@ -13,7 +15,7 @@ use Livewire\Component;
 class LoginForm extends Component
 {
   public FormsLoginForm $form;
-
+  use AddToCart;
   public function mount()
   {
     if (session()->has("reset-password-mail-sent")) {
@@ -37,7 +39,10 @@ class LoginForm extends Component
       session()->regenerate();
       if (session()->has("guest_cart_product")) {
         // dd("user added item to cart as guest");
-        $this->addToCart(session()->get("guest_cart_product"));
+        // $this->addToCart(session()->get("guest_cart_product"));
+        // $this->cartService->addToCart(session()->get("guest_cart_product"));
+        $this->addToCart2(session()->get("guest_cart_product"));
+        session()->remove("guest_cart_product");
       }
       DB::table("password_reset_tokens")->where("email", $this->form->email)->delete();
       auth()->user()->isAdmin() ? $this->redirectRoute("admin.dashboard") : $this->redirectRoute("home");
@@ -45,7 +50,7 @@ class LoginForm extends Component
     $this->addError('form.email', 'Invalid Credentials');
   }
 
-  public function addToCart(Product $product)
+  /* public function addToCart(Product $product)
   {
     $cart = null;
 
@@ -74,7 +79,7 @@ class LoginForm extends Component
     }
 
     session()->remove("guest_cart_product");
-  }
+  } */
 
   public function render()
   {
