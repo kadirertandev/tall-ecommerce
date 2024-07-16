@@ -212,11 +212,6 @@ class BaseCartComponent extends Component
     session()->put("selected-address-for-cart", $this->selectedAddress);
   }
 
-  public function clearSession()
-  {
-    session()->remove("selected-address-for-cart");
-  }
-
   public function showSelectedAddress()
   {
     dd($this->selectedAddress);

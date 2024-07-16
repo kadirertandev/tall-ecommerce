@@ -1,9 +1,8 @@
 <div class="mb-4">
-    {{-- <button wire:click='clearSession'>clear session</button> --}}
-    <section {{-- wire:poll.10s --}} class="bg-white py-4 antialiased dark:bg-gray-900">
-        <div class="mx-auto max-w-screen-xl">
-            <div class="flex  gap-6">
-                <div class="w-8/12 flex items-center justify-between ">
+    <section {{-- wire:poll.10s --}} class="py-4 antialiased bg-white dark:bg-gray-900">
+        <div class="max-w-screen-xl mx-auto">
+            <div class="flex gap-6">
+                <div class="flex items-center justify-between w-8/12 ">
                     <h2 class="text-3xl font-thin text-gray-900">{{ __('frontend.cart.shopping-cart') }}</h2>
                     @if (count($this->cartItems) > 0)
                         <p>{{ __('frontend.cart.cart-total-items-message', ['x' => count($this->cartItems)]) }}</p>
@@ -17,13 +16,13 @@
                     <div class="space-y-6">
                         @forelse ($this->cartItems as $item)
                             <div wire:key='{{ $item->id }}'
-                                class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
+                                class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
                                 <div class="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
-                                    <a href="#" class="shrink-0 h-24 w-24 flex items-center">
-                                        <img class="w-full h-auto flex-1"
+                                    <a href="#" class="flex items-center w-24 h-24 shrink-0">
+                                        <img class="flex-1 w-full h-auto"
                                             src="{{ asset('storage/' . $item->product->image) }}" alt="imac image" />
                                     </a>
-                                    <div class="w-full min-w-0 flex-1 space-y-4  md:max-w-md">
+                                    <div class="flex-1 w-full min-w-0 space-y-4 md:max-w-md">
                                         <a class="text-base font-medium text-gray-900 hover:underline dark:text-white"
                                             href="{{ route('products.show', ['category_slug' => $item->product->category->slug, 'product_slug' => $item->product->slug]) }}">{{ $item->product->name }}</a>
                                         <div class="flex items-center gap-4">
@@ -44,13 +43,13 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <div class="flex items-center justify-between  md:justify-end">
+                                    <div class="flex items-center justify-between md:justify-end">
 
-                                        <p class="text-gray-500 flex items-center gap-4">
+                                        <p class="flex items-center gap-4 text-gray-500">
                                             {{-- <span>{{ __('frontend.cart.quantity') }}</span> --}}
                                             <button {{-- wire:key='btn-decrease-{{ $item->id }}' --}}
                                                 wire:click='decreaseQuantity({{ $item->id }})' {{-- @click="$dispatch('decrease-quantity', {id: {{ $item->id }}})" --}}
-                                                class="rounded-full p-4 bg-gray-50 hover:bg-gray-100 group">
+                                                class="p-4 rounded-full bg-gray-50 hover:bg-gray-100 group">
                                                 <svg class="w-3 h-3 text-gray-800 group-hover:text-red-500 dark:text-white"
                                                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                                                     height="24" fill="none" viewBox="0 0 24 24">
@@ -63,7 +62,7 @@
 
                                             <button wire:click='increaseQuantity({{ $item->id }})'
                                                 {{-- @click="$dispatch('increase-quantity',{id:{{ $item->id }}})" --}}
-                                                class="rounded-full p-4 bg-gray-50 hover:bg-gray-100 group">
+                                                class="p-4 rounded-full bg-gray-50 hover:bg-gray-100 group">
                                                 <svg class="w-3 h-3 text-gray-800 group-hover:text-teal-500 dark:text-white"
                                                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                                                     height="24" fill="none" viewBox="0 0 24 24">
@@ -81,7 +80,7 @@
                             </div>
                         @empty
                             <div
-                                class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
+                                class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
                                 <div class="flex flex-col items-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-20 h-20 text-red-500"
                                         viewBox="0 0 16 16">
@@ -99,14 +98,14 @@
                     </div>
                     <div class="hidden">
                         <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">People also bought</h3>
-                        <div class="mt-6 grid grid-cols-3 gap-4 sm:mt-8">
+                        <div class="grid grid-cols-3 gap-4 mt-6 sm:mt-8">
                             <div
-                                class="space-y-6 overflow-hidden rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                                class="p-6 space-y-6 overflow-hidden bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800">
                                 <a href="#" class="overflow-hidden rounded">
                                     <img class="mx-auto h-44 w-44 dark:hidden"
                                         src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg"
                                         alt="imac image" />
-                                    <img class="mx-auto hidden h-44 w-44 dark:block"
+                                    <img class="hidden mx-auto h-44 w-44 dark:block"
                                         src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front-dark.svg"
                                         alt="imac image" />
                                 </a>
@@ -127,7 +126,7 @@
                                 <div class="mt-6 flex items-center gap-2.5">
                                     <button data-tooltip-target="favourites-tooltip-1" type="button"
                                         class="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700">
-                                        <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                             fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round"
                                                 stroke-linejoin="round" stroke-width="2"
@@ -135,13 +134,13 @@
                                         </svg>
                                     </button>
                                     <div id="favourites-tooltip-1" role="tooltip"
-                                        class="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700">
+                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                                         Add to favourites
                                         <div class="tooltip-arrow" data-popper-arrow></div>
                                     </div>
                                     <button type="button"
                                         class="inline-flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium  text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                                        <svg class="-ms-2 me-2 h-5 w-5" aria-hidden="true"
+                                        <svg class="w-5 h-5 -ms-2 me-2" aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round"
@@ -153,12 +152,12 @@
                                 </div>
                             </div>
                             <div
-                                class="space-y-6 overflow-hidden rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                                class="p-6 space-y-6 overflow-hidden bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800">
                                 <a href="#" class="overflow-hidden rounded">
                                     <img class="mx-auto h-44 w-44 dark:hidden"
                                         src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/ps5-light.svg"
                                         alt="imac image" />
-                                    <img class="mx-auto hidden h-44 w-44 dark:block"
+                                    <img class="hidden mx-auto h-44 w-44 dark:block"
                                         src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/ps5-dark.svg"
                                         alt="imac image" />
                                 </a>
@@ -179,7 +178,7 @@
                                 <div class="mt-6 flex items-center gap-2.5">
                                     <button data-tooltip-target="favourites-tooltip-2" type="button"
                                         class="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700">
-                                        <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                             fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round"
                                                 stroke-linejoin="round" stroke-width="2"
@@ -187,13 +186,13 @@
                                         </svg>
                                     </button>
                                     <div id="favourites-tooltip-2" role="tooltip"
-                                        class="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700">
+                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                                         Add to favourites
                                         <div class="tooltip-arrow" data-popper-arrow></div>
                                     </div>
                                     <button type="button"
                                         class="inline-flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium  text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                                        <svg class="-ms-2 me-2 h-5 w-5" aria-hidden="true"
+                                        <svg class="w-5 h-5 -ms-2 me-2" aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round"
@@ -205,12 +204,12 @@
                                 </div>
                             </div>
                             <div
-                                class="space-y-6 overflow-hidden rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                                class="p-6 space-y-6 overflow-hidden bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800">
                                 <a href="#" class="overflow-hidden rounded">
                                     <img class="mx-auto h-44 w-44 dark:hidden"
                                         src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/apple-watch-light.svg"
                                         alt="imac image" />
-                                    <img class="mx-auto hidden h-44 w-44 dark:block"
+                                    <img class="hidden mx-auto h-44 w-44 dark:block"
                                         src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/apple-watch-dark.svg"
                                         alt="imac image" />
                                 </a>
@@ -231,7 +230,7 @@
                                 <div class="mt-6 flex items-center gap-2.5">
                                     <button data-tooltip-target="favourites-tooltip-3" type="button"
                                         class="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700">
-                                        <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                             fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round"
                                                 stroke-linejoin="round" stroke-width="2"
@@ -239,14 +238,14 @@
                                         </svg>
                                     </button>
                                     <div id="favourites-tooltip-3" role="tooltip"
-                                        class="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700">
+                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                                         Add to favourites
                                         <div class="tooltip-arrow" data-popper-arrow></div>
                                     </div>
 
                                     <button type="button"
                                         class="inline-flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium  text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                                        <svg class="-ms-2 me-2 h-5 w-5" aria-hidden="true"
+                                        <svg class="w-5 h-5 -ms-2 me-2" aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round"
@@ -263,7 +262,7 @@
 
                 <div class="mx-auto w-4/12 {{-- flex-1 --}} space-y-6 {{-- bg-green-400 --}}">
                     <div
-                        class="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                        class="p-4 space-y-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800">
                         <p class="text-xl font-thin text-nowrap text-gray-900  {{-- bg-orange-300 --}}">
                             Order
                             summary</p>
@@ -271,7 +270,7 @@
                         <div class="space-y-4">
                             <div class="space-y-2">
                                 <dl class="flex items-center justify-between gap-4">
-                                    <dt class="text-base text-nowrap font-normal text-gray-500 dark:text-gray-400">
+                                    <dt class="text-base font-normal text-gray-500 text-nowrap dark:text-gray-400">
                                         Original price
                                     </dt>
                                     <dd class="text-base font-medium text-gray-900 dark:text-white">
@@ -280,7 +279,7 @@
                             </div>
 
                             <dl
-                                class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
+                                class="flex items-center justify-between gap-4 pt-2 border-t border-gray-200 dark:border-gray-700">
                                 <dt class="text-base font-bold text-gray-900 dark:text-white">Total</dt>
                                 <dd class="text-base font-bold text-gray-900 dark:text-white">
                                     {{ App\Helpers::formatPrice($this->cart?->subtotal()) }} TL</dd>
@@ -292,7 +291,7 @@
                                 <button type="button" @click="$dispatch('set-cart-step',{step:2})"
                                     class="inline-flex items-center gap-2 text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-md px-5 py-2.5 text-center me-2 mb-2">
                                     <span>{{ __('frontend.cart.continue') }}</span>
-                                    <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                         fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                             stroke-width="2" d="M19 12H5m14 0-4 4m4-4-4-4" />
@@ -302,7 +301,7 @@
                                 <a href="{{ route('home') }}"
                                     class="cursor-pointer inline-flex items-center gap-2 text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-md px-5 py-2.5 text-center me-2 mb-2">
                                     <span>{{ __('frontend.cart.start-shopping') }}</span>
-                                    <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                         fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                             stroke-width="2" d="M19 12H5m14 0-4 4m4-4-4-4" />
@@ -313,11 +312,11 @@
                     </div>
 
                     {{-- <div
-                        class="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
+                        class="p-4 space-y-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
                         <form class="space-y-4">
                             <div>
                                 <label for="voucher"
-                                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"> Do you have a
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Do you have a
                                     voucher or gift card? </label>
                                 <input type="text" id="voucher"
                                     class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
