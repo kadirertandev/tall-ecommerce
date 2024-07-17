@@ -27,7 +27,6 @@ class UserProfileOrders extends Component
     return $this->user->orders;
   }
 
-
   public $rating = 0;
   public $productToComment;
   public function openCommentModalForProduct($id)
@@ -51,6 +50,8 @@ class UserProfileOrders extends Component
     } catch (AuthorizationException $e) {
       $this->dispatch("close-user-profile-order-product-comment-modal");
       $this->dispatch("comment-error", title: "You can not evaluate this product", text: $e->getMessage());
+    } catch (Throwable $e) {
+      $this->dispatch("something-went-wrong");
     }
   }
 

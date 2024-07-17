@@ -5,7 +5,6 @@ namespace App\Livewire;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
-use App\Models\UserProductFavorite;
 use Illuminate\Support\Facades\Lang;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -55,62 +54,35 @@ class UserProfileFavorites extends Component
   #[Computed()]
   public function favorites()
   {
-    return $this->user->favorites()
-      ->orderBy($this->orderBy, $this->sortDir)
-      ->search($this->search)
+    return Product::search($this->search)
+      ->leftJoin("user_product_favorites", "user_product_favorites.product_id", "=", "products.id")
+      ->where("user_product_favorites.user_id", auth()->user()->id)
+      ->when($this->orderBy === "created_at", function ($query) {
+        return $query->orderBy("user_product_favorites.created_at", "desc");
+      })
+      ->when($this->orderBy !== "created_at", function ($query) {
+        return $query->orderBy($this->orderBy, $this->sortDir);
+      })
       ->when($this->categoriesFilter, function ($query) {
-        return $query->whereIn("category_id", $this->categoriesFilter);
+        return $query->whereIn("products.category_id", $this->categoriesFilter);
       })
       ->paginate($this->perPage);
-    /* if ($this->orderBy === "created_at") {
-      $query = UserProductFavorite::where('user_id', $this->user->id)
-        ->with("product")
-        ->orderBy('created_at', 'desc');
-
-      // Apply search filter
-      if (!empty($this->search)) {
-        $query->whereHas('product', function ($q) {
-          $q->where('name', 'like', '%' . $this->search . '%');
-        });
-      }
-
-      // Apply category filter
-      if (!empty($this->categoriesFilter)) {
-        $query->whereHas('product', function ($q) {
-          $q->whereIn('category_id', $this->categoriesFilter);
-        });
-      }
-
-      return $query->paginate($this->perPage);
-    } elseif ($this->orderBy === "price") {
-      return $this->user->favorites()
-        ->orderBy($this->orderBy, $this->sortDir)
-        ->search($this->search)
-        ->when($this->categoriesFilter, function ($query) {
-          return $query->whereIn("category_id", $this->categoriesFilter);
-        })
-        ->paginate($this->perPage);
-    } */
   }
 
   #[Computed()]
   public function favoritesCount()
   {
-    return $this->user->favorites->count();
+    return $this->favorites->count();
   }
 
   public function removeFromFavorites($id)
   {
     $product = Product::find($id);
-    if (!$this->user->favorites->contains($product)) {
-      // return $this->dispatch("remove-from-favorites-error", product: $product, text: __('frontend.favorites.remove-from-favorites-error'));
-      return $this->dispatch("remove-from-favorites", product: $product, text: __('frontend.favorites.removed-from-favorites'));
-    }
+
     $this->user->favorites()->detach($product);
     $this->dispatch("remove-from-favorites", product: $product, text: __('frontend.favorites.removed-from-favorites'));
   }
 
-  // #[On("lowest-price")]
   public function lowestPrice()
   {
     $this->orderBy = "price";
@@ -118,7 +90,6 @@ class UserProfileFavorites extends Component
     $this->orderFrontend = Lang::get("frontend.filters.lowest-price");
     // $this->resetPage();
   }
-  // #[On("highest-price")]
   public function highestPrice()
   {
     $this->orderBy = "price";
@@ -126,7 +97,6 @@ class UserProfileFavorites extends Component
     $this->orderFrontend = Lang::get("frontend.filters.highest-price");
     // $this->resetPage();
   }
-  // #[On("last-added")]
   public function lastAdded()
   {
     $this->orderBy = "created_at";

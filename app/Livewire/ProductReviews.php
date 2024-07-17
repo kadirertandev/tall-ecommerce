@@ -98,15 +98,6 @@ class ProductReviews extends Component
     }
   }
 
-  public function delete($reviewId)
-  {
-    try {
-      ProductReview::findOrFail($reviewId)->delete();
-    } catch (Exception $e) {
-
-    }
-  }
-
   public function render()
   {
     return view('livewire.product-reviews');

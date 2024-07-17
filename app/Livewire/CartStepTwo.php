@@ -3,20 +3,9 @@
 namespace App\Livewire;
 
 use Livewire\Attributes\On;
-use Livewire\Component;
 
 class CartStepTwo extends BaseCartComponent
 {
-  /* public $addresses;
-  public $selectedAddress;
-  public $selectedAddressParent;
-  public function mount($addresses, $selectedAddressParent)
-  {
-    $this->addresses = $addresses;
-    $this->selectedAddress = $addresses->where("is_default", 1)->first()->id;
-    $this->selectedAddressParent = $selectedAddressParent;
-  } */
-
   public function rendering()
   {
     if ($this->cartItemsCount == 0) {
@@ -25,7 +14,6 @@ class CartStepTwo extends BaseCartComponent
   }
   public function mount()
   {
-    // dd(session()->has("selected-address-for-cart"));
     if (session()->has("selected-address-for-cart")) {
       $this->selectedAddress = session()->get("selected-address-for-cart");
     } else {

@@ -1,5 +1,5 @@
 <div class="min-h-screen">
-    <div class="main-container py-4">
+    <div class="py-4 main-container">
         <ul
             class="hidden text-sm font-medium text-center text-gray-500 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400">
             <li class="w-full focus-within:z-10">
@@ -141,31 +141,31 @@
 
         @if (count($this->lastViewedProducts) > 0)
             <div class="mb-8">
-                <h2 class="text-2xl font-thin text-gray-900 mb-2">Last Viewed Products</h2>
+                <h2 class="mb-2 text-2xl font-thin text-gray-900">Last Viewed Products</h2>
                 <swiper-container class="mySwiper" navigation="true" {{-- pagination-clickable="true" --}} space-between="30"
                     slides-per-view="3" {{-- loop="true" --}} autoplay-delay="2500"
                     autoplay-disable-on-interaction="false">
                     @foreach ($this->lastViewedProducts as $product)
                         <swiper-slide wire:key='product-container-{{ $product->id }}'
-                            class="shadow-xl border-2 border-gray-100 p-2 flex flex-col justify-between gap-4">
+                            class="flex flex-col justify-between gap-4 p-2 border-2 border-gray-100 shadow-xl">
                             <div class="w-full flex justify-center {{-- bg-red-300 --}} flex-1 items-center">
                                 <a
                                     href="{{ route('products.show', ['category_slug' => $product->category->slug, 'product_slug' => $product->slug]) }}">
-                                    <img src="{{ asset('storage/' . $product->image) }}" class="max-h-40 w-auto"
+                                    <img src="{{ asset('storage/' . $product->image) }}" class="w-auto max-h-40"
                                         alt="">
                                 </a>
                             </div>
                             <div class="space-y-2">
-                                <h1 class="line-clamp-2 text-left">{!! $product->title() !!}</h1>
+                                <h1 class="text-left line-clamp-2">{!! $product->title() !!}</h1>
                                 <div class="flex gap-2">
                                     <div class="flex items-center">
                                         <x-stars :stars="$product->ratingAverage()" />
                                     </div>
                                     @if ($product->reviews()->count() >= 1)
-                                        <h3 class="font-thin text-xs">({{ $product->ratingAverage() }})</h3>
+                                        <h3 class="text-xs font-thin">({{ $product->ratingAverage() }})</h3>
                                     @endif
                                 </div>
-                                <div class="flex items-end justify-between flex-wrap ">
+                                <div class="flex flex-wrap items-end justify-between ">
                                     <div class="flex flex-col items-start">
                                         <h1 @class([
                                             'text-3xl font-thin' => !$product->discount_amount,
@@ -200,11 +200,11 @@
                 <div class="grid grid-cols-3 gap-2 h-max">
                     @foreach ($this->lastViewedProducts as $product)
                         <div wire:key='product-container-{{ $product->id }}'
-                            class="shadow-xl border-2 border-gray-100 p-2 flex flex-col justify-between gap-4">
+                            class="flex flex-col justify-between gap-4 p-2 border-2 border-gray-100 shadow-xl">
                             <div class="w-full flex justify-center {{-- bg-red-300 --}} flex-1 items-center">
                                 <a
                                     href="{{ route('products.show', ['category_slug' => $product->category->slug, 'product_slug' => $product->slug]) }}">
-                                    <img src="{{ asset('storage/' . $product->image) }}" class="max-h-60 w-auto"
+                                    <img src="{{ asset('storage/' . $product->image) }}" class="w-auto max-h-60"
                                         alt="">
                                 </a>
                             </div>
@@ -218,7 +218,7 @@
                                         <h3 class="font-thin">({{ $product->ratingAverage() }})</h3>
                                     @endif
                                 </div>
-                                <div class="flex items-end justify-between flex-wrap ">
+                                <div class="flex flex-wrap items-end justify-between ">
                                     <div>
                                         <h1 @class([
                                             'text-3xl font-thin' => !$product->discount_amount,
@@ -247,37 +247,32 @@
             here2:
         @endphp
 
-
-
-
-
-
         @if (Cache::has('weeklyDealProducts') || Cache::has('dailyDealProducts'))
-            <h2 class="text-2xl font-thin text-gray-900 mb-2">Featured Products</h2>
+            <h2 class="mb-2 text-2xl font-thin text-gray-900">Featured Products</h2>
             <swiper-container class="mySwiper" navigation="true" {{-- pagination-clickable="true" --}} space-between="30"
                 slides-per-view="3" loop="true" autoplay-delay="2500" autoplay-disable-on-interaction="false">
                 @if (Cache::has('weeklyDealProducts'))
                     @foreach ($weekly_deal_products as $deal)
                         <swiper-slide wire:key='product-container-weekly-{{ $deal->product->id }}'
-                            class="shadow-xl border-2 border-gray-100 p-2 flex flex-col justify-between gap-4">
+                            class="flex flex-col justify-between gap-4 p-2 border-2 border-gray-100 shadow-xl">
                             <div class="w-full flex justify-center {{-- bg-red-300 --}} flex-1 items-center">
                                 <a
                                     href="{{ route('products.show', ['category_slug' => $deal->product->category->slug, 'product_slug' => $deal->product->slug]) }}">
-                                    <img src="{{ asset('storage/' . $deal->product->image) }}" class="max-h-40 w-auto"
+                                    <img src="{{ asset('storage/' . $deal->product->image) }}" class="w-auto max-h-40"
                                         alt="">
                                 </a>
                             </div>
                             <div class="space-y-2">
-                                <h1 class="line-clamp-2 text-left">{!! $deal->product->title() !!}</h1>
+                                <h1 class="text-left line-clamp-2">{!! $deal->product->title() !!}</h1>
                                 <div class="flex items-center gap-2">
                                     <div class="flex items-center">
                                         <x-stars :stars="$deal->product->ratingAverage()" />
                                     </div>
                                     @if ($deal->product->reviews()->count() >= 1)
-                                        <h3 class="font-thin text-xs">({{ $deal->product->ratingAverage() }})</h3>
+                                        <h3 class="text-xs font-thin">({{ $deal->product->ratingAverage() }})</h3>
                                     @endif
                                 </div>
-                                <div class="flex items-end justify-between flex-wrap">
+                                <div class="flex flex-wrap items-end justify-between">
                                     <div class="flex flex-col items-start">
                                         <h1 @class([
                                             'text-3xl font-thin' => !$deal->product->discount_amount,
@@ -308,27 +303,27 @@
                 @if (Cache::has('dailyDealProducts'))
                     @foreach ($daily_deal_products as $deal)
                         <swiper-slide wire:key='product-container-daily-{{ $deal->product->id }}'
-                            class="shadow-xl border-2 border-gray-100 p-2 flex flex-col justify-between gap-4">
+                            class="flex flex-col justify-between gap-4 p-2 border-2 border-gray-100 shadow-xl">
                             <div class="w-full flex justify-center {{-- bg-red-300 --}} flex-1 items-center">
                                 <a
                                     href="{{ route('products.show', ['category_slug' => $deal->product->category->slug, 'product_slug' => $deal->product->slug]) }}">
                                     <img src="{{ asset('storage/' . $deal->product->image) }}"
-                                        class="max-h-40 w-auto" alt="">
+                                        class="w-auto max-h-40" alt="">
                                 </a>
                             </div>
                             <div class="space-y-2">
-                                <h1 class="line-clamp-2 text-left">{!! $deal->product->title() !!}</h1>
+                                <h1 class="text-left line-clamp-2">{!! $deal->product->title() !!}</h1>
                                 <div class="flex items-center gap-2">
                                     <div class="flex items-center">
                                         <x-stars :stars="$deal->product->ratingAverage()" />
                                     </div>
                                     @if ($deal->product->reviews()->count() >= 1)
-                                        <h3 class="font-thin text-xs">
+                                        <h3 class="text-xs font-thin">
                                             ({{ $deal->product->ratingAverage() }})
                                         </h3>
                                     @endif
                                 </div>
-                                <div class="flex items-end justify-between flex-wrap">
+                                <div class="flex flex-wrap items-end justify-between">
                                     <div class="flex flex-col items-start">
                                         <h1 @class([
                                             'text-3xl font-thin' => !$deal->product->discount_amount,
@@ -359,8 +354,6 @@
             </swiper-container>
         @endif
 
-
-
         @php
             goto here;
         @endphp
@@ -370,12 +363,12 @@
                 <div class="grid grid-cols-3 gap-2 h-max">
                     @foreach ($weekly_deal_products as $deal)
                         <div wire:key='product-container-weekly-{{ $deal->product->id }}'
-                            class="shadow-xl border-2 border-gray-100 p-2 flex flex-col justify-between gap-4">
+                            class="flex flex-col justify-between gap-4 p-2 border-2 border-gray-100 shadow-xl">
                             <div class="w-full flex justify-center {{-- bg-red-300 --}} flex-1 items-center">
                                 <a
                                     href="{{ route('products.show', ['category_slug' => $deal->product->category->slug, 'product_slug' => $deal->product->slug]) }}">
                                     <img src="{{ asset('storage/' . $deal->product->image) }}"
-                                        class="max-h-60 w-auto" alt="">
+                                        class="w-auto max-h-60" alt="">
                                 </a>
                             </div>
                             <div class="space-y-2">
@@ -388,7 +381,7 @@
                                         <h3 class="font-thin">({{ $deal->product->ratingAverage() }})</h3>
                                     @endif
                                 </div>
-                                <div class="flex items-end justify-between flex-wrap">
+                                <div class="flex flex-wrap items-end justify-between">
                                     <div>
                                         <h1 @class([
                                             'text-3xl font-thin' => !$deal->product->discount_amount,
@@ -422,12 +415,12 @@
                 <div class="grid grid-cols-3 gap-2 h-max">
                     @foreach ($daily_deal_products as $deal)
                         <div wire:key='product-container-daily-{{ $deal->product->id }}'
-                            class="shadow-xl border-2 border-gray-100 p-2 flex flex-col justify-between gap-4">
+                            class="flex flex-col justify-between gap-4 p-2 border-2 border-gray-100 shadow-xl">
                             <div class="w-full flex justify-center {{-- bg-red-300 --}} flex-1 items-center">
                                 <a
                                     href="{{ route('products.show', ['category_slug' => $deal->product->category->slug, 'product_slug' => $deal->product->slug]) }}">
                                     <img src="{{ asset('storage/' . $deal->product->image) }}"
-                                        class="max-h-60 w-auto" alt="">
+                                        class="w-auto max-h-60" alt="">
                                 </a>
                             </div>
                             <div class="space-y-2">
@@ -440,7 +433,7 @@
                                         <h3 class="font-thin">({{ $deal->product->ratingAverage() }})</h3>
                                     @endif
                                 </div>
-                                <div class="flex items-end justify-between flex-wrap">
+                                <div class="flex flex-wrap items-end justify-between">
                                     <div>
                                         <h1 @class([
                                             'text-3xl font-thin' => !$deal->product->discount_amount,

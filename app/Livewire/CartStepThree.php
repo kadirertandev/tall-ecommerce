@@ -2,10 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\UserAddress;
-use Livewire\Attributes\Computed;
-use Livewire\Component;
-
 class CartStepThree extends BaseCartComponent
 {
   public function rendering()

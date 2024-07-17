@@ -159,6 +159,7 @@
     <div wire:poll.10s
         class="mt-8 grid grid-cols-1 md:grid-cols-{{ $this->cols / 2 }} md:grid-cols-{{ $this->cols }} gap-3">
         @forelse ($this->favorites as $favorite)
+            {{-- {{ dd($this->favorites) }} --}}
             <div wire:key='favorite-card-{{ $favorite->name ? $favorite->id : $favorite->user_id }}'
                 class="p-3 shadow-lg ring-4 ring-gray-50">
                 <div class="relative flex items-center gap-2 md:flex-col md:gap-2">

@@ -1,7 +1,7 @@
-<section id="reviews" class="bg-white  py-4  my-24 antialiased border-2 border-gray-50 shadow-2xl shadow-red-100">
-    <div class="main-container px-4">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">{{ __('frontend.reviews') }}
+<section id="reviews" class="py-4 my-24 antialiased bg-white border-2 shadow-2xl border-gray-50 shadow-red-100">
+    <div class="px-4 main-container">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-lg font-bold text-gray-900 lg:text-2xl dark:text-white">{{ __('frontend.reviews') }}
                 ({{ $this->reviewsCount }})</h2>
         </div>
         <div class="flex items-center gap-2 mb-5">
@@ -9,7 +9,7 @@
                 @for ($i = 1; $i <= 5; $i++)
                     <button wire:key='star-{{ $i }}' wire:ignore onclick="rate({{ $i }})"
                         wire:click='$set("rating",{{ $i }})'>
-                        <svg id="star-{{ $i }}" class="w-6 h-6 ms-2 text-gray-300" aria-hidden="true"
+                        <svg id="star-{{ $i }}" class="w-6 h-6 text-gray-300 ms-2" aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
                             <path
                                 d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
@@ -19,26 +19,26 @@
             </div>
             <h1>{{ $rating }}</h1>
             <button wire:ignore id="btnClearRating" onclick="clearRate()" wire:click='$set("rating",0)'
-                class="hidden text-xs bg-red-500 px-2 py-1 text-white rounded-lg">Temizle</button>
+                class="hidden px-2 py-1 text-xs text-white bg-red-500 rounded-lg">Temizle</button>
         </div>
         <form class="mb-6">
             <div class="mb-3">
                 <input wire:model='title' type="text" id="default-input" placeholder="Write a title..."
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                 @error('title')
-                    <div class="p-2 mb-2 text-sm bg-red-500 text-white rounded-lg" role="alert">
+                    <div class="p-2 mb-2 text-sm text-white bg-red-500 rounded-lg" role="alert">
                         <span class="font-medium">{{ $message }}</span>
                     </div>
                 @enderror
             </div>
-            <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 ">
+            <div class="px-4 py-2 mb-4 bg-white border border-gray-200 rounded-lg rounded-t-lg ">
                 <label for="comment" class="sr-only">Your comment</label>
                 <textarea wire:model='comment' id="comment" rows="6"
-                    class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none  dark:placeholder-gray-400 "
+                    class="w-full px-0 text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:placeholder-gray-400 "
                     placeholder="Write a comment..." required></textarea>
             </div>
             @error('comment')
-                <div class="p-2 mb-2 text-sm bg-red-500 text-white rounded-lg" role="alert">
+                <div class="p-2 mb-2 text-sm text-white bg-red-500 rounded-lg" role="alert">
                     <span class="font-medium">{{ $message }}</span>
                 </div>
             @enderror
@@ -51,14 +51,14 @@
         <div id="reviews-pagination">{{ $this->reviews()->links(data: ['scrollTo' => '#reviews-pagination']) }}</div>
         @foreach ($this->reviews() as $review)
             <article wire:key='review-{{ $review->id }}' id="review-{{ $review->id }}"
-                class="my-4 border-s-2 border-b-2 border-red-200 ps-4 py-4 shadow-sm shadow-red-300">
+                class="py-4 my-4 border-b-2 border-red-200 shadow-sm border-s-2 ps-4 shadow-red-300">
                 <div class="flex items-start justify-between mb-4">
                     <div class="flex items-center mb-4">
                         @if ($review->user->profile_image)
-                            <img class="me-4 w-14 h-14 rounded-full"
+                            <img class="rounded-full me-4 w-14 h-14"
                                 src="{{ asset('storage/' . $review->user->profile_image) }}" alt="Michael Gough">
                         @else
-                            <img class="me-4 w-14 h-14 rounded-full"
+                            <img class="rounded-full me-4 w-14 h-14"
                                 src="https://flowbite.com/docs/images/people/profile-picture-2.jpg" alt="Michael Gough">
                         @endif
                         <div class="font-medium" wire:key='popover-container-{{ $review->id }}'>
@@ -90,7 +90,7 @@
                     <div wire:key='dropdown-container-{{ $review->id }}'>
                         <button id="dropdownComment{{ $review->id }}Button"
                             data-dropdown-toggle="dropdownComment{{ $review->id }}"
-                            class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-500 dark:text-gray-400 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                            class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-500 bg-white rounded-lg dark:text-gray-400 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                             type="button">
                             <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                 fill="currentColor" viewBox="0 0 16 3">
@@ -101,31 +101,24 @@
                         </button>
                         <!-- Dropdown menu -->
                         <div id="dropdownComment{{ $review->id }}"
-                            class="hidden z-10 w-36 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded shadow w-36 dark:bg-gray-700 dark:divide-gray-600">
                             <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
                                 aria-labelledby="dropdownMenuIconHorizontalButton">
-                                <li wire:click='edit({{ $review->id }})' class="cursor-pointer">
-                                    <a
-                                        class="inline-flex w-full items-center gap-2 py-2 px-4 hover:bg-blue-100 hover:text-black">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
-                                        </svg>
-                                        <span>Edit</span></a>
-                                </li>
-                                <li wire:click='delete({{ $review->id }})' class="cursor-pointer">
-                                    <a
-                                        class="inline-flex w-full items-center gap-2  py-2 px-4 hover:bg-red-100 hover:text-black">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M6 18 18 6M6 6l12 12" />
-                                        </svg><span>Remove</span></a>
-                                </li>
+                                @can('admin')
+                                    <li wire:click='edit({{ $review->id }})' class="cursor-pointer">
+                                        <a
+                                            class="inline-flex items-center w-full gap-2 px-4 py-2 hover:bg-blue-100 hover:text-black">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                                            </svg>
+                                            <span>Edit</span></a>
+                                    </li>
+                                @endcan
                                 <li>
                                     <a href="#"
-                                        class="inline-flex w-full items-center gap-2 py-2 px-4 hover:bg-yellow-100 hover:text-black">
+                                        class="inline-flex items-center w-full gap-2 px-4 py-2 hover:bg-yellow-100 hover:text-black">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -140,7 +133,7 @@
                 </div>
                 <div class="flex items-center mb-1 space-x-1 rtl:space-x-reverse">
                     <x-stars :stars="$review->rating" />
-                    <h3 class="ms-2 text-sm font-semibold text-gray-900 dark:text-white">{{ $review->title }}</h3>
+                    <h3 class="text-sm font-semibold text-gray-900 ms-2 dark:text-white">{{ $review->title }}</h3>
                 </div>
                 <footer class="mb-2 text-sm text-gray-500 dark:text-gray-400">
                     {{-- <p>Reviewed in the United Kingdom on <time datetime="2017-03-03 19:00">March 3, 2017</time>
@@ -164,7 +157,7 @@
                         <a href="#"
                             class="px-2 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Helpful</a>
                         <a href="#"
-                            class="ps-4 text-sm font-medium text-blue-600 hover:underline dark:text-blue-500 border-gray-200 ms-4 border-s md:mb-0 dark:border-gray-600">Report
+                            class="text-sm font-medium text-blue-600 border-gray-200 ps-4 hover:underline dark:text-blue-500 ms-4 border-s md:mb-0 dark:border-gray-600">Report
                             abuse</a>
                     </div>
                 </aside>

@@ -40,26 +40,6 @@ class Cart extends Component
     return to_route("auth.user.cart");
   }
 
-  /* #[Computed()]
-  public function user()
-  {
-    return auth()->user();
-  }
-
-  #[Computed()]
-  public function cart()
-  {
-    return $this->user->cart;
-  }
-
-  #[Computed()]
-  public function cartItems()
-  {
-    return $this->cart->items ?? [];
-  } */
-
-
-
   public function render()
   {
     return view('livewire.cart')->layout("components.layout");

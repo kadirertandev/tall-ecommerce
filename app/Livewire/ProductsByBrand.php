@@ -7,7 +7,6 @@ use App\Models\Product;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
-use Illuminate\Support\Str;
 use Livewire\WithPagination;
 use Livewire\Attributes\Computed;
 use Illuminate\Support\Facades\Lang;
