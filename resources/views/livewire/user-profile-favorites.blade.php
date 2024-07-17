@@ -1,5 +1,5 @@
-<div class=" bg-white text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full mb-4">
-    <div class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between gap-6">
+<div class="w-full mb-4 text-gray-500 bg-white rounded-lg text-medium dark:text-gray-400 dark:bg-gray-800">
+    <div class="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div
             class="{{-- col-span-4 --}}w-full sm:w-7/12 lg:w-9/12 flex items-center justify-between bg-gray-50 ring-2 ring-gray-100 px-3 rounded-lg">
             <h1 class="text-3xl">{{ __('frontend.favorites.favorites') }}</h1>
@@ -10,7 +10,7 @@
         <div
             class="{{-- col-span-2 --}}w-full sm:w-5/12 lg:w-3/12 flex place-content-end items-center gap-4 px-3 rounded-lg ">
             <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
-                class="hidden md:flex col-span-2 place-content-end items-center gap-4 px-3 rounded-lg " type="button">
+                class="items-center hidden col-span-2 gap-4 px-3 rounded-lg md:flex place-content-end " type="button">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24">
                     <path fill="black"
                         d="M22 12.999V20a1 1 0 0 1-1 1h-8v-8.001zm-11 0V21H3a1 1 0 0 1-1-1v-7.001zM11 3v7.999H2V4a1 1 0 0 1 1-1zm10 0a1 1 0 0 1 1 1v6.999h-9V3z" />
@@ -64,17 +64,17 @@
                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
                         aria-labelledby="dropdownDefaultButtonasdf">
                         <li wire:click='lastAdded'>
-                            <div class="flex cursor-pointer items-center px-4 py-2 group hover:bg-gray-100 ">
+                            <div class="flex items-center px-4 py-2 cursor-pointer group hover:bg-gray-100 ">
                                 {{ __('frontend.filters.newest') }}
                             </div>
                         </li>
                         <li wire:click='lowestPrice'>
-                            <div class="flex cursor-pointer items-center px-4 py-2 group hover:bg-gray-100 ">
+                            <div class="flex items-center px-4 py-2 cursor-pointer group hover:bg-gray-100 ">
                                 {{ __('frontend.filters.lowest-price') }}
                             </div>
                         </li>
                         <li wire:click='highestPrice'>
-                            <div class="flex cursor-pointer items-center px-4 py-2 group hover:bg-gray-100 ">
+                            <div class="flex items-center px-4 py-2 cursor-pointer group hover:bg-gray-100 ">
                                 {{ __('frontend.filters.highest-price') }}
                             </div>
                         </li>
@@ -87,7 +87,7 @@
     {{-- search --}}
     <div class="flex items-center justify-between mt-2">
         <div class="relative">
-            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <div class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3">
                 <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -95,7 +95,7 @@
                 </svg>
             </div>
             <input wire:model.live.debounce.300ms='search' type="search" id="default-search"
-                class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-gray-500 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white "
+                class="block w-full p-4 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg ps-10 focus:ring-gray-500 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white "
                 placeholder="{{ Lang::get('frontend.filters.search-within-x-products', ['x' => $this->favoritesCount]) }}"
                 required />
         </div>
@@ -116,13 +116,13 @@
 
             <!-- Dropdown menu -->
             <div id="dropdownBgHover" wire:ignore.self
-                class="hidden z-10 w-48 bg-white rounded-lg shadow-lg dark:bg-gray-700" {{-- style="{{ $opened ? 'position: absolute; top: 50px; left: -10px' : '' }}" --}}>
+                class="z-10 hidden w-48 bg-white rounded-lg shadow-lg dark:bg-gray-700" {{-- style="{{ $opened ? 'position: absolute; top: 50px; left: -10px' : '' }}" --}}>
                 {{-- dropdown search --}}
                 <div class="px-3 ">
                     <label for="input-group-search" class="sr-only">Search</label>
                     <div class="relative">
                         <div
-                            class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                            class="absolute inset-y-0 flex items-center pointer-events-none rtl:inset-r-0 start-0 ps-3">
                             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -130,7 +130,7 @@
                             </svg>
                         </div>
                         <input wire:model.live.debounce.300ms='searchCategory' type="text" id="input-group-search"
-                            class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg ps-10 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Search category">
                     </div>
                 </div>
@@ -145,7 +145,7 @@
                                     type="checkbox" value="{{ $id }}"
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                 <label for="category-check-{{ md5($name) }}"
-                                    class="w-full ms-2 text-sm font-medium text-gray-900 rounded">{{ $name }}</label>
+                                    class="w-full text-sm font-medium text-gray-900 rounded ms-2">{{ $name }}</label>
                             </div>
                         </li>
                     @endforeach
@@ -160,33 +160,23 @@
         class="mt-8 grid grid-cols-1 md:grid-cols-{{ $this->cols / 2 }} md:grid-cols-{{ $this->cols }} gap-3">
         @forelse ($this->favorites as $favorite)
             <div wire:key='favorite-card-{{ $favorite->name ? $favorite->id : $favorite->user_id }}'
-                class="ring-4 ring-gray-50 p-3 shadow-lg">
-                <div class="relative flex items-center md:flex-col gap-2 md:gap-2">
+                class="p-3 shadow-lg ring-4 ring-gray-50">
+                <div class="relative flex items-center gap-2 md:flex-col md:gap-2">
                     <div class="w-full min-w-24 h-48 max-h-48 flex items-center justify-center {{-- bg-red-500 --}}">
                         <img src="{{ asset('/storage/' . ($favorite->name ? $favorite->image : $favorite->product->image)) }}"
-                            class="max-h-48 w-auto aspect-auto" alt="">
+                            class="w-auto max-h-48 aspect-auto" alt="">
                     </div>
                     <div class="h-20 overflow-y-hidden">
                         <a
                             href="{{ route('products.show', ['category_slug' => $favorite->name ? $favorite->category->slug : $favorite->product->category->slug, 'product_slug' => $favorite->name ? $favorite->slug : $favorite->product->slug]) }}">{!! $favorite->name ? $favorite->title() : $favorite->product->title() !!}</a>
                     </div>
-                    {{-- <livewire:add-to-favorites-button
-                        wire:key='{{ $favorite->name ? $favorite->id : $favorite->product->id }}' :product_slug="$favorite->name ? $favorite->slug : $favorite->product->slug"
-                        type="profile" /> --}}
-                    <button wire:click='removeFromFavorites("{{ $favorite->id }}")'
-                        class="absolute max-w-md:bottom-0 max-w-md:right-1/2  max-w-md:left-1/2 md:right-0 md:top-0"
-                        role="button">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 -ms-2 me-2 group-hover:fill-white"
-                            width="24" height="24" viewBox="0 0 24 24" fill="#ff0000">
-                            <path
-                                d="M3.28 2.22a.75.75 0 1 0-1.06 1.06l1.855 1.856a5.375 5.375 0 0 0-.5 8.044l7.895 7.896a.75.75 0 0 0 1.06 0l3.744-3.742l4.445 4.447a.75.75 0 0 0 1.061-1.061zm17.152 10.959l-2.036 2.035L7.19 4.008a5.36 5.36 0 0 1 3.986 1.57l.823.824l.82-.822a5.38 5.38 0 0 1 7.613 7.599" />
-                        </svg>
-                    </button>
+                    <livewire:add-to-favorites-button :key="$favorite->name ? $favorite->id : $favorite->product->id" :product_slug="$favorite->name ? $favorite->slug : $favorite->product->slug" type="profile"
+                        :showLabel="false" />
                 </div>
             </div>
         @empty
-            <div class="w-full sm:w-7/12 lg:w-9/12 flex items-center justify-between px-3 rounded-lg">
-                <h1 class="text-xl my-2">No products found.</h1>
+            <div class="flex items-center justify-between w-full px-3 rounded-lg sm:w-7/12 lg:w-9/12">
+                <h1 class="my-2 text-xl">No products found.</h1>
             </div>
         @endforelse
     </div>

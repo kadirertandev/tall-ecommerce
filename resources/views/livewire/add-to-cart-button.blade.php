@@ -1,8 +1,3 @@
-{{-- <div>
-    <x-add-to-cart-button :product="$this->product" class="{{ $class }}" svg="{{ $svg }}" />
-</div>
- --}}
-
 <div>
     <button @click='$dispatch("add-to-cart",{productID: {{ $this->product->id }} })' type="button"
         class="{{ $class }}">

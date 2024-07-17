@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class CartStepTwo extends BaseCartComponent
@@ -42,6 +43,7 @@ class CartStepTwo extends BaseCartComponent
     }
   }
 
+  #[On("added-to-cart")]
   public function render()
   {
     return view('livewire.cart-step-two');
