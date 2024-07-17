@@ -2,9 +2,6 @@
 
 namespace App\Livewire;
 
-
-
-
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Order;
