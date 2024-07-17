@@ -2,13 +2,10 @@
 
 namespace App\Livewire;
 
-use App\Models\Cart;
-use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\Product;
 use App\Models\UserAddress;
-use App\Traits\AddToCart;
+use App\Traits\CartService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
@@ -18,145 +15,34 @@ use Throwable;
 
 class BaseCartComponent extends Component
 {
-  use AddToCart;
+  use CartService {
+    CartService::addToCart as traitAddToCart;
+    CartService::removeFromCart as traitRemoveFromCart;
+    CartService::decreaseQuantity as traitDecreaseQuantity;
+    CartService::increaseQuantity as traitIncreaseQuantity;
+  }
+
   #[On("add-to-cart")]
   public function addToCart($productID)
   {
-    return $this->addToCart2($productID);
-    /* try {
-      $product = Product::find($productID);
-      if (!auth()->user()) {
-        session()->put("guest_cart_product", $product);
-        return to_route("login");
-      }
-
-      if (Gate::denies("customer")) {
-        throw new AuthorizationException("This action is unauthorized!");
-      }
-
-      if (!$this->cart) {
-        $cart = Cart::create([
-          "user_id" => $this->user["id"]
-        ]);
-      } else {
-        $cart = $this->cart;
-      }
-
-      if ($cart->products()->contains($product["id"])) {
-        // dd((int) $product["discount_amount"], $product["price"], $product["price"] - (float) $product["discount_amount"]);
-        $item = CartItem::where("product_id", $product["id"])->first();
-        $item->update([
-          "quantity" => $item->quantity += 1,
-          "discount_amount" => $item->discount_amount + $product["discount_amount"],
-          "item_total_price" => $item->quantity * ($product["price"] - (float) $product["discount_amount"])
-        ]);
-      } else {
-        // dd((int) $product["discount_amount"], $product["price"]);
-        CartItem::create([
-          "cart_id" => $cart->id,
-          "product_id" => $product["id"],
-          "quantity" => 1,
-          "price" => $product["price"] /* - (float) $product["discount_amount"]  ,
-          "discount_amount" => $product["discount_amount"],
-          "item_total_price" => $product["price"] - (float) $product["discount_amount"],
-        ]);
-      }
-
-      $this->dispatch("added-to-cart", product: $product, text: __('frontend.cart.added-to-cart'));
-    } catch (AuthorizationException $e) {
-      $this->dispatch("error-with-message", message: $e->getMessage());
-    } catch (Throwable $e) {
-      $this->dispatch("something-went-wrong");
-    } */
+    return $this->traitAddToCart($productID);
   }
 
   #[On("remove-form-cart-modal-is-confirmed")]
   #[On("remove-form-cart-modal-is-denied")]
   public function removeFromCart($cartItemId, $addFavorites)
   {
-    // dd($cartItemId);
-    // dd($cartItemId, $cartItem, $addFavorites);
-    try {
-      if (Gate::denies("customer")) {
-        throw new AuthorizationException("This action is unauthorized!");
-      }
-      $cartItem = CartItem::find((int) $cartItemId);
-      if (!empty($cartItem)) {
-        if ($addFavorites) {
-          if (!$this->user->favorites->contains($cartItem->product->id)) {
-            $this->user->favorites()->attach($cartItem->product->id);
-          }
-          $cartItem->delete();
-          $this->dispatch("removed-from-cart-and-added-favorites", product: $cartItem->product, text: __('frontend.cart.removed-from-cart-and-added-to-favorites'));
-        } else {
-          $cartItem->delete();
-          $this->dispatch("removed-from-cart", product: $cartItem->product, text: __('frontend.cart.removed-from-cart'));
-        }
-      }
-      $this->dispatch("refresh-cart");
-    } catch (AuthorizationException $e) {
-      $this->dispatch("error-with-message", message: $e->getMessage());
-    } catch (Throwable $e) {
-      dd($e->getMessage(), "remove from cart");
-      $this->dispatch("something-went-wrong");
-    }
+    return $this->traitRemoveFromCart($cartItemId, $addFavorites);
   }
 
-  /* #[On("decrease-quantity")] */
   public function decreaseQuantity($id)
   {
-    // dd($id);
-    try {
-      if (Gate::denies("customer")) {
-        throw new AuthorizationException("This action is unauthorized!");
-      }
-      $cartItem = CartItem::find($id);
-      if (!empty($cartItem)) {
-        if ($cartItem->quantity > 1) {
-          $cartItem->decrement("quantity", 1);
-          $cartItem->update([
-            // "item_total_price" => $cartItem->quantity * $cartItem->price
-            "item_total_price" => $cartItem->quantity * ($cartItem->product->price - (float) $cartItem->product->discount_amount)
-          ]);
-        } else {
-          #2 seçenek, evet-sil, sil ve favorilere ekle
-          $this->dispatch("remove-from-cart-modal", cartItemId: $cartItem->id);
-          // $cartItem->delete();
-          // $this->dispatch("removed-from-cart", product: $cartItem->product, text: __('frontend.cart.removed-from-cart'));
-        }
-        $this->dispatch("refresh-cart");
-      }
-    } catch (AuthorizationException $e) {
-      $this->dispatch("error-with-message", message: $e->getMessage());
-    } catch (Throwable $e) {
-      dd($e->getMessage(), "decrease quantity");
-      $this->dispatch("something-went-wrong");
-    }
+    return $this->traitDecreaseQuantity($id);
   }
 
-  /* #[On("increase-quantity")] */
   public function increaseQuantity($id)
   {
-    // dd($id);
-    try {
-      if (Gate::denies("customer")) {
-        throw new AuthorizationException("This action is unauthorized!");
-      }
-      $cartItem = CartItem::find($id);
-      if (!empty($cartItem)) {
-        $cartItem->increment("quantity", 1);
-        $cartItem->update([
-          // "item_total_price" => $cartItem->quantity * $cartItem->price
-          "item_total_price" => $cartItem->quantity * ($cartItem->product->price - (float) $cartItem->product->discount_amount)
-        ]);
-        $this->dispatch("refresh-cart");
-      }
-    } catch (AuthorizationException $e) {
-      $this->dispatch("error-with-message", message: $e->getMessage());
-    } catch (Throwable $e) {
-      // dd($e->getMessage());
-      $this->dispatch("something-went-wrong");
-    }
+    return $this->traitIncreaseQuantity($id);
   }
 
   #[Computed()]
