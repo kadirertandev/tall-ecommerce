@@ -14,6 +14,7 @@
         "vite": "^5.0.0"
     },
     "dependencies": {
-        "flowbite-datepicker": "^1.2.6"
+        "flowbite-datepicker": "^1.2.6",
+        "swiper": "^11.1.5"
     }
 }

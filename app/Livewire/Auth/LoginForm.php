@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Events\Login;
 use App\Livewire\Forms\LoginForm as FormsLoginForm;
 use App\Traits\CartService;
 use Illuminate\Support\Facades\DB;
@@ -36,10 +37,7 @@ class LoginForm extends Component
     $validated = $this->form->validate();
     if (auth()->attempt($validated, (bool) $this->form->remember_me)) {
       session()->regenerate();
-      if (session()->has("guest_cart_product")) {
-        $this->traitAddToCart(session()->get("guest_cart_product"));
-        session()->remove("guest_cart_product");
-      }
+      Login::dispatch();
       DB::table("password_reset_tokens")->where("email", $this->form->email)->delete();
       auth()->user()->isAdmin() ? $this->redirectRoute("admin.dashboard") : $this->redirectRoute("home");
     }
