@@ -15,6 +15,7 @@ class OrderItem extends Model
     "price",
     "quantity",
     "item_total_price",
+    "created_at"
   ];
 
   public function product()

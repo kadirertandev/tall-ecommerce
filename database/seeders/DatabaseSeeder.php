@@ -11,6 +11,7 @@ use App\Models\CategoryBrand;
 use App\Models\City;
 use App\Models\DailyDealProduct;
 use App\Models\District;
+use App\Models\OrderItem;
 use App\Models\Permission;
 use App\Models\ProductReview;
 use App\Models\Role;
@@ -33,6 +34,55 @@ class DatabaseSeeder extends Seeder
   }
   public function run(): void
   {
+    OrderItem::create([
+      "order_id" => 1,
+      "product_id" => 1,
+      "price" => 10000,
+      "quantity" => 2,
+      "item_total_price" => 20000,
+      "created_at" => "2024-07-19"
+    ]);
+    OrderItem::create([
+      "order_id" => 1,
+      "product_id" => 1,
+      "price" => 20000,
+      "quantity" => 3,
+      "item_total_price" => 60000,
+      "created_at" => "2024-06-19"
+    ]);
+    OrderItem::create([
+      "order_id" => 1,
+      "product_id" => 1,
+      "price" => 30000,
+      "quantity" => 1,
+      "item_total_price" => 30000,
+      "created_at" => "2024-05-19"
+    ]);
+    OrderItem::create([
+      "order_id" => 1,
+      "product_id" => 1,
+      "price" => 40000,
+      "quantity" => 6,
+      "item_total_price" => 240000,
+      "created_at" => "2024-04-19"
+    ]);
+    OrderItem::create([
+      "order_id" => 1,
+      "product_id" => 1,
+      "price" => 100000,
+      "quantity" => 3,
+      "item_total_price" => 300000,
+      "created_at" => "2024-03-19"
+    ]);
+    OrderItem::create([
+      "order_id" => 1,
+      "product_id" => 1,
+      "price" => 45000,
+      "quantity" => 7,
+      "item_total_price" => 315000,
+      "created_at" => "2024-02-19"
+    ]);
+
     \App\Models\User::factory(10)->create();
 
     // \App\Models\User::factory()->create([
