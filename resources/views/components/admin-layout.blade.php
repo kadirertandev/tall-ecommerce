@@ -1,27 +1,14 @@
 <x-header-meta :title="$title ?? ''" />
-<div class="min-h-screen flex flex-col items-between">
+<div class="flex flex-col min-h-screen items-between">
     {{-- navbar --}}
-    <nav class="bg-white border-b border-2 border-gray-200 dark:bg-gray-900">
-        <div class="w-full flex flex-wrap items-center justify-between px-4 py-1">
-            <div class="w-2/12 flex flex-wrap items-center justify-between {{-- bg-orange-200 --}}">
+    <nav class="bg-white border-2 border-b border-gray-200 dark:bg-gray-900">
+        <div class="flex flex-wrap items-center justify-between w-full px-4 py-1">
+            <div class="flex flex-wrap items-center justify-between w-2/12">
                 <a href="{{ route('home') }}" class="text-4xl font-roboto main-red">
                     <span class="font-extralight">eco</span><span class="font-extrabold">mmerce</span>
                 </a>
             </div>
-            <div class="w-10/12 {{-- bg-blue-200 --}} flex items-center justify-end">
-                {{-- <div class="relative block w-80">
-                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                        </svg>
-                        <span class="sr-only">Search icon</span>
-                    </div>
-                    <input type="text" id="search-navbar"
-                        class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Search...">
-                </div> --}}
+            <div class="flex items-center justify-end w-10/12">
                 <div class="flex items-center space-x-3 md:space-x-0 rtl:space-x-reverse">
                     <button type="button"
                         class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
@@ -42,26 +29,18 @@
                             <span
                                 class="block text-sm text-gray-900 dark:text-white">{{ auth()->user()->full_name() }}</span>
                             <span
-                                class="block text-sm  text-gray-500 truncate dark:text-gray-400">{{ auth()->user()->email }}</span>
+                                class="block text-sm text-gray-500 truncate dark:text-gray-400">{{ auth()->user()->email }}</span>
                         </div>
                         <ul class="py-2" aria-labelledby="user-menu-button">
                             <li>
                                 <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-400 hover:text-gray-100">Dashboard</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-400 hover:text-gray-100">Settings</a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-400 hover:text-gray-100">Earnings</a>
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-400 hover:text-gray-100">Profile</a>
                             </li>
                             <li>
                                 <form action="{{ route('logout') }}" method="POST"
-                                    class="cursor-pointer block text-sm text-gray-700 hover:bg-gray-400 hover:text-gray-100">
+                                    class="block text-sm text-gray-700 cursor-pointer hover:bg-gray-400 hover:text-gray-100">
                                     @csrf
-                                    <button type="submit" class="px-4 py-2 w-full text-left flex items-center gap-1">
+                                    <button type="submit" class="flex items-center w-full gap-1 px-4 py-2 text-left">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -74,7 +53,7 @@
                         </ul>
                     </div>
                     <button data-collapse-toggle="navbar-user" type="button"
-                        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                        class="inline-flex items-center justify-center w-10 h-10 p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:focus:ring-gray-600"
                         aria-controls="navbar-user" aria-expanded="false">
                         <span class="sr-only">Open main menu</span>
                         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -92,11 +71,14 @@
     <section class="flex-1 bg-white flex items-stretch justify-between {{-- p-4 --}} gap-4">
         <aside id="default-sidebar" class="w-2/12 bg-teal-500" aria-label="Sidenav">
             <div
-                class="overflow-y-auto p-4 h-full bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                class="h-full p-4 overflow-y-auto bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                 <ul class="space-y-2">
                     <li>
-                        <a wire:navigate href="{{ route('admin.dashboard') }}"
-                            class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        <a wire:navigate href="{{ route('admin.dashboard') }}" @class([
+                            'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
+                            'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                                'admin.dashboard'),
+                        ])>
                             <svg aria-hidden="true"
                                 class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -108,8 +90,11 @@
                     </li>
                     @can('view admins')
                         <li>
-                            <a wire:navigate href="{{ route('admin.admins.index') }}"
-                                class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                            <a wire:navigate href="{{ route('admin.admins.index') }}" @class([
+                                'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
+                                'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                                    'admin.admins.index'),
+                            ])>
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                     class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                     viewBox="0 0 26 26">
@@ -122,8 +107,11 @@
                     @endcan
                     @can('view products')
                         <li>
-                            <a wire:navigate href="{{ route('admin.products.index') }}"
-                                class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                            <a wire:navigate href="{{ route('admin.products.index') }}" @class([
+                                'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
+                                'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                                    'admin.products.index'),
+                            ])>
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                     class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                     viewBox="0 0 32 32">
@@ -137,8 +125,11 @@
                     @endcan
                     @can('view categories')
                         <li>
-                            <a wire:navigate href="{{ route('admin.categories.index') }}"
-                                class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                            <a wire:navigate href="{{ route('admin.categories.index') }}" @class([
+                                'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
+                                'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                                    'admin.categories.index'),
+                            ])>
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                     class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                     viewBox="0 0 24 24">
@@ -156,8 +147,11 @@
                     @endcan
                     @can('view brands')
                         <li>
-                            <a wire:navigate href="{{ route('admin.brands.index') }}"
-                                class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                            <a wire:navigate href="{{ route('admin.brands.index') }}" @class([
+                                'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
+                                'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                                    'admin.brands.index'),
+                            ])>
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                     class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                     viewBox="0 0 2048 2048">
@@ -170,8 +164,11 @@
                     @endcan
                     @can('view customers')
                         <li>
-                            <a wire:navigate href="{{ route('admin.customers.index') }}"
-                                class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                            <a wire:navigate href="{{ route('admin.customers.index') }}" @class([
+                                'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
+                                'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                                    'admin.customers.index'),
+                            ])>
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                     class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                     viewBox="0 0 24 24">
@@ -185,8 +182,11 @@
                     @endcan
                     @can('view orders')
                         <li>
-                            <a wire:navigate href="{{ route('admin.orders.index') }}"
-                                class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                            <a wire:navigate href="{{ route('admin.orders.index') }}" @class([
+                                'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
+                                'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                                    'admin.orders.index'),
+                            ])>
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                     class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                     viewBox="0 0 32 32">
@@ -199,8 +199,11 @@
                     @endcan
                     @can('view reviews')
                         <li>
-                            <a wire:navigate href="{{ route('admin.reviews.index') }}"
-                                class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                            <a wire:navigate href="{{ route('admin.reviews.index') }}" @class([
+                                'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
+                                'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                                    'admin.reviews.index'),
+                            ])>
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                     class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                     viewBox="0 0 32 32">
@@ -216,8 +219,11 @@
                 </ul>
                 <ul class="hidden pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
                     <li>
-                        <a href="#"
-                            class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group">
+                        <a href="#" @class([
+                            'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
+                            'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                                'admin.dashboard'),
+                        ])>
                             <svg aria-hidden="true"
                                 class="flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -230,8 +236,11 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#"
-                            class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group">
+                        <a href="#" @class([
+                            'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
+                            'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                                'admin.dashboard'),
+                        ])>
                             <svg aria-hidden="true"
                                 class="flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -243,8 +252,11 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#"
-                            class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group">
+                        <a href="#" @class([
+                            'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
+                            'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                                'admin.dashboard'),
+                        ])>
                             <svg aria-hidden="true"
                                 class="flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -259,7 +271,7 @@
             </div>
         </aside>
 
-        <div class="w-10/12 {{-- bg-orange-200 --}} my-4">
+        <div class="w-10/12 my-4">
             {{ $content }}
         </div>
     </section>
