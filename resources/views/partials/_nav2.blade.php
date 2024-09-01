@@ -1,4 +1,4 @@
-<nav class="main-container my-2 flex justify-between items-center md:gap-8">
+<nav class="flex items-center justify-between my-2 main-container md:gap-8">
     <a href="{{ route('home') }}" class="text-4xl font-roboto main-red">
         <span class="font-extralight">eco</span><span class="font-extrabold">mmerce</span>
     </a>
@@ -7,7 +7,7 @@
     <div class="flex md:hidden">
         <div class="block md:hidden">
             <button data-collapse-toggle="navbar-search" type="button"
-                class="inline-flex items-center justify-center p-2 w-10 h-10 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                class="inline-flex items-center justify-center w-10 h-10 p-2 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                 aria-controls="navbar-search" aria-expanded="false">
                 <span class="sr-only">Open main menu</span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -18,12 +18,12 @@
 
                 </svg>
             </button>
-            <div class="hidden absolute -left-0 w-full" id="navbar-search">
+            <div class="absolute hidden w-full -left-0" id="navbar-search">
                 <form class="mt-4">
                     <label for="default-search"
                         class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                     <div class="relative">
-                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <div class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3">
                             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -31,7 +31,7 @@
                             </svg>
                         </div>
                         <input type="search" id="default-search"
-                            class="-mt-2 block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300  bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="block w-full p-4 -mt-2 text-sm text-gray-900 border border-gray-300 ps-10 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Search for products, categories or brands" required />
                         <button type="submit"
                             class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
@@ -42,7 +42,7 @@
 
         <div class="block md:hidden">
             <button data-collapse-toggle="navbar-hamburger" type="button"
-                class="inline-flex items-center justify-center p-2 w-10 h-10 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                class="inline-flex items-center justify-center w-10 h-10 p-2 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                 aria-controls="navbar-hamburger" aria-expanded="false">
                 <span class="sr-only">Open main menu</span>
                 <svg class="w-8 h-8" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -53,18 +53,18 @@
             </button>
             <div class="hidden absolute z-[500] -left-0 w-full -mt-2" id="navbar-hamburger">
                 <ul
-                    class="flex flex-col font-medium mt-4 border-y-2 border-red-500 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+                    class="flex flex-col mt-4 font-medium border-red-500 border-y-2 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
                     <li>
                         <a href="#"
-                            class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-main-red">Login</a>
+                            class="block px-3 py-2 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-main-red">Login</a>
                     </li>
                     <li>
                         <a href="#"
-                            class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-main-red">Register</a>
+                            class="block px-3 py-2 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-main-red">Register</a>
                     </li>
                     <li>
                         <a href="#"
-                            class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-main-red">Favorites</a>
+                            class="block px-3 py-2 text-gray-900 rounded hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-main-red">Favorites</a>
                     </li>
                 </ul>
             </div>
@@ -75,11 +75,11 @@
     <livewire:search />
     {{-- search bar --}}
 
-    <div class="hidden md:flex items-center gap-4">
+    <div class="items-center hidden gap-4 md:flex">
         @guest
             <div>
                 <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" data-dropdown-trigger="hover"
-                    class="group hover:text-main-red focus:text-main-red font-medium text-sm inline-flex items-center gap-1 rounded-md p-1"
+                    class="inline-flex items-center gap-1 p-1 text-sm font-medium rounded-md group hover:text-main-red focus:text-main-red"
                     type="button">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-6 h-6 group-hover:fill-main-red">
@@ -103,11 +103,11 @@
                     <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownDefaultButton">
                         <li>
                             <a href="{{ route('login') }}"
-                                class="hover:text-main-red block px-4 py-2 hover:underline">{{ __('frontend.auth.login') }}</a>
+                                class="block px-4 py-2 hover:text-main-red hover:underline">{{ __('frontend.auth.login') }}</a>
                         </li>
                         <li>
                             <a href="{{ route('register') }}"
-                                class="hover:text-main-red block px-4 py-2 hover:underline">{{ __('frontend.auth.register') }}</a>
+                                class="block px-4 py-2 hover:text-main-red hover:underline">{{ __('frontend.auth.register') }}</a>
                         </li>
                     </ul>
                 </div>
@@ -120,7 +120,7 @@
         {{-- favorites --}}
         <div>
             <a href="{{ route('auth.user.favorites') }}"
-                class="group hover:text-main-red  font-medium text-sm inline-flex items-center gap-1 rounded-md p-1"
+                class="inline-flex items-center gap-1 p-1 text-sm font-medium rounded-md group hover:text-main-red"
                 type="button">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6 group-hover:fill-main-red">
@@ -159,7 +159,7 @@
                 id="user-dropdown">
                 {{-- <div class="px-4 py-3">
                     <span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
-                    <span class="block text-sm  text-gray-500 truncate dark:text-gray-400">name@flowbite.com</span>
+                    <span class="block text-sm text-gray-500 truncate dark:text-gray-400">name@flowbite.com</span>
                 </div>
                 <ul class="py-2" aria-labelledby="user-menu-button">
                     <li>

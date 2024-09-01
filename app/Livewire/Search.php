@@ -13,6 +13,15 @@ class Search extends Component
   public $search;
   public $thereAreResults = false;
 
+  public $selectedCategoryTitle = "All Categories";
+  public $selectedCategoryId = 0;
+
+  public function setSelectedCategory($title, $id)
+  {
+    $this->selectedCategoryTitle = $title;
+    $this->selectedCategoryId = $id;
+  }
+
   public function updatedSearch()
   {
     // dd($this->search, count($this->categoryResults()), count($this->brandResults()), count($this->productResults()));
@@ -31,7 +40,11 @@ class Search extends Component
   public function categoryResults()
   {
     if (strlen($this->search) > 2) {
-      $productResults = Category::where("name", "like", "%{$this->search}%")->get();
+      $productResults = Category::where("name", "like", "%{$this->search}%")
+        ->when($this->selectedCategoryId !== 0, function ($query) {
+          return $query->where("id", $this->selectedCategoryId);
+        })
+        ->get();
       return $productResults;
     }
     return [];
@@ -41,7 +54,13 @@ class Search extends Component
   public function brandResults()
   {
     if (strlen($this->search) >= 2) {
-      $productResults = Brand::where("name", "like", "%{$this->search}%")->get();
+      $productResults = Brand::where("name", "like", "%{$this->search}%")
+        ->when($this->selectedCategoryId !== 0, function ($query) {
+          return $query->join("category_brands", "category_brands.brand_id", "=", "brands.id")
+            ->where("category_brands.category_id", $this->selectedCategoryId);
+        })
+        ->get();
+
       return $productResults;
     }
     return [];
@@ -51,7 +70,11 @@ class Search extends Component
   public function productResults()
   {
     if (strlen($this->search) > 2) {
-      $productResults = Product::where("name", "like", "%{$this->search}%")->get();
+      $productResults = Product::where("name", "like", "%{$this->search}%")
+        ->when($this->selectedCategoryId !== 0, function ($query) {
+          return $query->where("category_id", $this->selectedCategoryId);
+        })
+        ->get();
       return $productResults;
     }
     return [];
