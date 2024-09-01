@@ -2,10 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Traits\Addresses;
 use Livewire\Attributes\On;
 
 class CartStepTwo extends BaseCartComponent
 {
+  use Addresses;
   public function rendering()
   {
     if ($this->cartItemsCount == 0) {

@@ -2,22 +2,22 @@
 <div x-data="{ show: false, name: '{{ $name }}' }" x-show="show" x-on:open-address-modal.window="show = ($event.detail.name === name)"
     x-on:close-address-modal.window="show = false,$dispatch('address-modal-closed')" class="relative z-10"
     aria-labelledby="modal-title" role="dialog" aria-modal="true" wire:ignore.self style="display: none;">
-    <div class="fixed inset-0 bg-gray-500 opacity-40 transition-opacity"></div>
+    <div class="fixed inset-0 transition-opacity bg-gray-500 opacity-40"></div>
 
     <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+        <div class="flex items-end justify-center min-h-full p-4 text-center sm:items-center sm:p-0">
             <div
-                class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                class="relative overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:w-full sm:max-w-lg">
                 {{-- modal content --}}
                 <div class="bg-white" @click.outside="$dispatch('close-address-modal')">
                     {{-- header --}}
-                    <div class="flex items-center justify-between p-4 border-b  dark:border-gray-600">
+                    <div class="flex items-center justify-between p-4 border-b dark:border-gray-600">
                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                             {{ $type == 'add' ? 'Add new address' : 'Edit address' }}
                         </h3>
 
                         <button type="button" @click="$dispatch('close-address-modal')"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            class="inline-flex items-center justify-center w-8 h-8 text-sm text-gray-400 bg-transparent rounded-lg hover:bg-gray-200 hover:text-gray-900 ms-auto dark:hover:bg-gray-600 dark:hover:text-white"
                             data-modal-hide="default-modal">
                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 14 14">
@@ -28,7 +28,7 @@
                         </button>
                     </div>
                     {{-- body --}}
-                    <div class="p-4 md:p-5 space-y-2">
+                    <div class="p-4 space-y-2 md:p-5">
                         <div>
                             <label for="first_name"
                                 class="block mb-2 text-sm font-medium text-gray-600 dark:text-white">Address
@@ -37,7 +37,7 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="John" required />
                             @error('form.addressTitle')
-                                <div class="p-2 mb-2 text-sm bg-red-500 text-white rounded-lg" role="alert">
+                                <div class="p-2 mb-2 text-sm text-white bg-red-500 rounded-lg" role="alert">
                                     <span class="font-medium">{{ $message }}</span>
                                 </div>
                             @enderror
@@ -55,7 +55,7 @@
                                 @endforeach
                             </select>
                             @error('form.selectedCity')
-                                <div class="p-2 mb-2 text-sm bg-red-500 text-white rounded-lg" role="alert">
+                                <div class="p-2 mb-2 text-sm text-white bg-red-500 rounded-lg" role="alert">
                                     <span class="font-medium">{{ $message }}</span>
                                 </div>
                             @enderror
@@ -75,7 +75,7 @@
                                 @endforeach
                             </select>
                             @error('form.selectedDistrict')
-                                <div class="p-2 mb-2 text-sm bg-red-500 text-white rounded-lg" role="alert">
+                                <div class="p-2 mb-2 text-sm text-white bg-red-500 rounded-lg" role="alert">
                                     <span class="font-medium">{{ $message }}</span>
                                 </div>
                             @enderror
@@ -95,7 +95,7 @@
                                 @endforeach
                             </select>
                             @error('form.selectedNeighborhood')
-                                <div class="p-2 mb-2 text-sm bg-red-500 text-white rounded-lg" role="alert">
+                                <div class="p-2 mb-2 text-sm text-white bg-red-500 rounded-lg" role="alert">
                                     <span class="font-medium">{{ $message }}</span>
                                 </div>
                             @enderror
@@ -108,7 +108,7 @@
                                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Write your thoughts here..."></textarea>
                             @error('form.addressLine')
-                                <div class="p-2 mb-2 text-sm bg-red-500 text-white rounded-lg" role="alert">
+                                <div class="p-2 mb-2 text-sm text-white bg-red-500 rounded-lg" role="alert">
                                     <span class="font-medium">{{ $message }}</span>
                                 </div>
                             @enderror
@@ -117,7 +117,7 @@
                             <input wire:model='form.makeDefault' id="default-checkbox123" type="checkbox"
                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="default-checkbox123"
-                                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Make default
+                                class="text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">Make default
                                 address</label>
                         </div>
 
@@ -131,11 +131,11 @@
                         @endif
                     </div>
                 </div>
-                {{-- <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                {{-- <div class="px-4 py-3 bg-gray-50 sm:flex sm:flex-row-reverse sm:px-6">
                     <button type="button"
-                        class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Deactivate</button>
+                        class="inline-flex justify-center w-full px-3 py-2 text-sm font-semibold text-white bg-red-600 rounded-md shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Deactivate</button>
                     <button type="button"
-                        class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button>
+                        class="inline-flex justify-center w-full px-3 py-2 mt-3 text-sm font-semibold text-gray-900 bg-white rounded-md shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button>
                 </div> --}}
             </div>
         </div>
