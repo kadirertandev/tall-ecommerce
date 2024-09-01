@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\ProductController;
+use App\Http\Middleware\LastViewedProducts;
 use App\Livewire\ProductsByBrand;
 use App\Livewire\ProductsByCategory;
 use Illuminate\Support\Facades\Route;
@@ -41,7 +42,7 @@ Route::prefix("/")->group(function () {
 
 Route::get("/category/{slug}", ProductsByCategory::class)->name("category-slug");
 Route::get("/brand/{slug}", ProductsByBrand::class)->name("brand-slug");
-Route::get("/category/{category_slug}/{product_slug}", [ProductController::class, "show"])->name("products.show");
+Route::get("/category/{category_slug}/{product_slug}", [ProductController::class, "show"])->name("products.show")->middleware(LastViewedProducts::class);
 
 Route::post("/lang", function () {
   session()->put("locale", request("lang"));
