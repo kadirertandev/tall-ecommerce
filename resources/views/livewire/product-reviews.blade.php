@@ -18,7 +18,7 @@
                 @endfor
             </div>
             <h1>{{ $rating }}</h1>
-            <button wire:ignore id="btnClearRating" onclick="clearRate()" wire:click='$set("rating",0)'
+            <button wire:ignore id="btnClearRating" onclick="clearRate()" wire:click='$set("rating","")'
                 class="hidden px-2 py-1 text-xs text-white bg-red-500 rounded-lg">Temizle</button>
         </div>
         <form class="mb-6">
@@ -176,3 +176,25 @@
         })
     </script>
 @endscript
+
+@section('script')
+    <script>
+        function rate(stars) {
+            $("#btnClearRating").removeClass("hidden");
+            for (let i = 1; i <= stars; i++) {
+                $("#star-" + i).removeClass("text-gray-300")
+                $("#star-" + i).addClass("text-yellow-300")
+            }
+
+            for (let i = 5; i > stars; i--) {
+                $("#star-" + i).removeClass("text-yellow-300")
+                $("#star-" + i).addClass("text-gray-300")
+            }
+        }
+
+        function clearRate() {
+            rate(0);
+            $("#btnClearRating").addClass("hidden");
+        }
+    </script>
+@endsection

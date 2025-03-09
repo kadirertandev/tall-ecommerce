@@ -1,16 +1,16 @@
 <div class="min-h-screen">
-    <div class="main-container py-4">
+    <div class="py-4 main-container">
         <div>
             {!! \App\Helpers\Breadcrumbs::generate($this->breadcrumbs) !!}
         </div>
         <div class="w-full bg-white">
             <div>
                 <main>
-                    <section aria-labelledby="products-heading" class="pb-4 pt-6">
-                        <div class="grid grid-cols-4 gap-x-8 mb-4">
+                    <section aria-labelledby="products-heading" class="pt-6 pb-4">
+                        <div class="grid grid-cols-4 mb-4 gap-x-8">
                             <h1 class="text-3xl font-thin font-roboto">
                                 {{ Str::of($slug)->headline() }}</h1>
-                            <div class="col-span-3 flex justify-between items-center">
+                            <div class="flex items-center justify-between col-span-3">
                                 {{-- <p>{{ Lang::get('frontend.product.x-product-found', ['x' => $this->productsCount]) }}</p> --}}
                                 @if ($this->products->total() > 0)
                                     <p>{{ Lang::get('frontend.product.x-product-found', ['x' => $this->products->total()]) }}
@@ -61,39 +61,20 @@
                         <div class="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
                             <!-- Filters -->
                             <form class="hidden lg:block ">
-                                {{-- <h3 class="sr-only">Categories</h3>
-                              <ul role="list"
-                                  class="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
-                                  <li>
-                                      <a href="#">Totes</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Backpacks</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Travel Bags</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Hip Bags</a>
-                                  </li>
-                                  <li>
-                                      <a href="#">Laptop Sleeves</a>
-                                  </li>
-                              </ul> --}}
-                                <div class="border-b border-gray-200 py-6" data-accordion="collapse" wire:ignore>
-                                    <h3 class="-my-3 flow-root" id="accordion-category-collapse-heading">
-                                        <button id="category-accordion-button" type="button"
+                                <div class="py-6 border-b border-gray-200" data-accordion="collapse" wire:ignore>
+                                    <h3 class="flow-root -my-3" id="accordion-category-collapse-heading">
+                                        <button id="category-accordion-button" type="button" data-name="category"
                                             data-accordion-target="#accordion-category-collapse-body"
-                                            class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500"
+                                            class="flex items-center justify-between w-full py-3 text-sm text-gray-400 bg-white accordion-button hover:text-gray-500"
                                             aria-expanded="true" aria-controls="accordion-category-collapse-heading">
                                             <span class="font-medium text-gray-900">{{ __('frontend.category') }}</span>
-                                            <span class="ml-6 flex items-center">
-                                                <svg id="category-accordion-svg-plus" class="h-5 w-5"
+                                            <span class="flex items-center ml-6">
+                                                <svg id="category-accordion-svg-plus" class="hidden w-5 h-5"
                                                     viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                     <path
                                                         d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
                                                 </svg>
-                                                <svg id="category-accordion-svg-minus" class="hidden h-5 w-5"
+                                                <svg id="category-accordion-svg-minus" class="w-5 h-5"
                                                     viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                     <path fill-rule="evenodd"
                                                         d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
@@ -111,7 +92,7 @@
                                                     <input wire:model.live='selectedCategories'
                                                         id="filter-category-{{ $category->id }}"
                                                         value="{{ $category->id }}" type="checkbox"
-                                                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                                        class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
                                                     <label for="filter-category-{{ $category->id }}"
                                                         class="ml-3 text-sm text-gray-600">{{ $category->name }}</label>
                                                 </div>
@@ -120,21 +101,21 @@
                                     </div>
                                 </div>
 
-                                <div class="border-b border-gray-200 py-6" data-accordion="collapse" wire:ignore>
-                                    <h3 class="-my-3 flow-root" id="accordion-price-collapse-heading">
-                                        <button id="price-accordion-button" type="button"
+                                <div class="py-6 border-b border-gray-200" data-accordion="collapse" wire:ignore>
+                                    <h3 class="flow-root -my-3" id="accordion-price-collapse-heading">
+                                        <button id="price-accordion-button" type="button" data-name="price"
                                             data-accordion-target="#accordion-price-collapse-body"
-                                            class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500"
+                                            class="flex items-center justify-between w-full py-3 text-sm text-gray-400 bg-white accordion-button hover:text-gray-500"
                                             aria-expanded="true" aria-controls="accordion-price-collapse-heading">
                                             <span class="font-medium text-gray-900">{{ __('frontend.price') }}</span>
-                                            <span class="ml-6 flex items-center">
-                                                <svg id="price-accordion-svg-plus" class="h-5 w-5" viewBox="0 0 20 20"
-                                                    fill="currentColor" aria-hidden="true">
+                                            <span class="flex items-center ml-6">
+                                                <svg id="price-accordion-svg-plus" class="hidden w-5 h-5"
+                                                    viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                                     <path
                                                         d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
                                                 </svg>
-                                                <svg id="price-accordion-svg-minus" class="hidden h-5 w-5"
-                                                    viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <svg id="price-accordion-svg-minus" class="w-5 h-5" viewBox="0 0 20 20"
+                                                    fill="currentColor" aria-hidden="true">
                                                     <path fill-rule="evenodd"
                                                         d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
                                                         clip-rule="evenodd" />
@@ -145,14 +126,7 @@
                                     <div class="pt-6" id="accordion-price-collapse-body"
                                         aria-labelledby="accordion-price-collapse-heading">
                                         <div class="space-y-4">
-                                            {{-- <div class="flex items-center">
-                                              <input id="filter-color-0" name="color[]" value="white"
-                                                  type="checkbox"
-                                                  class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                              <label for="filter-color-0"
-                                                  class="ml-3 text-sm text-gray-600">White</label>
-                                          </div> --}}
-                                            <div class="max-w-xs mx-auto relative flex items-center gap-2">
+                                            <div class="relative flex items-center max-w-xs gap-2 mx-auto">
                                                 <input wire:model='minPrice' type="text" id="min_price"
                                                     data-input-counter aria-describedby="helper-text-explanation"
                                                     class="rounded-lg bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -162,7 +136,7 @@
                                                     class="rounded-lg bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="Max" required />
                                                 <button wire:click='setPrices' type="button" id="btnSortByPrice"
-                                                    class="bg-red-500 p-2 rounded-lg text-white hover:bg-red-600">
+                                                    class="p-2 text-white bg-red-500 rounded-lg hover:bg-red-600">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                                                         class="w-6 h-6">
@@ -171,7 +145,7 @@
                                                     </svg>
                                                 </button>
                                                 <button wire:click='resetPrices' type="button" id="btnSortByPrice"
-                                                    class="bg-red-500 p-2 rounded-lg text-white hover:bg-red-600">
+                                                    class="p-2 text-white bg-red-500 rounded-lg hover:bg-red-600">
                                                     <svg class="w-6 h-6" aria-hidden="true"
                                                         xmlns="http://www.w3.org/2000/svg" width="24"
                                                         height="24" fill="none" viewBox="0 0 24 24">
@@ -185,190 +159,19 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="border-b border-gray-200 py-6" data-accordion="collapse" wire:ignore>
-                                    <h3 class="-my-3 flow-root" id="accordion-color-collapse-heading">
-                                        <button type="button" data-accordion-target="#accordion-color-collapse-body"
-                                            class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500"
-                                            aria-expanded="true" aria-controls="accordion-color-collapse-heading">
-                                            <span class="font-medium text-gray-900">Color</span>
-                                            <span class="ml-6 flex items-center">
-                                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
-                                                    aria-hidden="true">
-                                                    <path
-                                                        d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                                                </svg>
-                                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
-                                                    aria-hidden="true">
-                                                    <path fill-rule="evenodd"
-                                                        d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z"
-                                                        clip-rule="evenodd" />
-                                                </svg>
-                                            </span>
-                                        </button>
-                                    </h3>
-                                    <div class="pt-6" id="accordion-color-collapse-body"
-                                        aria-labelledby="accordion-color-collapse-heading">
-                                        <div class="space-y-4">
-                                            <div class="flex items-center">
-                                                <input id="filter-color-0" name="color[]" value="white"
-                                                    type="checkbox"
-                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                <label for="filter-color-0"
-                                                    class="ml-3 text-sm text-gray-600">White</label>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <input id="filter-color-1" name="color[]" value="beige"
-                                                    type="checkbox"
-                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                <label for="filter-color-1"
-                                                    class="ml-3 text-sm text-gray-600">Beige</label>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <input id="filter-color-2" name="color[]" value="blue"
-                                                    type="checkbox" checked
-                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                <label for="filter-color-2"
-                                                    class="ml-3 text-sm text-gray-600">Blue</label>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <input id="filter-color-3" name="color[]" value="brown"
-                                                    type="checkbox"
-                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                <label for="filter-color-3"
-                                                    class="ml-3 text-sm text-gray-600">Brown</label>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <input id="filter-color-4" name="color[]" value="green"
-                                                    type="checkbox"
-                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                <label for="filter-color-4"
-                                                    class="ml-3 text-sm text-gray-600">Green</label>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <input id="filter-color-5" name="color[]" value="purple"
-                                                    type="checkbox"
-                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                <label for="filter-color-5"
-                                                    class="ml-3 text-sm text-gray-600">Purple</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </form>
 
                             <!-- Product grid -->
-                            <div class="lg:col-span-3 grid grid-cols-3 gap-2  h-max">
-                                {{-- <div class="col-span-3 grid grid-cols-3 animate-pulse">
-                                  <div
-                                      class="shadow-xl border-2 border-gray-100 p-2 flex flex-col justify-between gap-4">
-                                      <div class="w-full flex justify-center">
-                                          <div
-                                              class="flex items-center justify-center w-full h-48 bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
-                                              <svg class="w-10 h-10 text-gray-200 dark:text-gray-600"
-                                                  aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                  fill="currentColor" viewBox="0 0 20 18">
-                                                  <path
-                                                      d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                                              </svg>
-                                          </div>
-                                      </div>
-                                      <div class="space-y-2">
-                                          <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
-                                          <div
-                                              class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5">
-                                          </div>
-                                          <div
-                                              class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5">
-                                          </div>
-                                          <div class="flex items-center">
-                                              <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4">
-                                              </div>
-                                          </div>
-                                          <div class="flex items-center justify-between ">
-                                              <div class="h-5 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-4">
-                                              </div>
-                                              <div class="h-5 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-4">
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div
-                                      class="shadow-xl border-2 border-gray-100 p-2 flex flex-col justify-between gap-4">
-                                      <div class="w-full flex justify-center">
-                                          <div
-                                              class="flex items-center justify-center w-full h-48 bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
-                                              <svg class="w-10 h-10 text-gray-200 dark:text-gray-600"
-                                                  aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                  fill="currentColor" viewBox="0 0 20 18">
-                                                  <path
-                                                      d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                                              </svg>
-                                          </div>
-                                      </div>
-                                      <div class="space-y-2">
-                                          <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
-                                          <div
-                                              class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5">
-                                          </div>
-                                          <div
-                                              class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5">
-                                          </div>
-                                          <div class="flex items-center">
-                                              <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4">
-                                              </div>
-                                          </div>
-                                          <div class="flex items-center justify-between ">
-                                              <div class="h-5 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-4">
-                                              </div>
-                                              <div class="h-5 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-4">
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div
-                                      class="shadow-xl border-2 border-gray-100 p-2 flex flex-col justify-between gap-4">
-                                      <div class="w-full flex justify-center">
-                                          <div
-                                              class="flex items-center justify-center w-full h-48 bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
-                                              <svg class="w-10 h-10 text-gray-200 dark:text-gray-600"
-                                                  aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                  fill="currentColor" viewBox="0 0 20 18">
-                                                  <path
-                                                      d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                                              </svg>
-                                          </div>
-                                      </div>
-                                      <div class="space-y-2">
-                                          <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
-                                          <div
-                                              class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5">
-                                          </div>
-                                          <div
-                                              class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5">
-                                          </div>
-                                          <div class="flex items-center">
-                                              <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4">
-                                              </div>
-                                          </div>
-                                          <div class="flex items-center justify-between ">
-                                              <div class="h-5 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-4">
-                                              </div>
-                                              <div class="h-5 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-4">
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div> --}}
+                            <div class="grid grid-cols-3 gap-2 lg:col-span-3 h-max">
                                 @forelse ($this->products as $product)
                                     <div wire:key='product-container-{{ $product->id }}'
-                                        class="shadow-xl border-2 border-gray-100 p-2 flex flex-col justify-between gap-4">
+                                        class="flex flex-col justify-between gap-4 p-2 border-2 border-gray-100 shadow-xl">
                                         <div
                                             class="w-full flex justify-center {{-- bg-red-300 --}} flex-1 items-center">
                                             <a
                                                 href="{{ route('products.show', ['category_slug' => $product->category->slug, 'product_slug' => $product->slug]) }}">
                                                 <img src="{{ asset('storage/' . $product->image) }}"
-                                                    class="max-h-60 w-auto" alt="">
+                                                    class="w-auto max-h-60" alt="">
                                             </a>
                                         </div>
                                         <div class="space-y-2">
@@ -381,7 +184,7 @@
                                                     <h3 class="font-thin">({{ $product->ratingAverage() }})</h3>
                                                 @endif
                                             </div>
-                                            <div class="flex items-end justify-between flex-wrap ">
+                                            <div class="flex flex-wrap items-end justify-between ">
                                                 {{-- <h1 class="text-3xl font-thin">
                                                     {{ App\Helpers::formatPrice($product->price) }} TL</h1> --}}
                                                 <div>
@@ -399,16 +202,6 @@
                                                         </h1>
                                                     @endif
                                                 </div>
-                                                {{-- @auth
-                                                    <button
-                                                        @click="$dispatch('add-to-cart', {product: {{ $product }}, text: '{{ __('frontend.added-to-cart') }}'})"
-                                                        type="button"
-                                                        class="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">{{ __('frontend.add-to-cart') }}</button>
-                                                @endauth
-                                                @guest
-                                                    <a href="{{ route('login') }}" type="button"
-                                                        class="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">{{ __('frontend.add-to-cart') }}</a>
-                                                @endguest --}}
                                                 <livewire:add-to-cart-button :key='$product->id' :product_slug="$product->slug"
                                                     :svg="false"
                                                     class="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center" />
@@ -416,8 +209,8 @@
                                         </div>
                                     </div>
                                 @empty
-                                    <div class="p-2 bg-main-red text-white w-full col-span-3">
-                                        <h1 class="text-4xl flex flex-col items-center justify-center">
+                                    <div class="w-full col-span-3 p-2 text-white bg-main-red">
+                                        <h1 class="flex flex-col items-center justify-center text-4xl">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16"
                                                 viewBox="0 0 24 24">
                                                 <path fill="currentColor"
@@ -433,7 +226,7 @@
                 </main>
             </div>
         </div>
-        <div class="grid grid-cols-4 gap-x-8 mb-4">
+        <div class="grid grid-cols-4 mb-4 gap-x-8">
             <div></div>
             {{-- <div class="col-span-3">{{ $this->products->links(data: ['scrollTo' => 'false']) }}
             </div> --}}
@@ -448,13 +241,11 @@
 
 @script
     <script>
-        $("#category-accordion-button").on("click", function() {
-            $("#category-accordion-svg-plus").toggleClass("hidden");
-            $("#category-accordion-svg-minus").toggleClass("hidden");
-        })
-        $("#price-accordion-button").on("click", function() {
-            $("#price-accordion-svg-plus").toggleClass("hidden");
-            $("#price-accordion-svg-minus").toggleClass("hidden");
+        $(".accordion-button").on("click", function() {
+            let name = $(this).data("name");
+
+            $(`#${name}-accordion-svg-plus`).toggleClass("hidden");
+            $(`#${name}-accordion-svg-minus`).toggleClass("hidden");
         })
     </script>
 @endscript

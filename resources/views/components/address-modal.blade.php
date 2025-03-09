@@ -1,4 +1,4 @@
-@props(['name', 'type', 'address'])
+@props(['name', 'type'])
 <div x-data="{ show: false, name: '{{ $name }}' }" x-show="show" x-on:open-address-modal.window="show = ($event.detail.name === name)"
     x-on:close-address-modal.window="show = false,$dispatch('address-modal-closed')" class="relative z-10"
     aria-labelledby="modal-title" role="dialog" aria-modal="true" wire:ignore.self style="display: none;">
@@ -131,12 +131,6 @@
                         @endif
                     </div>
                 </div>
-                {{-- <div class="px-4 py-3 bg-gray-50 sm:flex sm:flex-row-reverse sm:px-6">
-                    <button type="button"
-                        class="inline-flex justify-center w-full px-3 py-2 text-sm font-semibold text-white bg-red-600 rounded-md shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Deactivate</button>
-                    <button type="button"
-                        class="inline-flex justify-center w-full px-3 py-2 mt-3 text-sm font-semibold text-gray-900 bg-white rounded-md shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button>
-                </div> --}}
             </div>
         </div>
     </div>
