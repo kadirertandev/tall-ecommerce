@@ -75,14 +75,6 @@ class UserProfileFavorites extends Component
     return $this->favorites->count();
   }
 
-  public function removeFromFavorites($id)
-  {
-    $product = Product::find($id);
-
-    $this->user->favorites()->detach($product);
-    $this->dispatch("remove-from-favorites", product: $product, text: __('frontend.favorites.removed-from-favorites'));
-  }
-
   public function lowestPrice()
   {
     $this->orderBy = "price";

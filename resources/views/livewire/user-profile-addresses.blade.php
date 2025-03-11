@@ -1,7 +1,7 @@
 <div x-data="addressModal"
-    class="bg-white text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full mb-4">
+    class="w-full mb-4 text-gray-500 bg-white rounded-lg text-medium dark:text-gray-400 dark:bg-gray-800">
     <div class="flex items-center justify-between gap-12 mb-4">
-        <div class="flex-1 flex items-center justify-between bg-gray-50 ring-2 ring-gray-100 px-3 rounded-lg">
+        <div class="flex items-center justify-between flex-1 px-3 rounded-lg bg-gray-50 ring-2 ring-gray-100">
             <h1 class="text-3xl">{{ __('frontend.auth.dropdown-on-nav.addresses') }}</h1>
         </div>
         <div class="flex items-center justify-end">
@@ -19,17 +19,17 @@
             ])>
                 @if ($this->defaultAddress?->id == $address->id)
                     <div class="flex items-center justify-between">
-                        <h1 class="font-roboto font-semibold text-2xl">{{ $address->title }}</h1>
-                        <h1 class="uppercase font-semibold text-orange-400">Default Address</h1>
+                        <h1 class="text-2xl font-semibold font-roboto">{{ $address->title }}</h1>
+                        <h1 class="font-semibold text-orange-400 uppercase">Default Address</h1>
                     </div>
                 @else
-                    <h1 class="font-roboto font-semibold text-2xl">{{ $address->title }}</h1>
+                    <h1 class="text-2xl font-semibold font-roboto">{{ $address->title }}</h1>
                 @endif
-                <p class="font-roboto font-thin text-black">{{ $address->neighborhood }}</p>
-                <p class="font-roboto font-thin text-black">{{ $address->address_line }}</p>
+                <p class="font-thin text-black font-roboto">{{ $address->neighborhood }}</p>
+                <p class="font-thin text-black font-roboto">{{ $address->address_line }}</p>
                 <p>{{ $address->district }} / {{ $address->city }}</p>
                 <div class="flex items-center gap-3 mt-2">
-                    <button wire:click="edit({{ $address->id }})" class="group flex items-center">
+                    <button wire:click="edit({{ $address->id }})" class="flex items-center group">
                         <svg class="w-6 h-6 text-gray-800 dark:text-white group-hover:fill-teal-500" aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                             viewBox="0 0 24 24">
@@ -39,7 +39,7 @@
                         <span class="group-hover:text-teal-500">Edit</span>
                     </button>
                     <button @click="$dispatch('delete-address-modal', {addressId: {{ $address->id }}})"
-                        class="group flex items-center">
+                        class="flex items-center group">
                         <svg class="w-6 h-6 text-gray-800 dark:text-white group-hover:fill-main-red" aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                             viewBox="0 0 24 24">

@@ -32,8 +32,8 @@ class UserProfileUpdateForm extends Component
 
   public function update()
   {
-    // dd($this->form->date_of_birth);
     $validated = $this->form->validate();
+
     if ($validated["profile_image"]) {
       if ($this->user->profile_image && Storage::disk("public")->exists($this->user->profile_image)) {
         Storage::disk("public")->delete($this->user->profile_image);
@@ -42,9 +42,9 @@ class UserProfileUpdateForm extends Component
     } else {
       $validated["profile_image"] = $this->user->profile_image;
     }
+
     $this->user->update($validated);
-    // $this->form->deneme();
-    // dd($this->form->all());
+
     $this->dispatch("user-profile-update", $this->form->all());
   }
 

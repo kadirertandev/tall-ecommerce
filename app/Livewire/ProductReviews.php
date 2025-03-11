@@ -4,10 +4,8 @@ namespace App\Livewire;
 
 use App\Models\Product;
 use App\Models\ProductReview;
-use Throwable;
-use Exception;
+use App\Traits\WithTryCatch;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
@@ -16,6 +14,8 @@ use Livewire\WithPagination;
 class ProductReviews extends Component
 {
   use WithPagination;
+  use WithTryCatch;
+
   public $page = 1;
   public function updatedPage()
   {
@@ -68,34 +68,38 @@ class ProductReviews extends Component
     if (!auth()->user()) {
       return $this->dispatch("comment-error");
     } else {
-      try {
+
+      $validated = $this->validate();
+
+      $this->tryCatch(function () use ($validated) {
         $this->authorize("canReview", $this->product);
-        $validated = $this->validate();
+
         $validated["rating"] = $this->rating ?? 0;
         $validated["user_id"] = auth()->user()->id;
         $validated["product_id"] = $this->product()->id;
         ProductReview::create($validated);
+
+        $this->dispatch("comment-success");
         $this->resetPage();
         $this->reset(["rating", "title", "comment"]);
-        $this->dispatch("comment-success");
-      } catch (AuthorizationException $e) {
-        $this->dispatch("comment-error", title: "You can not evaluate this product", text: $e->getMessage());
-      }
+      }, [
+        AuthorizationException::class => function ($e) {
+          $this->dispatch("comment-error", title: "You can not evaluate this product", text: $e->getMessage());
+        }
+      ]);
     }
 
   }
 
   public function edit($id)
   {
-    try {
+    $this->tryCatch(function () use ($id) {
       $review = ProductReview::findOrFail($id);
+
       session()->put("review_id_to_edit", $review->id);
+
       return to_route("admin.reviews.index");
-    } catch (ModelNotFoundException $e) {
-      $this->dispatch("error-with-message", message: "Review not found!");
-    } catch (Throwable $e) {
-      $this->dispatch("something-went-wrong");
-    }
+    });
   }
 
   public function render()

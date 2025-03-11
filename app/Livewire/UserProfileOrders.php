@@ -5,14 +5,15 @@ namespace App\Livewire;
 use App\Livewire\Forms\ProductReviewForm;
 use App\Models\Product;
 use App\Models\ProductReview;
+use App\Traits\WithTryCatch;
 use Illuminate\Auth\Access\AuthorizationException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use Throwable;
 
 class UserProfileOrders extends Component
 {
+  use WithTryCatch;
   public ProductReviewForm $reviewForm;
 
   #[Computed()]
@@ -31,28 +32,32 @@ class UserProfileOrders extends Component
   public $productToComment;
   public function openCommentModalForProduct($id)
   {
-    $this->productToComment = Product::find($id);
-    $this->dispatch("open-user-profile-order-product-comment-modal");
+    $this->tryCatch(function () use ($id) {
+      $this->productToComment = Product::findOrFail($id);
+
+      $this->dispatch("open-user-profile-order-product-comment-modal");
+    });
   }
   public function createComment()
   {
-    try {
+    $this->tryCatch(function () {
       $this->authorize("canReview", $this->productToComment);
+
       $validated = $this->reviewForm->validate();
       $validated["rating"] = $this->rating ?? 0;
       $validated["user_id"] = $this->user->id;
       $validated["product_id"] = $this->productToComment->id;
+
       ProductReview::create($validated);
+
       $this->reset("rating");
       $this->reviewForm->reset();
       $this->dispatch("close-user-profile-order-product-comment-modal");
-      $this->dispatch("comment-success");
-    } catch (AuthorizationException $e) {
-      $this->dispatch("close-user-profile-order-product-comment-modal");
-      $this->dispatch("comment-error", title: "You can not evaluate this product", text: $e->getMessage());
-    } catch (Throwable $e) {
-      $this->dispatch("something-went-wrong");
-    }
+    }, [
+      AuthorizationException::class => function ($e) {
+        $this->dispatch("comment-error", title: "You can not evaluate this product", text: $e->getMessage());
+      }
+    ]);
   }
 
   #[On("user-profile-order-product-comment-modal-closed")]

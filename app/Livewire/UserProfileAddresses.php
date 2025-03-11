@@ -5,16 +5,15 @@ namespace App\Livewire;
 use App\Livewire\Forms\UserProfileAddressForm;
 use App\Models\UserAddress;
 use App\Traits\Addresses;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Support\Facades\Gate;
+use App\Traits\WithTryCatch;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use Throwable;
 
 class UserProfileAddresses extends Component
 {
   use Addresses;
+  use WithTryCatch;
 
   public UserProfileAddressForm $form;
 
@@ -33,12 +32,9 @@ class UserProfileAddresses extends Component
   public $selectedAddressId;
   public function edit($id)
   {
-    try {
-      if (Gate::denies("customer")) {
-        throw new AuthorizationException("This action is unauthorized!");
-      }
+    $this->tryCatch(function () use ($id) {
+      $address = UserAddress::findOrFail($id);
 
-      $address = UserAddress::find($id);
       $this->selectedAddressId = $id;
       $this->form->addressTitle = $address->title;
       $this->form->selectedCity = $address->city;
@@ -46,26 +42,24 @@ class UserProfileAddresses extends Component
       $this->form->selectedNeighborhood = $address->neighborhood;
       $this->form->addressLine = $address->address_line;
       $this->form->makeDefault = (bool) $address->is_default;
+
       $this->dispatch('open-address-modal', name: 'edit-address');
-    } catch (AuthorizationException $e) {
-      $this->dispatch("error-with-message", message: $e->getMessage());
-    } catch (Throwable $e) {
-      $this->dispatch("something-went-wrong");
-    }
+    });
   }
   public function update()
   {
-    try {
-      if (Gate::denies("customer")) {
-        throw new AuthorizationException("This action is unauthorized!");
-      }
+    $this->tryCatch(function () {
+      $address = UserAddress::findOrFail($this->selectedAddressId);
 
-      $address = UserAddress::find($this->selectedAddressId);
       $validated = $this->form->validate();
+
+      # if makeDefault checkbox is checked
+      # set all existing addresses of user to non-default before making selected address the default
       if ($this->form->makeDefault) {
         UserAddress::where("user_id", auth()->user()->id)
           ->update(["is_default" => 0]);
       }
+
       $address->update([
         "title" => $validated["addressTitle"],
         "city" => $validated["selectedCity"],
@@ -74,15 +68,12 @@ class UserProfileAddresses extends Component
         "address_line" => $validated["addressLine"],
         "is_default" => $this->form->makeDefault
       ]);
+
       $this->dispatch("address-updated");
       $this->dispatch("close-address-modal");
-    } catch (AuthorizationException $e) {
-      $this->dispatch("error-with-message", message: $e->getMessage());
-    } catch (Throwable $e) {
-      $this->dispatch("close-address-modal");
-      $this->dispatch("something-went-wrong");
-    }
+    });
   }
+
   #[On("address-modal-closed")]
   public function addressModalClosed()
   {
@@ -93,22 +84,13 @@ class UserProfileAddresses extends Component
   #[On("delete-address-modal-is-confirmed")]
   public function delete($addressId)
   {
-    try {
-      if (Gate::denies("customer")) {
-        throw new AuthorizationException("This action is unauthorized!");
-      }
+    $this->tryCatch(function () use ($addressId) {
+      $address = UserAddress::findOrFail($addressId);
 
-      $address = UserAddress::find($addressId);
-      if ($address->is_default) {
-        // session()->remove("selected-address-for-cart");
-      }
       $address->delete();
+
       $this->dispatch("address-deleted");
-    } catch (AuthorizationException $e) {
-      $this->dispatch("error-with-message", message: $e->getMessage());
-    } catch (Throwable $e) {
-      $this->dispatch("something-went-wrong");
-    }
+    });
   }
 
   #[On("address-created")]

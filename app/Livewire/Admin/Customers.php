@@ -3,19 +3,19 @@
 namespace App\Livewire\Admin;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Traits\WithTryCatch;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Throwable;
 
 class Customers extends Component
 {
   use WithPagination;
+  use WithTryCatch;
+
   public $page = 1;
   public function updatedPage()
   {
@@ -41,7 +41,6 @@ class Customers extends Component
   {
     $this->withTrashed == true ? $this->onlyTrashed = false : "";
     $this->dispatch("refresh-flowbite");
-
   }
   public function updatedOnlyTrashed()
   {
@@ -117,51 +116,38 @@ class Customers extends Component
   public $selectedCustomer;
   public function showViewModal($id)
   {
-    try {
-      if (!Gate::allows("view customers")) {
-        throw new UnauthorizedException("can not view customer");
-      }
-
-      $this->selectedCustomer = User::withTrashed()->findOrFail($id);
+    $this->tryCatch(function () use ($id) {
+      $this->selectedCustomer = User::findOrFail($id);
 
       $this->dispatch("open-customer-view-modal");
-      $this->dispatch("refresh-flowbite");
-    } catch (ModelNotFoundException $e) {
-      $this->dispatch("error-with-message", message: "Customer not found!");
-    } catch (UnauthorizedException $e) {
-      $this->dispatch("unauthorized-action");
-    } catch (Throwable $e) {
-      $this->dispatch("something-went-wrong");
-    }
+    });
   }
 
   public function delete($customerId)
   {
-    // $this->authorize("delete products");
-    try {
-      if (!Gate::allows("delete customers")) {
-        throw new UnauthorizedException("can not delete customer");
-      }
+    $this->tryCatch(
+      function () use ($customerId) {
+        if (!Gate::allows("delete customers")) {
+          throw new UnauthorizedException("can not delete customer");
+        }
 
-      $customer = User::findOrFail($customerId);
+        $customer = User::findOrFail($customerId);
 
-      if ($customer->delete_request) {
-        $customer->forceDelete();
-        $this->dispatch("force_delete_customer_success");
-      } else {
-        $this->dispatch("something-went-wrong");
+        if ($customer->delete_request) {
+          $customer->forceDelete();
+
+          $this->dispatch("force_delete_customer_success");
+        } else {
+          $this->dispatch("something-went-wrong");
+        }
       }
-    } catch (ModelNotFoundException $e) {
-      $this->dispatch("error-with-message", message: "Customer not found!");
-    } catch (UnauthorizedException $e) {
-      $this->dispatch("unauthorized-action");
-    } catch (Throwable $e) {
-      $this->dispatch("something-went-wrong");
-    }
+    );
   }
 
   public function render()
   {
-    return view('livewire.admin.customers')->layout("components.admin-layout")->section("content");
+    return view('livewire.admin.customers')
+      ->layout("components.admin-layout", ["title" => "Customers"])
+      ->section("content");
   }
 }

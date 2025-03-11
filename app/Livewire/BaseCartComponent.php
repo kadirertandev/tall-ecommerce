@@ -6,8 +6,10 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\UserAddress;
 use App\Traits\CartService;
-use Illuminate\Auth\Access\AuthorizationException;
+use App\Traits\WithTryCatch;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -21,6 +23,7 @@ class BaseCartComponent extends Component
     CartService::decreaseQuantity as traitDecreaseQuantity;
     CartService::increaseQuantity as traitIncreaseQuantity;
   }
+  use WithTryCatch;
 
   #[On("add-to-cart")]
   public function addToCart($productID)
@@ -114,46 +117,56 @@ class BaseCartComponent extends Component
 
   public function giveOrder()
   {
-    try {
-      if (Gate::denies("customer")) {
-        throw new AuthorizationException("This action is unauthorized!");
-      }
-    } catch (AuthorizationException $e) {
-      $this->dispatch("error-with-message", message: $e->getMessage());
+    if (
+      !$this->tryCatch(function () {
+        if (Gate::denies("customer")) {
+          throw new UnauthorizedException("This action is unauthorized!");
+        }
+      })
+    ) {
+      return;
     }
 
     if ($this->cartItemsCount == 0) {
       session()->remove("selected-address-for-cart");
       $this->dispatch('set-cart-step', step: 1);
-    } else {
-      // dd($this->cartItems, $this->selectedAddress);
-      try {
-        $order = Order::create([
-          "user_id" => $this->user->id,
-          "city" => $this->finalAddress->city,
-          "district" => $this->finalAddress->district,
-          "neighborhood" => $this->finalAddress->neighborhood,
-          "address_line" => $this->finalAddress->address_line,
-          "total_price" => $this->cart->subtotal()
-        ]);
-        if ($order) {
-          foreach ($this->cartItems as $cartItem) {
-            OrderItem::create([
-              "order_id" => $order->id,
-              "product_id" => $cartItem->product->id,
-              "price" => $cartItem->price,
-              "quantity" => $cartItem->quantity,
-              "item_total_price" => $cartItem->item_total_price,
-            ]);
-          }
-
-          $this->cart->delete();
-          return to_route("auth.user.orders");
-        }
-      } catch (Throwable $e) {
-        $this->dispatch("something-went-wrong", exception: $e);
-      }
+      return;
     }
+
+
+    $this->tryCatch(function () {
+      DB::beginTransaction();
+
+      $order = Order::create([
+        "user_id" => $this->user->id,
+        "city" => $this->finalAddress->city,
+        "district" => $this->finalAddress->district,
+        "neighborhood" => $this->finalAddress->neighborhood,
+        "address_line" => $this->finalAddress->address_line,
+        "total_price" => $this->cart->subtotal()
+      ]);
+
+      foreach ($this->cartItems as $cartItem) {
+        OrderItem::create([
+          "order_id" => $order->id,
+          "product_id" => $cartItem->product->id,
+          "price" => $cartItem->price,
+          "quantity" => $cartItem->quantity,
+          "item_total_price" => $cartItem->item_total_price,
+        ]);
+      }
+
+      $this->cart->delete();
+
+      DB::commit();
+
+      return to_route("auth.user.orders");
+    }, [
+      Throwable::class => function ($e) {
+        DB::rollBack();
+        $this->dispatch("something-went-wrong");
+      }
+    ]);
   }
 
   public function render()

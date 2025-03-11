@@ -3,22 +3,22 @@
 <div x-data="{ show: false }" x-show="show" x-on:open-category-edit-modal.window="show = true"
     x-on:close-category-edit-modal.window="show = false,$dispatch('category-edit-modal-closed')" class="relative z-10"
     aria-labelledby="modal-title" role="dialog" aria-modal="true" wire:ignore.self style="display: none;">
-    <div class="fixed inset-0 bg-gray-500 opacity-40 transition-opacity"></div>
+    <div class="fixed inset-0 transition-opacity bg-gray-500 opacity-40"></div>
 
     <div class="fixed inset-0 z-10 w-screen overflow-y-auto ">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0 ">
+        <div class="flex items-end justify-center min-h-full p-4 text-center sm:items-center sm:p-0 ">
             <div
                 class="relative transform {{-- overflow-hidden --}} rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 {{-- modal content --}}
                 <div class="bg-white" @click.outside="$dispatch('close-category-edit-modal')">
                     {{-- header --}}
-                    <div class="flex items-center justify-between p-4 border-b  dark:border-gray-600">
+                    <div class="flex items-center justify-between p-4 border-b dark:border-gray-600">
                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                             Update - {{ $category?->name }}
                         </h3>
 
                         <button type="button" @click="$dispatch('close-category-edit-modal')"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            class="inline-flex items-center justify-center w-8 h-8 text-sm text-gray-400 bg-transparent rounded-lg hover:bg-gray-200 hover:text-gray-900 ms-auto dark:hover:bg-gray-600 dark:hover:text-white"
                             data-modal-hide="default-modal">
                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 14 14">
@@ -61,7 +61,7 @@
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                     @change="$wire.updateCategoryIsPopular($el.checked)">
                                 <label for="category-{{ $category?->id }}-is-popular"
-                                    class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Is
+                                    class="text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">Is
                                     Popular</label>
                             </div>
 
@@ -70,7 +70,7 @@
                             <div>
                                 <button id="dropdownSearchButton" data-dropdown-toggle="dropdownSearch"
                                     data-dropdown-placement="top"
-                                    class="w-full inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-4 focus:outline-none"
+                                    class="inline-flex items-center w-full px-4 py-2 text-sm font-medium text-center text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-4 focus:outline-none"
                                     type="button">
                                     <span>Brands</span>
                                     <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +88,7 @@
                                         <label for="input-group-search" class="sr-only">Search</label>
                                         <div class="relative">
                                             <div
-                                                class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                                                class="absolute inset-y-0 flex items-center pointer-events-none rtl:inset-r-0 start-0 ps-3">
                                                 <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" fill="none"
                                                     viewBox="0 0 20 20">
@@ -99,7 +99,7 @@
                                             </div>
                                             <input wire:model.live.debounce.400ms='editForm.searchCategoryBrand'
                                                 type="text" id="input-group-search"
-                                                class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg ps-10 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                 placeholder="Search brand">
                                             <button wire:click="$set('editForm.searchCategoryBrand','')"
                                                 @class([
@@ -127,17 +127,17 @@
                                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                                                     @change="$wire.updateCategoryBrands({{ $brand->id }}, $el.checked)">
                                                 <label for="checkbox-brand-{{ $brand->id }}"
-                                                    class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">
+                                                    class="w-full text-sm font-medium text-gray-900 rounded ms-2 dark:text-gray-300">
                                                     {{ $brand->name }}</label>
                                             </li>
                                         @endforeach
                                     </ul>
                                 </div>
                             </div>
-                            <div class="sm:col-span-2 flex justify-between items-end gap-2">
+                            <div class="flex items-end justify-between gap-2 sm:col-span-2">
                                 @if (!$this->editForm->image)
                                     <div>
-                                        <img class="col-span-2 w-24 h-auto"
+                                        <img class="w-24 h-auto col-span-2"
                                             src="{{ asset('storage/' . $category?->image) }}">
                                     </div>
                                 @else

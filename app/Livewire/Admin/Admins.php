@@ -6,11 +6,13 @@ use App\Livewire\Forms\Admin\AdminCreateForm;
 use App\Livewire\Forms\Admin\AdminEditForm;
 use App\Models\Role;
 use App\Models\User;
-use Exception;
+use App\Traits\WithTryCatch;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -23,14 +25,16 @@ class Admins extends Component
 {
   use WithFileUploads;
   use WithPagination;
+  use WithTryCatch;
+
+  public AdminCreateForm $createForm;
+  public AdminEditForm $editForm;
+
   public $page;
   public function updatedPage()
   {
     $this->dispatch("refresh-flowbite");
   }
-
-  public AdminCreateForm $createForm;
-  public AdminEditForm $editForm;
 
   public $sortDir = "";
   public $sortBy = "";
@@ -142,48 +146,63 @@ class Admins extends Component
   public $selectedAdmin;
   public function showViewModal($id)
   {
-    $this->selectedAdmin = User::withTrashed()->find($id);
-    $this->dispatch("open-admin-view-modal");
+    $this->tryCatch(function () use ($id) {
+      $this->selectedAdmin = User::withTrashed()->findOrFail($id);
+      $this->dispatch("open-admin-view-modal");
+    });
   }
 
   public function showEditModal($id)
   {
-    $user = User::withTrashed()->find($id);
-    $this->selectedAdmin = $user;
-    $this->editForm->first_name = $user->first_name;
-    $this->editForm->last_name = $user->last_name;
-    $this->editForm->email = $user->email;
-    $this->editForm->phone_number = $user->phone_number;
-    $this->editForm->date_of_birth = $user->date_of_birth;
-    $this->editForm->profile_image = $user->profile_image;
-    $this->editForm->userId = $user->id;
-    $this->editForm->roleId = $user->role()->id;
-    $this->dispatch("open-admin-edit-modal");
-  }
-
-  public function assignRole($adminId, $roleId)
-  {
-    try {
-      $admin = User::find($adminId);
-      if ($admin->role()->name == "owner") {
-        throw new Exception("can not change role of owner");
-      }
-      $role = Role::find($roleId);
-      $admin->assignRole($role);
-      $this->dispatch("update_admin_success");
-    } catch (Throwable $e) {
-      $this->dispatch("something-went-wrong");
-    }
-  }
-
-  public function update()
-  {
-    try {
+    $this->tryCatch(function () use ($id) {
       if (!Gate::allows("edit admins") || !Gate::allows("assign role")) {
         throw new UnauthorizedException("can not edit admin");
       }
 
-      $this->editForm->validate();
+      $admin = User::findOrFail($id);
+
+      $this->selectedAdmin = $admin;
+      $this->editForm->first_name = $admin->first_name;
+      $this->editForm->last_name = $admin->last_name;
+      $this->editForm->email = $admin->email;
+      $this->editForm->phone_number = $admin->phone_number;
+      $this->editForm->date_of_birth = $admin->date_of_birth;
+      $this->editForm->profile_image = $admin->profile_image;
+      $this->editForm->userId = $admin->id;
+      $this->editForm->roleId = $admin->role()->id;
+
+      $this->dispatch("open-admin-edit-modal");
+    });
+  }
+
+  public function assignRole($adminId, $roleId)
+  {
+    $this->tryCatch(
+      function () use ($adminId, $roleId) {
+        $admin = User::findOrFail($adminId);
+
+        if ($admin->role()->name == "owner") {
+          throw new UnauthorizedException("can not change role of owner");
+        }
+
+        $role = Role::findOrFail($roleId);
+        $admin->assignRole($role);
+
+        $this->dispatch("update_admin_success");
+      }
+    );
+  }
+
+  public function update()
+  {
+    $this->editForm->validate();
+
+    $this->tryCatch(function () {
+      if (!Gate::allows("edit admins") || !Gate::allows("assign role")) {
+        throw new UnauthorizedException("can not edit admin");
+      }
+
+      $admin = User::findOrFail($this->selectedAdmin->id);
 
       if ($this->editForm->profile_image) {
         $imageName = $this->editForm->profile_image->store("profile_images", "public");
@@ -192,7 +211,7 @@ class Admins extends Component
         }
       }
 
-      $this->selectedAdmin->update([
+      $admin->update([
         "first_name" => $this->editForm->first_name,
         "last_name" => $this->editForm->last_name,
         "email" => $this->editForm->email,
@@ -201,51 +220,62 @@ class Admins extends Component
         "profile_image" => $imageName ?? $this->selectedAdmin->profile_image
       ]);
 
-      $role = Role::find($this->editForm->roleId);
+      $role = Role::findOrFail($this->editForm->roleId);
       $this->selectedAdmin->assignRole($role);
 
       $this->dispatch("close-admin-edit-modal");
       $this->dispatch("update_admin_success");
-    } catch (UnauthorizedException $e) {
-      $this->dispatch("unauthorized-action");
-    }
+    });
   }
 
   public function create()
   {
-    // $this->authorize("create products");
-    try {
-      if (!Gate::allows("create admins") || !Gate::allows("assign role")) {
-        throw new UnauthorizedException("can not create admin");
-      }
+    $this->createForm->validate();
 
-      $this->createForm->validate();
+    $this->tryCatch(
+      function () {
+        if (!Gate::allows("create admins") || !Gate::allows("assign role")) {
+          throw new UnauthorizedException("can not create admin");
+        }
 
-      if ($this->createForm->profile_image) {
-        $imageName = $this->createForm->profile_image->store("profile_images", "public");
-      }
+        if ($this->createForm->profile_image) {
+          $imageName = $this->createForm->profile_image->store("profile_images", "public");
+        }
 
-      $newAdmin = User::create([
-        "is_admin" => true,
-        "first_name" => $this->createForm->first_name,
-        "last_name" => $this->createForm->last_name,
-        "email" => $this->createForm->email,
-        "phone_number" => $this->createForm->phone_number,
-        "date_of_birth" => $this->createForm->date_of_birth,
-        "profile_image" => $imageName ?? NULL,
-        "password" => Hash::make($this->createForm->password),
-      ]);
+        DB::beginTransaction();
 
-      $role = Role::find($this->createForm->roleId);
-      $newAdmin->assignRole($role);
+        $newAdmin = User::create([
+          "is_admin" => true,
+          "first_name" => $this->createForm->first_name,
+          "last_name" => $this->createForm->last_name,
+          "email" => $this->createForm->email,
+          "phone_number" => $this->createForm->phone_number,
+          "date_of_birth" => $this->createForm->date_of_birth,
+          "profile_image" => $imageName ?? NULL,
+          "password" => Hash::make($this->createForm->password),
+        ]);
 
-      $this->dispatch("close-admin-create-modal");
-      $this->resetCreateFormFields();
-      $this->dispatch("create_admin_success");
-      $this->dispatch("refresh-flowbite");
-    } catch (UnauthorizedException $e) {
-      $this->dispatch("unauthorized-action");
-    }
+        $role = Role::findOrFail($this->createForm->roleId);
+        $newAdmin->assignRole(role: $role);
+
+        DB::commit();
+
+        $this->dispatch("close-admin-create-modal");
+        $this->resetCreateFormFields();
+        $this->dispatch("create_admin_success");
+        $this->dispatch("refresh-flowbite");
+      },
+      [
+        ModelNotFoundException::class => function ($e) {
+          DB::rollBack();
+          $this->dispatch("error-with-message", message: Str::singular(Str::ucfirst(app($e->getModel())->getTable())) . " not found!");
+        },
+        Throwable::class => function ($e) {
+          DB::rollBack();
+          $this->dispatch("something-went-wrong");
+        }
+      ]
+    );
   }
 
   public function resetCreateFormFields()
@@ -265,59 +295,54 @@ class Admins extends Component
   #[On("delete-admin-modal-is-confirmed")]
   public function delete($adminId)
   {
-    // $this->authorize("delete products");
-    try {
+    $this->tryCatch(function () use ($adminId) {
       if (!Gate::allows("delete admins") || auth()->user()->id == $adminId) {
         throw new UnauthorizedException("can not delete admin");
       }
 
-      $admin = User::find($adminId);
+      $admin = User::findOrFail($adminId);
 
       $admin->delete();
       $admin->update([
         "deleted_by" => auth()->user()->id
       ]);
-      $this->dispatch("delete_admin_success");
 
-    } catch (UnauthorizedException $e) {
-      // dd($e->getMessage());
-      $this->dispatch("unauthorized-action");
-    }
+      $this->dispatch("delete_admin_success");
+    });
   }
 
   #[On("force-delete-admin-modal-is-confirmed")]
   public function forceDelete($adminId)
   {
-    // $this->authorize("force delete products");
-    try {
+    $this->tryCatch(function () use ($adminId) {
       if (!Gate::allows("force delete admins")) {
         throw new UnauthorizedException("you cant delete admins permanently");
       }
-      $admin = User::withTrashed()->find($adminId);
+
+      $admin = User::withTrashed()->findOrFail($adminId);
+
       $admin->forceDelete();
+
       $this->dispatch("force-delete_admin_success");
-    } catch (UnauthorizedException $e) {
-      // dd($e->getMessage());
-      $this->dispatch("unauthorized-action");
-    }
+    });
   }
 
   public function restore($adminId)
   {
-    try {
+    $this->tryCatch(function () use ($adminId) {
       if (!Gate::allows("force delete admins")) {
         throw new UnauthorizedException("you cant restore admin");
       }
-      User::withTrashed()->find($adminId)->restore();
-    } catch (UnauthorizedException $e) {
-      // dd($e->getMessage());
-      $this->dispatch("unauthorized-action");
-    }
+
+      User::withTrashed()->findOrFail($adminId)->restore();
+    });
   }
 
   #[On("delete_admin_success")]
   public function render()
   {
-    return view('livewire.admin.admins')->layout("components.admin-layout", ["title" => "Admins"])->section("content");
+    return view('livewire.admin.admins')
+      ->layout("components.admin-layout", ["title" => "Admins"])
+      ->section("content");
   }
 }

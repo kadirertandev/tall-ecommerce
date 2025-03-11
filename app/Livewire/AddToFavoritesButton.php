@@ -3,14 +3,14 @@
 namespace App\Livewire;
 
 use App\Models\Product;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Support\Facades\Gate;
+use App\Traits\WithTryCatch;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
-use Throwable;
 
 class AddToFavoritesButton extends Component
 {
+  use WithTryCatch;
+
   public $product_slug;
   public $type;
   public $showLabel;
@@ -35,34 +35,24 @@ class AddToFavoritesButton extends Component
 
   public function addToFavorites()
   {
-    try {
-      if (Gate::denies("customer")) {
-        throw new AuthorizationException("This action is unauthorized!");
+    $this->tryCatch(function () {
+      if (!$this->user->favorites()->where("product_id", $this->product->id)->exists()) {
+        $this->user->favorites()->attach($this->product, ['created_at' => now()]);
       }
 
-      $this->user->favorites()->attach($this->product, ['created_at' => now()]);
       $this->dispatch("add-to-favorites", product: $this->product, text: __('frontend.favorites.added-to-favorites'));
-    } catch (AuthorizationException $e) {
-      $this->dispatch("error-with-message", message: $e->getMessage());
-    } catch (Throwable $e) {
-      $this->dispatch("something-went-wrong");
-    }
+    });
   }
 
   public function removeFromFavorites()
   {
-    try {
-      if (Gate::denies("customer")) {
-        throw new AuthorizationException("This action is unauthorized!");
+    $this->tryCatch(function () {
+      if ($this->user->favorites()->where("product_id", $this->product->id)->exists()) {
+        $this->user->favorites()->detach($this->product);
       }
 
-      $this->user->favorites()->detach($this->product);
       $this->dispatch("remove-from-favorites", product: $this->product, text: __('frontend.favorites.removed-from-favorites'));
-    } catch (AuthorizationException $e) {
-      $this->dispatch("error-with-message", message: $e->getMessage());
-    } catch (Throwable $e) {
-      $this->dispatch("something-went-wrong");
-    }
+    });
   }
 
   public function render()

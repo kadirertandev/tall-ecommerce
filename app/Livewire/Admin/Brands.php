@@ -6,32 +6,33 @@ use App\Livewire\Forms\Admin\BrandCreateForm;
 use App\Livewire\Forms\Admin\BrandEditForm;
 use App\Models\Brand;
 use App\Models\Product;
-use Error;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Traits\WithTryCatch;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
-use Throwable;
 
 class Brands extends Component
 {
   use WithFileUploads;
   use WithPagination;
+  use WithTryCatch;
+
+  public BrandCreateForm $createForm;
+  public BrandEditForm $editForm;
+
   public $page;
   public function updatedPage()
   {
     $this->dispatch("refresh-flowbite");
   }
-
-  public BrandCreateForm $createForm;
-  public BrandEditForm $editForm;
 
   public $sortDir = "";
   public $sortBy = "";
@@ -45,8 +46,12 @@ class Brands extends Component
   {
     $this->dispatch("refresh-flowbite");
   }
+
+  #[Url()]
   public $withTrashed = false;
+  #[Url()]
   public $onlyTrashed = false;
+
   public function updatedWithTrashed()
   {
     $this->withTrashed == true ? $this->onlyTrashed = false : "";
@@ -100,18 +105,29 @@ class Brands extends Component
   public $selectedBrand;
   public function showViewModal($id)
   {
-    $this->selectedBrand = Brand::withTrashed()->find($id);
-    $this->dispatch("open-brand-view-modal");
+    $this->tryCatch(function () use ($id) {
+      $this->selectedBrand = Brand::withTrashed()->findOrFail($id);
+
+      $this->dispatch("open-brand-view-modal");
+    });
   }
 
   public function showEditModal($id)
   {
-    $brand = Brand::withTrashed()->find($id);
-    $this->selectedBrand = $brand;
-    $this->editForm->name = $brand->name;
-    $this->editForm->slug = $brand->slug;
-    $this->editForm->brandId = $brand->id;
-    $this->dispatch("open-brand-edit-modal");
+    $this->tryCatch(function () use ($id) {
+      if (!Gate::allows("edit brands")) {
+        throw new UnauthorizedException("can not edit brand");
+      }
+
+      $brand = Brand::findOrFail($id);
+
+      $this->selectedBrand = $brand;
+      $this->editForm->name = $brand->name;
+      $this->editForm->slug = $brand->slug;
+      $this->editForm->brandId = $brand->id;
+
+      $this->dispatch("open-brand-edit-modal");
+    });
   }
 
   public function updatedCreateFormName()
@@ -126,17 +142,13 @@ class Brands extends Component
 
   public function create()
   {
-    try {
+    $this->createForm->validate();
+
+    $this->tryCatch(function () {
       if (!Gate::allows("create brands")) {
         throw new UnauthorizedException("can not create brand");
       }
-    } catch (UnauthorizedException $e) {
-      return $this->dispatch("unauthorized-action");
-    }
 
-    $this->createForm->validate();
-
-    try {
       $imageName = $this->createForm->image->store("brand_images", "public");
 
       Brand::create([
@@ -151,10 +163,7 @@ class Brands extends Component
       $this->resetCreateFormFields();
       $this->dispatch("create_brand_success");
       $this->dispatch("refresh-flowbite");
-
-    } catch (Throwable $e) {
-      $this->dispatch("something-went-wrong");
-    }
+    });
   }
 
   public function resetCreateFormFields()
@@ -165,12 +174,14 @@ class Brands extends Component
 
   public function update()
   {
-    try {
-      if (!Gate::allows("edit brands")) {
+    $this->editForm->validate();
+
+    $this->tryCatch(function () {
+      if (Gate::allows("edit brands")) {
         throw new UnauthorizedException("can not edit brand");
       }
 
-      $this->editForm->validate();
+      $brand = Brand::findOrFail($this->selectedBrand->id);
 
       if ($this->editForm->image) {
         $imageName = $this->editForm->image->store("category_images", "public");
@@ -179,88 +190,74 @@ class Brands extends Component
         }
       }
 
-      $this->selectedBrand->update([
+      $brand->update([
         "name" => $this->editForm->name,
         "slug" => $this->editForm->slug,
-        "image" => $imageName ?? $this->selectedBrand->image,
+        "image" => $imageName ?? $brand->image,
         "updated_by" => auth()->user()->id,
         "updated_at" => Carbon::now(),
       ]);
 
       $this->dispatch("close-brand-edit-modal");
       $this->dispatch("update_brand_success");
-    } catch (UnauthorizedException $e) {
-      $this->dispatch("unauthorized-action");
-    } catch (Throwable $e) {
-      $this->dispatch("something-went-wrong");
-    }
+    });
   }
 
   #[On("delete-brand-modal-is-confirmed")]
   public function delete($brandId)
   {
-    /* $brand = Brand::find($brandId);
-    $brand->delete();
-    return; */
-    try {
+    $this->tryCatch(function () use ($brandId) {
       if (!Gate::allows("delete brands")) {
         throw new UnauthorizedException("can not delete brand");
       }
+
       $brand = Brand::findOrFail($brandId);
-      $relatedProductsCount = Product::where("brand_id", $brand->id)->count();
-      if ($relatedProductsCount) {
+
+      $hasRelatedProducts = Product::where("brand_id", $brand->id)->exists();
+
+      if ($hasRelatedProducts) {
         $this->dispatch("delete_brand_error", title: "There are associated products with this brand.", text: "Either reassign the products to a different brand or delete the products before deleting the brand.");
       } else {
         $brand->delete();
         $brand->update([
           "deleted_by" => auth()->user()->id
         ]);
+
         $this->dispatch("delete_brand_success");
       }
-    } catch (UnauthorizedException $e) {
-      $this->dispatch("unauthorized-action");
-    } catch (ModelNotFoundException $e) {
-      $this->dispatch("error-with-message", message: "Brand not found!");
-    } catch (Throwable $e) {
-      $this->dispatch("something-went-wrong");
-    }
+    });
   }
 
   #[On("force-delete-brand-modal-is-confirmed")]
   public function forceDelete($brandId)
   {
-    // $this->authorize("force delete categories");
-    try {
+    $this->tryCatch(function () use ($brandId) {
       if (!Gate::allows("force delete brands")) {
         throw new UnauthorizedException("you cant delete brand permanently");
       }
-      $brand = Brand::withTrashed()->find($brandId);
+
+      $brand = Brand::withTrashed()->findOrFail($brandId);
       $brand->forceDelete();
+
       $this->dispatch("force-delete_brand_success");
-    } catch (UnauthorizedException $e) {
-      $this->dispatch("unauthorized-action");
-    } catch (Throwable $e) {
-      $this->dispatch("something-went-wrong");
-    }
+    });
   }
 
   public function restore($brandId)
   {
-    try {
+    $this->tryCatch(function () use ($brandId) {
       if (!Gate::allows("force delete brands")) {
         throw new UnauthorizedException("you cant restore brand");
       }
-      Brand::withTrashed()->find($brandId)->restore();
-    } catch (UnauthorizedException $e) {
-      $this->dispatch("unauthorized-action");
-    } catch (Throwable $e) {
-      $this->dispatch("something-went-wrong");
-    }
-  }
 
+      Brand::withTrashed()->findOrFail($brandId)->restore();
+    });
+  }
 
   public function render()
   {
-    return view('livewire.admin.brands')->layout("components.admin-layout", ['title' => "Brands"])->section("content");
+    return view('livewire.admin.brands')
+      ->layout("components.admin-layout", ['title' => "Brands"])
+      ->section("content");
   }
 }

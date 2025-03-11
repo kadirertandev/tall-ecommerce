@@ -7,12 +7,11 @@ namespace App\Traits;
 use App\Livewire\Forms\UserProfileAddressForm;
 use Livewire\Attributes\Computed;
 use App\Models\UserAddress;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Support\Facades\Gate;
-use Throwable;
 
 trait Addresses
 {
+  use WithTryCatch;
+
   public UserProfileAddressForm $form;
 
   #[Computed()]
@@ -64,19 +63,16 @@ trait Addresses
 
   public function add()
   {
-    try {
-      if (Gate::denies("customer")) {
-        throw new AuthorizationException("This action is unauthorized!");
-      }
-
+    $this->tryCatch(function () {
       $validated = $this->form->validate();
-      #before creating a new address
-      #if makeDefault is true, make is_default field false for all existing addresses in database
+
+      # if makeDefault checkbox is checked
+      # set all existing addresses of user to non-default before making selected address the default
       if ($this->form->makeDefault) {
         UserAddress::where("user_id", auth()->user()->id)
-          ->where("is_default", 1)
           ->update(["is_default" => 0]);
       }
+
       $userAddress = UserAddress::create([
         "user_id" => auth()->user()->id,
         "title" => $validated["addressTitle"],
@@ -84,16 +80,11 @@ trait Addresses
         "district" => $validated["selectedDistrict"],
         "neighborhood" => $validated["selectedNeighborhood"],
         "address_line" => $validated["addressLine"],
-        "is_default" => (count(auth()->user()->addresses) == 0) ? true : $this->form->makeDefault
+        "is_default" => $this->form->makeDefault
       ]);
-      $this->dispatch("address-created");
+
       $this->dispatch("close-address-modal");
       $this->form->reset();
-    } catch (AuthorizationException $e) {
-      $this->dispatch("error-with-message", message: $e->getMessage());
-    } catch (Throwable $e) {
-      $this->dispatch("something-went-wrong");
-    }
-
+    });
   }
 }

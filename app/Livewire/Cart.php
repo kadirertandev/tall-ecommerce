@@ -28,10 +28,8 @@ class Cart extends Component
   public function lastViewedProducts()
   {
     $lastViewedProductIDs = Session::get("last_viewed_products", []);
-    if (count($lastViewedProductIDs) > 0) {
-      return Product::whereIn("id", array_keys($lastViewedProductIDs))->get();
-    }
-    return [];
+
+    return Product::whereIn("id", array_keys($lastViewedProductIDs))->get();
   }
 
   public function clearLastViewedProducts()

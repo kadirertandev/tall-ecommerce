@@ -4,18 +4,19 @@ namespace App\Livewire\Admin;
 
 use App\Enums\OrderStatusType;
 use App\Models\Order;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Traits\WithTryCatch;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Throwable;
 
 class Orders extends Component
 {
   use WithPagination;
+  use WithTryCatch;
+
   public $page = 1;
   public function updatedPage()
   {
@@ -89,24 +90,16 @@ class Orders extends Component
   public $selectedOrder;
   public function showViewModal($id)
   {
-    try {
-      if (!Gate::allows("view orders")) {
-        throw new UnauthorizedException("can not view order");
-      }
-
+    $this->tryCatch(function () use ($id) {
       $this->selectedOrder = Order::findOrFail($id);
 
       $this->dispatch("open-order-view-modal");
-    } catch (ModelNotFoundException $e) {
-      $this->dispatch("error-with-message", message: "Order not found!");
-    } catch (Throwable $e) {
-      $this->dispatch("something-went-wrong");
-    }
+    });
   }
 
   public function changeStatus($orderId, $statusValue)
   {
-    try {
+    $this->tryCatch(function () use ($orderId, $statusValue) {
       if (!Gate::allows("edit orders")) {
         throw new UnauthorizedException("can not edit order");
       }
@@ -114,17 +107,13 @@ class Orders extends Component
       Order::findOrFail($orderId)->update([
         "status" => OrderStatusType::from($statusValue)->value
       ]);
-    } catch (ModelNotFoundException $e) {
-      $this->dispatch("error-with-message", message: "Order not found!");
-    } catch (UnauthorizedException $e) {
-      $this->dispatch("unauthorized-action");
-    } catch (Throwable $e) {
-      $this->dispatch("something-went-wrong");
-    }
+    });
   }
 
   public function render()
   {
-    return view('livewire.admin.orders')->layout("components.admin-layout")->section("content");
+    return view('livewire.admin.orders')
+      ->layout("components.admin-layout", ["title" => "Orders"])
+      ->section("content");
   }
 }
