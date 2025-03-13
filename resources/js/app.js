@@ -170,7 +170,6 @@ window.addEventListener("add-to-favorites-guest-error", function (event) {
 
 })
 window.addEventListener("remove-from-favorites", function (event) {
-  console.log(event.detail.product);
   console.log(event.detail.text);
 
   Swal.fire({

@@ -3,11 +3,13 @@
 namespace App\Livewire\Admin;
 
 use App\Models\User;
+use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithTryCatch;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -15,52 +17,49 @@ class Customers extends Component
 {
   use WithPagination;
   use WithTryCatch;
+  use WithRefreshFlowbite;
 
-  public $page = 1;
-  public function updatedPage()
+  public function boot()
   {
-    $this->dispatch("refresh-flowbite");
+    $this->refreshFlobwite();
   }
+
   public $sortDir = "";
   public $sortBy = "";
   public $keyword = "";
-  public function updatedKeyword()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
   public $perPage = 10;
-  public function updatedPerPage()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
-  public $withTrashed = false;
-  public $onlyTrashed = false;
+  public $columns = [
+    "full_name" => "Customer",
+    "email" => "Email",
+    "email_verified_at" => "Email Verified At",
+    "phone_number" => "Phone Number",
+    "created_at" => "Joined At",
+  ];
+
+  #[Url()]
   public $withDeleteRequest = false;
-  public $onlyDeleteRequest = false;
-  public function updatedWithTrashed()
-  {
-    $this->withTrashed == true ? $this->onlyTrashed = false : "";
-    $this->dispatch("refresh-flowbite");
-  }
-  public function updatedOnlyTrashed()
-  {
-    $this->onlyTrashed == true ? $this->withTrashed = false : "";
-    $this->dispatch("refresh-flowbite");
-  }
   public function updatedWithDeleteRequest()
   {
-    $this->withDeleteRequest == true ? $this->onlyDeleteRequest = false : "";
-    $this->dispatch("refresh-flowbite");
-
+    if ($this->withDeleteRequest == true)
+      $this->onlyDeleteRequest = false;
   }
+
+  #[Url()]
+  public $onlyDeleteRequest = false;
   public function updatedonlyDeleteRequest()
   {
-    $this->onlyDeleteRequest == true ? $this->withDeleteRequest = false : "";
-    $this->dispatch("refresh-flowbite");
+    if ($this->onlyDeleteRequest == true)
+      $this->withDeleteRequest = false;
+  }
+
+  public function setSortBy($column)
+  {
+    $this->sortBy = $column;
+    $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
   }
 
   #[Computed()]
-  public function customersTemplate()
+  public function customers()
   {
     return User::search($this->keyword)
       ->when($this->sortBy != "full_name", function ($query) {
@@ -73,44 +72,14 @@ class Customers extends Component
           return $query->orderBy(DB::raw("CONCAT(first_name, ' ', last_name)"), $this->sortDir);
         });
       })
-      ->when($this->withTrashed == true, function ($query) {
-        $query->withTrashed();
-      })
-      ->when($this->onlyTrashed == true, function ($query) {
-        $query->onlyTrashed();
-      })
       ->when($this->withDeleteRequest == true, function ($query) {
         $query->where("delete_request", true)->orWhere("delete_request", false);
       })
       ->when($this->onlyDeleteRequest == true, function ($query) {
         $query->where("delete_request", true);
       })
-      ->where("is_admin", false);
-  }
-
-  #[Computed()]
-  public function customers()
-  {
-    return $this->customersTemplate->paginate(($this->perPage >= 5) ? $this->perPage : 5);
-  }
-
-  #[Computed()]
-  public function columns()
-  {
-    return [
-      "full_name" => "Customer",
-      "email" => "Email",
-      "email_verified_at" => "Email Verified At",
-      "phone_number" => "Phone Number",
-      "created_at" => "Joined At",
-    ];
-  }
-
-  public function setSortBy($column)
-  {
-    $this->sortBy = $column;
-    $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
-    $this->dispatch("refresh-flowbite");
+      ->where("is_admin", false)
+      ->paginate(($this->perPage >= 5) ? $this->perPage : 5);
   }
 
   public $selectedCustomer;

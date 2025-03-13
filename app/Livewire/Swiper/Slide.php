@@ -8,12 +8,12 @@ use Livewire\Component;
 class Slide extends Component
 {
   #[Locked()]
-  public $deal;
+  public $product;
   public $prefix;
 
-  public function mount($deal, $prefix)
+  public function mount($product, $prefix)
   {
-    $this->deal = $deal;
+    $this->product = $product;
     $this->prefix = $prefix . '-';
   }
   public function render()

@@ -17,15 +17,9 @@ class UserProfileOrders extends Component
   public ProductReviewForm $reviewForm;
 
   #[Computed()]
-  public function user()
-  {
-    return auth()->user();
-  }
-
-  #[Computed()]
   public function orders()
   {
-    return $this->user->orders;
+    return auth()->user()->orders;
   }
 
   public $rating = 0;
@@ -45,7 +39,7 @@ class UserProfileOrders extends Component
 
       $validated = $this->reviewForm->validate();
       $validated["rating"] = $this->rating ?? 0;
-      $validated["user_id"] = $this->user->id;
+      $validated["user_id"] = auth()->user()->id;
       $validated["product_id"] = $this->productToComment->id;
 
       ProductReview::create($validated);

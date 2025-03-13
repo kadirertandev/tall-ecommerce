@@ -2,8 +2,8 @@
 
 namespace App\Livewire;
 
-use App\Models\Product;
 use App\Models\ProductReview;
+use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithTryCatch;
 use Illuminate\Auth\Access\AuthorizationException;
 use Livewire\Attributes\Computed;
@@ -15,22 +15,23 @@ class ProductReviews extends Component
 {
   use WithPagination;
   use WithTryCatch;
+  use WithRefreshFlowbite;
 
-  public $page = 1;
-  public function updatedPage()
+  public function boot()
   {
-    $this->dispatch("product-reviews-page-updated");
+    $this->refreshFlobwite();
   }
 
-  public $product_slug;
+  public $productId;
   public $rating;
   #[Rule("required|min:5|max:50")]
   public $title;
   #[Rule("required|min:5|max:200")]
   public $comment;
-  public function mount($product_slug)
+  public function mount($productId)
   {
-    $this->product_slug = $product_slug;
+    $this->productId = $productId;
+
     if (session()->has("reviewId")) {
       $reviewId = session()->get("reviewId");
       $this->js("document.getElementById('review-" . $reviewId . "').style.backgroundColor = '#efefef'");
@@ -38,29 +39,10 @@ class ProductReviews extends Component
     }
   }
 
-  public function boot()
-  {
-    if ($this->product() == null) {
-      $this->skipRender();
-    }
-  }
-
-  #[Computed()]
-  public function product()
-  {
-    return Product::where("slug", $this->product_slug)->first();
-  }
-
   #[Computed()]
   public function reviews()
   {
-    return ProductReview::where("product_id", $this->product()->id)->where("status", \App\Enums\ReviewStatusType::APPROVED)->latest()->paginate(4);
-  }
-
-  #[Computed()]
-  public function reviewsCount()
-  {
-    return $this->reviews()->count();
+    return ProductReview::where("product_id", $this->productId)->where("status", \App\Enums\ReviewStatusType::APPROVED)->latest()->paginate(1);
   }
 
   public function create()
@@ -72,11 +54,11 @@ class ProductReviews extends Component
       $validated = $this->validate();
 
       $this->tryCatch(function () use ($validated) {
-        $this->authorize("canReview", $this->product);
+        $this->authorize("canReview", $this->productId);
 
         $validated["rating"] = $this->rating ?? 0;
         $validated["user_id"] = auth()->user()->id;
-        $validated["product_id"] = $this->product()->id;
+        $validated["product_id"] = $this->productId;
         ProductReview::create($validated);
 
         $this->dispatch("comment-success");

@@ -159,7 +159,7 @@
                                 {{-- <th scope="col" class="px-4 py-3">admin</th>
                           <th scope="col" class="px-4 py-3">Is Popular</th>
                           <th scope="col" class="px-4 py-3">Updated At</th> --}}
-                                @foreach ($this->columns as $key => $value)
+                                @foreach ($columns as $key => $value)
                                     <th wire:key='heading-{{ $key }}-{{ $value }}'
                                         wire:click='setSortBy("{{ $key }}")' scope="col"
                                         class="px-4 py-3">
@@ -364,13 +364,6 @@
 </div>
 @script
 <script>
-    Livewire.on("refresh-flowbite", function() {
-        setTimeout(() => {
-            initFlowbite();
-            console.log("flowbite initialized")
-        }, 300);
-    })
-
     Livewire.on("open-review-edit-modal-referred", function() {
         setTimeout(() => {
             Livewire.dispatch("open-review-edit-modal");

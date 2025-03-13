@@ -49,15 +49,9 @@ class BaseCartComponent extends Component
   }
 
   #[Computed()]
-  public function user()
-  {
-    return auth()->user();
-  }
-
-  #[Computed()]
   public function cart()
   {
-    return $this->user->cart;
+    return auth()->user()->cart;
   }
 
   #[Computed()]
@@ -81,13 +75,13 @@ class BaseCartComponent extends Component
   #[Computed()]
   public function addresses()
   {
-    return $this->user->addresses;
+    return auth()->user()->addresses;
   }
 
   #[Computed()]
   public function defaultAddress()
   {
-    return $this->user->defaultAddress();
+    return auth()->user()->defaultAddress();
   }
 
   #[Computed()]
@@ -138,7 +132,7 @@ class BaseCartComponent extends Component
       DB::beginTransaction();
 
       $order = Order::create([
-        "user_id" => $this->user->id,
+        "user_id" => auth()->user()->id,
         "city" => $this->finalAddress->city,
         "district" => $this->finalAddress->district,
         "neighborhood" => $this->finalAddress->neighborhood,

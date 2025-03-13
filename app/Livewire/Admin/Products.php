@@ -11,6 +11,7 @@ use App\Models\DailyDealProduct;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\WeeklyDealProduct;
+use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithTryCatch;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +21,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 use Livewire\WithPagination;
@@ -29,58 +31,99 @@ class Products extends Component
   use WithFileUploads;
   use WithPagination;
   use WithTryCatch;
+  use WithRefreshFlowbite;
 
   public ProductCreateForm $createForm;
   public ProductEditForm $editForm;
 
-  public $page;
-  public function updatedPage()
+  public function boot()
   {
-    $this->dispatch("refresh-flowbite");
+    $this->refreshFlobwite();
   }
 
   public $sortDir = "";
   public $sortBy = "";
   public $keyword = "";
-  public function updatedKeyword()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
   public $categoriesFilter = [];
-  public function updatedCategoriesFilter()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
   public $brandsFilter = [];
-  public function updatedBrandsFilter()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
   public $minPrice;
   public $maxPrice;
   public $perPage = 10;
-  public function updatedPerPage()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
+  public $columns = [
+    "name" => "Product",
+    "category" => "Category",
+    "brand" => "Brand",
+    "rating" => "Rating",
+    "price" => "Price",
+    "sales" => "Sales",
+    "revenue" => "Revenue",
+    "updated_at" => "Last Update",
+  ];
+
+  #[Url()]
   public $withTrashed = false;
-  public $onlyTrashed = false;
   public function updatedWithTrashed()
   {
-    $this->withTrashed == true ? $this->onlyTrashed = false : "";
-    $this->dispatch("refresh-flowbite");
-
+    if ($this->withTrashed == true)
+      $this->onlyTrashed = false;
   }
+
+  #[Url()]
+  public $onlyTrashed = false;
   public function updatedOnlyTrashed()
   {
-    $this->onlyTrashed == true ? $this->withTrashed = false : "";
-    $this->dispatch("refresh-flowbite");
+    if ($this->onlyTrashed == true)
+      $this->withTrashed = false;
+  }
+
+  public function setPrices()
+  {
+  }
+  public function resetPrices()
+  {
+    $this->reset("minPrice", "maxPrice");
+  }
+
+  public function setSortBy($column)
+  {
+    $this->sortBy = $column;
+    $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
+  }
+
+  public function updatedEditFormName()
+  {
+    $this->editForm->slug = Str::slug($this->editForm->name);
+  }
+  public function updatedCreateFormName()
+  {
+    $this->createForm->slug = Str::slug($this->createForm->name);
+  }
+
+  public function removeImage()
+  {
+    $this->editForm->reset("image");
+    $this->editForm->resetErrorBag("image");
+    $this->createForm->reset("image");
+    $this->createForm->resetErrorBag("image");
+  }
+
+  #[On("product-edit-modal-closed")]
+  public function resetFields()
+  {
+    $this->editForm->resetErrorBag();
+    $this->editForm->reset("image");
+  }
+
+  public function resetCreateFormFields()
+  {
+    $this->createForm->reset();
+    $this->createForm->resetErrorBag();
   }
 
   #[Computed()]
-  public function productsTemplate()
+  public function products()
   {
-    $products = Product::search($this->keyword)
+    return Product::search($this->keyword)
       ->when(
         $this->sortBy != "category" && $this->sortBy != "brand" && $this->sortBy != "rating" && $this->sortBy != "sales" && $this->sortBy != "revenue",
         function ($query) {
@@ -135,13 +178,8 @@ class Products extends Component
       })
       ->when($this->maxPrice, function ($query) {
         $query->where("products.price", "<=", $this->maxPrice);
-      });
-    return $products;
-  }
-  #[Computed()]
-  public function products()
-  {
-    return $this->productsTemplate->paginate(($this->perPage >= 5) ? $this->perPage : 5);
+      })
+      ->paginate(($this->perPage >= 5) ? $this->perPage : 5);
   }
 
   #[Computed()]
@@ -149,39 +187,11 @@ class Products extends Component
   {
     return Category::all();
   }
+
   #[Computed()]
   public function brands()
   {
     return Brand::all();
-  }
-
-  public function setPrices()
-  {
-  }
-  public function resetPrices()
-  {
-    $this->reset("minPrice", "maxPrice");
-  }
-
-  #[Computed()]
-  public function columns()
-  {
-    return [
-      "name" => "Product",
-      "category" => "Category",
-      "brand" => "Brand",
-      "rating" => "Rating",
-      "price" => "Price",
-      "sales" => "Sales",
-      "revenue" => "Revenue",
-      "updated_at" => "Last Update",
-    ];
-  }
-  public function setSortBy($column)
-  {
-    $this->sortBy = $column;
-    $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
-    $this->dispatch("refresh-flowbite");
   }
 
   #[Computed()]
@@ -221,36 +231,6 @@ class Products extends Component
 
       $this->dispatch("open-product-edit-modal");
     });
-  }
-
-  public function updatedEditFormName()
-  {
-    $this->editForm->slug = Str::slug($this->editForm->name);
-  }
-  public function updatedCreateFormName()
-  {
-    $this->createForm->slug = Str::slug($this->createForm->name);
-  }
-
-  public function removeImage()
-  {
-    $this->editForm->reset("image");
-    $this->editForm->resetErrorBag("image");
-    $this->createForm->reset("image");
-    $this->createForm->resetErrorBag("image");
-  }
-
-  #[On("product-edit-modal-closed")]
-  public function resetFields()
-  {
-    $this->editForm->resetErrorBag();
-    $this->editForm->reset("image");
-  }
-
-  public function resetCreateFormFields()
-  {
-    $this->createForm->reset();
-    $this->createForm->resetErrorBag();
   }
 
   public function update()
@@ -314,7 +294,6 @@ class Products extends Component
       $this->dispatch("close-product-create-modal");
       $this->resetCreateFormFields();
       $this->dispatch("create_product_success");
-      $this->dispatch("refresh-flowbite");
     });
   }
 

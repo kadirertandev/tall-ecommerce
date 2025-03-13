@@ -2,56 +2,42 @@
 
 namespace App\Livewire;
 
-use App\Models\Product;
 use App\Traits\WithTryCatch;
-use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class AddToFavoritesButton extends Component
 {
   use WithTryCatch;
 
-  public $product_slug;
+  public $productId;
   public $type;
   public $showLabel;
-  public function mount($product_slug, $type, $showLabel = true)
+  public function mount($productId, $type, $showLabel = true)
   {
-    $this->product_slug = $product_slug;
+    $this->productId = $productId;
     $this->type = $type;
     $this->showLabel = $showLabel;
-  }
-
-  #[Computed()]
-  public function user()
-  {
-    return auth()->user();
-  }
-
-  #[Computed()]
-  public function product()
-  {
-    return Product::where("slug", $this->product_slug)->first();
   }
 
   public function addToFavorites()
   {
     $this->tryCatch(function () {
-      if (!$this->user->favorites()->where("product_id", $this->product->id)->exists()) {
-        $this->user->favorites()->attach($this->product, ['created_at' => now()]);
+      if (!auth()->user()->favorites()->where("product_id", $this->productId)->exists()) {
+        auth()->user()->favorites()->attach($this->productId, ['created_at' => now()]);
       }
 
-      $this->dispatch("add-to-favorites", product: $this->product, text: __('frontend.favorites.added-to-favorites'));
+      $this->dispatch("add-to-favorites", text: __('frontend.favorites.added-to-favorites'));
     });
   }
 
   public function removeFromFavorites()
   {
     $this->tryCatch(function () {
-      if ($this->user->favorites()->where("product_id", $this->product->id)->exists()) {
-        $this->user->favorites()->detach($this->product);
+      if (auth()->user()->favorites()->where("product_id", $this->productId)->exists()) {
+        auth()->user()->favorites()->detach($this->productId);
       }
 
-      $this->dispatch("remove-from-favorites", product: $this->product, text: __('frontend.favorites.removed-from-favorites'));
+      $this->dispatch("remove-from-favorites", text: __('frontend.favorites.removed-from-favorites'));
     });
   }
 

@@ -145,8 +145,8 @@
                 <swiper-container wire:ignore class="mySwiper" navigation="true" {{-- pagination-clickable="true" --}}
                     space-between="30" slides-per-view="3" loop="true" autoplay-delay="2500"
                     autoplay-disable-on-interaction="false">
-                    @foreach ($this->lastViewedProducts as $deal)
-                        <livewire:swiper.slide :key="'last-viewed-' . $deal->id" :$deal prefix="last-viewed" />
+                    @foreach ($this->lastViewedProducts as $product)
+                        <livewire:swiper.slide :key="'last-viewed-' . $product->id" :$product prefix="last-viewed" />
                     @endforeach
                 </swiper-container>
             </div>
@@ -157,14 +157,14 @@
             <swiper-container wire:ignore class="mySwiper" navigation="true" {{-- pagination-clickable="true" --}} space-between="30"
                 slides-per-view="3" loop="true" autoplay-delay="2500" autoplay-disable-on-interaction="false">
                 @if (Cache::has('weeklyDealProducts'))
-                    @foreach ($weekly_deal_products as $deal)
-                        <livewire:swiper.slide :key="'weekly-' . $deal->product_id" :$deal prefix="weekly" />
+                    @foreach ($weekly_deal_products as $product)
+                        <livewire:swiper.slide :key="'weekly-' . $product->product_id" :$product prefix="weekly" />
                     @endforeach
                 @endif
 
                 @if (Cache::has('dailyDealProducts'))
-                    @foreach ($daily_deal_products as $deal)
-                        <livewire:swiper.slide :key="'daily-' . $deal->product_id" :$deal prefix="daily" />
+                    @foreach ($daily_deal_products as $product)
+                        <livewire:swiper.slide :key="'daily-' . $product->product_id" :$product prefix="daily" />
                     @endforeach
                 @endif
             </swiper-container>

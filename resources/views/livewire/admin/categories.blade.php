@@ -141,10 +141,7 @@
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
-                                {{-- <th scope="col" class="px-4 py-3">Category</th>
-                                <th scope="col" class="px-4 py-3">Is Popular</th>
-                                <th scope="col" class="px-4 py-3">Updated At</th> --}}
-                                @foreach ($this->columns as $key => $value)
+                                @foreach ($columns as $key => $value)
                                     <th wire:key='heading-{{ $key }}-{{ $value }}'
                                         wire:click='setSortBy("{{ $key }}")' scope="col"
                                         class="px-4 py-3">
@@ -283,13 +280,3 @@
     <x-admin.category.edit-modal :category="$selectedCategory" :brands="$this->editForm->brands()" :editform="$this->editForm"></x-admin.category.edit-modal>
 
 </div>
-@script
-    <script>
-        Livewire.on("refresh-flowbite", function() {
-            setTimeout(() => {
-                initFlowbite();
-                console.log("flowbite initialized")
-            }, 300);
-        })
-    </script>
-@endscript

@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use App\Enums\ReviewStatusType;
 use App\Livewire\Forms\Admin\ReviewEditForm;
 use App\Models\ProductReview;
+use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithTryCatch;
 use Exception;
 use Illuminate\Support\Carbon;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Throwable;
@@ -21,45 +23,9 @@ class Reviews extends Component
 {
   use WithPagination;
   use WithTryCatch;
+  use WithRefreshFlowbite;
 
   public ReviewEditForm $editForm;
-
-  public $page = 1;
-  public function updatedPage()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
-
-  public $sortDir = "";
-  public $sortBy = "";
-  public $keyword = "";
-  public function updatedKeyword()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
-  public $statusFilter = [];
-  public function updatedStatusFilter()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
-  public $perPage = 10;
-  public function updatedPerPage()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
-  public $withTrashed = false;
-  public $onlyTrashed = false;
-  public function updatedWithTrashed()
-  {
-    $this->withTrashed == true ? $this->onlyTrashed = false : "";
-    $this->dispatch("refresh-flowbite");
-
-  }
-  public function updatedOnlyTrashed()
-  {
-    $this->onlyTrashed == true ? $this->withTrashed = false : "";
-    $this->dispatch("refresh-flowbite");
-  }
 
   public function mount()
   {
@@ -69,8 +35,50 @@ class Reviews extends Component
     }
   }
 
+  public function boot()
+  {
+    $this->refreshFlobwite();
+  }
+
+  public $sortDir = "";
+  public $sortBy = "";
+  public $keyword = "";
+  public $statusFilter = [];
+  public $perPage = 10;
+  public $columns = [
+    "user_id" => "Customer",
+    "product_id" => "Product",
+    "title" => "Title",
+    "comment" => "Comment",
+    "rating" => "rating",
+    "status" => "Status",
+    "created_at" => "Review Date",
+  ];
+
+  #[Url()]
+  public $withTrashed = false;
+  public function updatedWithTrashed()
+  {
+    if ($this->withTrashed == true)
+      $this->onlyTrashed = false;
+  }
+
+  #[Url()]
+  public $onlyTrashed = false;
+  public function updatedOnlyTrashed()
+  {
+    if ($this->onlyTrashed == true)
+      $this->withTrashed = false;
+  }
+
+  public function setSortBy($column)
+  {
+    $this->sortBy = $column;
+    $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
+  }
+
   #[Computed()]
-  public function reviewsTemplate()
+  public function reviews()
   {
     return ProductReview::search($this->keyword)
       ->when($this->sortBy != "user_id" && $this->sortBy != "product_id", function ($query) {
@@ -96,34 +104,8 @@ class Reviews extends Component
       })
       ->when($this->onlyTrashed, function ($query) {
         $query->onlyTrashed();
-      });
-  }
-
-  #[Computed()]
-  public function reviews()
-  {
-    return $this->reviewsTemplate->paginate(($this->perPage >= 5) ? $this->perPage : 5);
-  }
-
-  #[Computed()]
-  public function columns()
-  {
-    return [
-      "user_id" => "Customer",
-      "product_id" => "Product",
-      "title" => "Title",
-      "comment" => "Comment",
-      "rating" => "rating",
-      "status" => "Status",
-      "created_at" => "Review Date",
-    ];
-  }
-
-  public function setSortBy($column)
-  {
-    $this->sortBy = $column;
-    $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
-    $this->dispatch("refresh-flowbite");
+      })
+      ->paginate(($this->perPage >= 5) ? $this->perPage : 5);
   }
 
   public $selectedReview;
@@ -261,8 +243,6 @@ class Reviews extends Component
       }
 
       ProductReview::withTrashed()->findOrFail($reviewId)->restore();
-
-      $this->dispatch("refresh-flowbite");
     });
   }
 

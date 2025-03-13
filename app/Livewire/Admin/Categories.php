@@ -4,8 +4,10 @@ namespace App\Livewire\Admin;
 
 use App\Jobs\InsertItemToCategoryLanguageFiles;
 use App\Jobs\RemoveItemFromCategoryLanguageFiles;
+use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithTryCatch;
 use App\Models\Product;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use App\Models\Category;
 use Illuminate\Support\Str;
@@ -25,45 +27,75 @@ class Categories extends Component
   use WithFileUploads;
   use WithPagination;
   use WithTryCatch;
+  use WithRefreshFlowbite;
 
   public CategoryCreateForm $createForm;
   public CategoryEditForm $editForm;
 
-  public $page;
-  public function updatedPage()
+  public function boot()
   {
-    $this->dispatch("refresh-flowbite");
+    $this->refreshFlobwite();
   }
 
   public $sortDir = "";
   public $sortBy = "";
   public $keyword = "";
-  public function updatedKeyword()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
   public $perPage = 10;
-  public function updatedPerPage()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
-  public $withTrashed = false;
-  public $onlyTrashed = false;
   public $onlyPopular = false;
+  public $columns = [
+    "name" => "Category",
+    "is_popular" => "Is Popular",
+    "updated_at" => "Last Update"
+  ];
+
+  #[Url()]
+  public $withTrashed = false;
   public function updatedWithTrashed()
   {
-    $this->withTrashed == true ? $this->onlyTrashed = false : "";
-    $this->dispatch("refresh-flowbite");
-
+    if ($this->withTrashed == true)
+      $this->onlyTrashed = false;
   }
+
+  #[Url()]
+  public $onlyTrashed = false;
   public function updatedOnlyTrashed()
   {
-    $this->onlyTrashed == true ? $this->withTrashed = false : "";
-    $this->dispatch("refresh-flowbite");
+    if ($this->onlyTrashed == true)
+      $this->withTrashed = false;
+  }
+
+  public function updatedEditFormName()
+  {
+    $this->editForm->slug = Str::slug($this->editForm->name);
+  }
+
+  public function updatedCreateFormName()
+  {
+    $this->createForm->slug = Str::slug($this->createForm->name);
+  }
+
+  public function removeImage()
+  {
+    $this->editForm->reset("image");
+    $this->editForm->resetErrorBag("image");
+    $this->createForm->reset("image");
+    $this->createForm->resetErrorBag("image");
+  }
+
+  public function resetCreateFormFields()
+  {
+    $this->createForm->reset();
+    $this->createForm->resetErrorBag();
+  }
+
+  public function setSortBy($column)
+  {
+    $this->sortBy = $column;
+    $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
   }
 
   #[Computed()]
-  public function categoriesTemplate()
+  public function categories()
   {
     return Category::search($this->keyword)
       ->when($this->sortBy && $this->sortDir, function ($query) {
@@ -77,30 +109,8 @@ class Categories extends Component
       })
       ->when($this->onlyPopular == true, function ($query) {
         $query->where("is_popular", true);
-      });
-  }
-
-  #[Computed()]
-  public function categories()
-  {
-    return $this->categoriesTemplate->paginate(($this->perPage >= 5) ? $this->perPage : 5);
-  }
-
-  #[Computed()]
-  public function columns()
-  {
-    return [
-      "name" => "Category",
-      "is_popular" => "Is Popular",
-      "updated_at" => "Last Update"
-    ];
-  }
-
-  public function setSortBy($column)
-  {
-    $this->sortBy = $column;
-    $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
-    $this->dispatch("refresh-flowbite");
+      })
+      ->paginate(($this->perPage >= 5) ? $this->perPage : 5);
   }
 
   public $selectedCategory;
@@ -131,30 +141,6 @@ class Categories extends Component
 
       $this->dispatch("open-category-edit-modal");
     });
-  }
-
-  public function updatedEditFormName()
-  {
-    $this->editForm->slug = Str::slug($this->editForm->name);
-  }
-
-  public function updatedCreateFormName()
-  {
-    $this->createForm->slug = Str::slug($this->createForm->name);
-  }
-
-  public function removeImage()
-  {
-    $this->editForm->reset("image");
-    $this->editForm->resetErrorBag("image");
-    $this->createForm->reset("image");
-    $this->createForm->resetErrorBag("image");
-  }
-
-  public function resetCreateFormFields()
-  {
-    $this->createForm->reset();
-    $this->createForm->resetErrorBag();
   }
 
   public function updateCategoryIsPopular($checked = null)
@@ -235,7 +221,6 @@ class Categories extends Component
       $this->dispatch("close-category-create-modal");
       $this->resetCreateFormFields();
       $this->dispatch("create_category_success");
-      $this->dispatch("refresh-flowbite");
     });
   }
 
@@ -280,7 +265,6 @@ class Categories extends Component
       $this->dispatch("force-delete_category_success");
     });
   }
-
   public function restore($categoryId)
   {
     $this->tryCatch(function () use ($categoryId) {

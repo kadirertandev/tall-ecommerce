@@ -4,7 +4,8 @@
             class="{{-- col-span-4 --}}w-full sm:w-7/12 lg:w-9/12 flex items-center justify-between bg-gray-50 ring-2 ring-gray-100 px-3 rounded-lg">
             <h1 class="text-3xl">{{ __('frontend.favorites.favorites') }}</h1>
             @if ($this->favorites->count() > 0)
-                <p>{{ $this->favoritesCount . ' ' . Str::lower(__('frontend.product.product')) }}</p>
+                <p>{{ $this->favorites->total() . ' ' . Str::lower(__('frontend.product.product')) }}
+                </p>
             @endif
         </div>
         <div
@@ -96,7 +97,7 @@
             </div>
             <input wire:model.live.debounce.300ms='search' type="search" id="default-search"
                 class="block w-full p-4 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg ps-10 focus:ring-gray-500 focus:border-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white "
-                placeholder="{{ Lang::get('frontend.filters.search-within-x-products', ['x' => $this->favoritesCount]) }}"
+                placeholder="{{ Lang::get('frontend.filters.search-within-x-products', ['x' => $this->favorites->total()]) }}"
                 required />
         </div>
     </div>
@@ -159,7 +160,6 @@
     <div wire:poll.10s
         class="mt-8 grid grid-cols-1 md:grid-cols-{{ $this->cols / 2 }} md:grid-cols-{{ $this->cols }} gap-3">
         @forelse ($this->favorites as $favorite)
-            {{-- {{ dd($this->favorites) }} --}}
             <div wire:key='favorite-card-{{ $favorite->name ? $favorite->id : $favorite->user_id }}'
                 class="p-3 shadow-lg ring-4 ring-gray-50">
                 <div class="relative flex items-center gap-2 md:flex-col md:gap-2">
@@ -171,7 +171,7 @@
                         <a
                             href="{{ route('products.show', ['category_slug' => $favorite->name ? $favorite->category->slug : $favorite->product->category->slug, 'product_slug' => $favorite->name ? $favorite->slug : $favorite->product->slug]) }}">{!! $favorite->name ? $favorite->title() : $favorite->product->title() !!}</a>
                     </div>
-                    <livewire:add-to-favorites-button :key="$favorite->name ? $favorite->id : $favorite->product->id" :product_slug="$favorite->name ? $favorite->slug : $favorite->product->slug" type="profile"
+                    <livewire:add-to-favorites-button :key="$favorite->name ? $favorite->id : $favorite->product->id" :productId="$favorite->name ? $favorite->id : $favorite->product->id" type="profile"
                         :showLabel="false" />
                 </div>
             </div>

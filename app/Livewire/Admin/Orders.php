@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Enums\OrderStatusType;
 use App\Models\Order;
+use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithTryCatch;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -16,32 +17,37 @@ class Orders extends Component
 {
   use WithPagination;
   use WithTryCatch;
+  use WithRefreshFlowbite;
 
-  public $page = 1;
-  public function updatedPage()
+  public function boot()
   {
-    $this->dispatch("refresh-flowbite");
+    $this->refreshFlobwite();
   }
+
   public $sortDir = "";
   public $sortBy = "";
   public $keyword = "";
-  public function updatedKeyword()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
   public $statusFilter = [];
-  public function updatedStatusFilter()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
   public $perPage = 10;
-  public function updatedPerPage()
+  public $columns = [
+    "user_id" => "Customer",
+    "city" => "City",
+    "district" => "District",
+    "neighborhood" => "Neighborhood",
+    "address_line" => "Address Line",
+    "total_price" => "Total Price",
+    "status" => "Status",
+    "created_at" => "Order Date",
+  ];
+
+  public function setSortBy($column)
   {
-    $this->dispatch("refresh-flowbite");
+    $this->sortBy = $column;
+    $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
   }
 
   #[Computed()]
-  public function ordersTemplate()
+  public function orders()
   {
     return Order::search($this->keyword)
       ->when($this->sortBy != "user_id", function ($query) {
@@ -56,35 +62,8 @@ class Orders extends Component
       })
       ->when($this->statusFilter, function ($query) {
         $query->whereIn("status", $this->statusFilter);
-      });
-  }
-
-  #[Computed()]
-  public function orders()
-  {
-    return $this->ordersTemplate->paginate(($this->perPage >= 5) ? $this->perPage : 5);
-  }
-
-  #[Computed()]
-  public function columns()
-  {
-    return [
-      "user_id" => "Customer",
-      "city" => "City",
-      "district" => "District",
-      "neighborhood" => "Neighborhood",
-      "address_line" => "Address Line",
-      "total_price" => "Total Price",
-      "status" => "Status",
-      "created_at" => "Order Date",
-    ];
-  }
-
-  public function setSortBy($column)
-  {
-    $this->sortBy = $column;
-    $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
-    $this->dispatch("refresh-flowbite");
+      })
+      ->paginate(($this->perPage >= 5) ? $this->perPage : 5);
   }
 
   public $selectedOrder;

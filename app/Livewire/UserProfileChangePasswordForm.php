@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use Illuminate\Support\Facades\Hash;
-use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -14,20 +13,14 @@ class UserProfileChangePasswordForm extends Component
   #[Validate("required|min:8")]
   public $newPassword;
 
-  #[Computed()]
-  public function user()
-  {
-    return auth()->user();
-  }
-
   public function changePassword()
   {
     $this->validate();
-    if (!Hash::check($this->currentPassword, $this->user->password)) {
+    if (!Hash::check($this->currentPassword, auth()->user()->password)) {
       return $this->addError("currentPassword", __("frontend.form.change-password-form.old-password-dismatch"));
     }
 
-    $this->user->update([
+    auth()->user()->update([
       "password" => Hash::make($this->newPassword)
     ]);
 

@@ -43,9 +43,11 @@ class ProductShow extends Component
   #[Computed()]
   public function product()
   {
-    return Product::where("slug", $this->product_slug)->firstOrFail();
+    return Product::where([
+      "slug" => $this->product_slug,
+      "category_id" => $this->category->id
+    ])->firstOrFail();
   }
-
 
   public function render()
   {

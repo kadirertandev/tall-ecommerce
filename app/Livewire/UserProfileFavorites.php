@@ -4,7 +4,6 @@ namespace App\Livewire;
 
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\User;
 use Illuminate\Support\Facades\Lang;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -32,7 +31,6 @@ class UserProfileFavorites extends Component
 
   public function mount()
   {
-    $this->userID = auth()->user()->id;
     $this->orderFrontend = Lang::get("frontend.filters.newest");
   }
 
@@ -42,13 +40,6 @@ class UserProfileFavorites extends Component
     return Category::where("name", "like", "%" . $this->searchCategory . "%")
       ->orWhere("slug", "like", "%" . $this->searchCategory . "%")
       ->pluck("name", "id");
-    // ->get();
-  }
-
-  #[Computed()]
-  public function user()
-  {
-    return User::find($this->userID);
   }
 
   #[Computed()]
@@ -67,12 +58,6 @@ class UserProfileFavorites extends Component
         return $query->whereIn("products.category_id", $this->categoriesFilter);
       })
       ->paginate($this->perPage);
-  }
-
-  #[Computed()]
-  public function favoritesCount()
-  {
-    return $this->favorites->count();
   }
 
   public function lowestPrice()

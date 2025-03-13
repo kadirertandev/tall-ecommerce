@@ -26,7 +26,7 @@
                                         <a class="text-base font-medium text-gray-900 hover:underline dark:text-white"
                                             href="{{ route('products.show', ['category_slug' => $item->product->category->slug, 'product_slug' => $item->product->slug]) }}">{{ $item->product->name }}</a>
                                         <div class="flex items-center gap-4">
-                                            <livewire:add-to-favorites-button :key='$item->product->id' :product_slug="$item->product->slug"
+                                            <livewire:add-to-favorites-button :key='$item->product->id' :productId="$item->product->id"
                                                 type="cart" />
 
                                             <button type="button"

@@ -16,27 +16,24 @@ class ProductsByCategory extends Component
 {
   use WithPagination;
 
-  #[Url(keep: false)]
-  public $page = 1;
-  public function udpatedPage()
-  {
-    // dd("page updated. do something");
-  }
+  public $page;
+
   public $slug;
   #[Url()]
   public $selectedBrands = [];
-  public function updatedSelectedBrands()
-  {
-    $this->js("console.log(" . json_encode($this->selectedBrands) . ")");
-  }
+
   #[Url()]
   public $minPrice;
+
   #[Url()]
   public $maxPrice;
+
   #[Url()]
   public $orderBy = "created_at";
+
   #[Url()]
   public $orderDir = "desc";
+
   public $orderFrontend;
 
   public $breadcrumbs = [];
@@ -103,14 +100,9 @@ class ProductsByCategory extends Component
   #[Computed()]
   public function category()
   {
-    $category = Category::where("slug", $this->slug)
+    return Category::where("slug", $this->slug)
       ->orWhere("slug", __("categories.dictionary." . $this->slug))
-      ->first();
-
-    if (!$category) {
-      abort(404);
-    }
-    return $category;
+      ->firstOrFail();
   }
 
   #[Computed()]
@@ -119,8 +111,9 @@ class ProductsByCategory extends Component
     return $this->category->brands;
   }
 
+  public $perPage = 6;
   #[Computed()]
-  public function productsTemplate()
+  public function products()
   {
     return Product::where("category_id", $this->category->id)
       ->when(count($this->selectedBrands) > 0, function ($query) {
@@ -138,14 +131,8 @@ class ProductsByCategory extends Component
       ->when($this->orderBy === "price", function ($query) {
         $this->resetPage();
         return $query->orderBy($this->orderBy, $this->orderDir);
-      });
-  }
-
-  public $perPage = 6;
-  #[Computed()]
-  public function products()
-  {
-    return $this->productsTemplate()->paginate($this->perPage, ["*"], "page", $this->page);
+      })
+      ->paginate($this->perPage, ["*"], "page", $this->page);
   }
 
   public function loadMore()

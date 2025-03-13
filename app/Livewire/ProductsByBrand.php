@@ -14,13 +14,28 @@ use Illuminate\Support\Facades\Lang;
 class ProductsByBrand extends Component
 {
   use WithPagination;
-  public $page = 1;
-  public function updatedPage()
-  {
-    // dd($this->page);
-  }
+
   public $slug = "";
+
   public $breadcrumbs = [];
+
+  #[Url()]
+  public $selectedCategories = [];
+
+  #[Url()]
+  public $minPrice;
+
+  #[Url()]
+  public $maxPrice;
+
+  #[Url()]
+  public $orderBy = "created_at";
+
+  #[Url()]
+  public $orderDir = "desc";
+
+  public $orderFrontend;
+
   public function mount($slug)
   {
     $this->slug = $slug;
@@ -32,22 +47,6 @@ class ProductsByBrand extends Component
       ]
     ];
   }
-  #[Url()]
-  public $selectedCategories = [];
-  public function updatedSelectedCategories()
-  {
-    $this->js("console.log(" . json_encode($this->selectedCategories) . ")");
-  }
-  #[Url()]
-  public $minPrice;
-  #[Url()]
-  public $maxPrice;
-  #[Url()]
-  public $orderBy = "created_at";
-  #[Url()]
-  public $orderDir = "desc";
-  public $orderFrontend;
-
 
   public function setPrices()
   {
@@ -98,12 +97,7 @@ class ProductsByBrand extends Component
   #[Computed()]
   public function brand()
   {
-    $brand = Brand::where("slug", $this->slug)->first();
-
-    if (!$brand) {
-      abort(404);
-    }
-    return $brand;
+    return Brand::where("slug", $this->slug)->firstOrFail();
   }
   #[Computed()]
   public function brandCategories()
@@ -111,8 +105,9 @@ class ProductsByBrand extends Component
     return $this->brand->categories;
   }
 
+  public $perPage = 1;
   #[Computed()]
-  public function productsTemplate()
+  public function products()
   {
     return Product::where("brand_id", $this->brand->id)
       ->when(count($this->selectedCategories) > 0, function ($query) {
@@ -130,14 +125,8 @@ class ProductsByBrand extends Component
       ->when($this->orderBy === "price", function ($query) {
         $this->resetPage();
         return $query->orderBy($this->orderBy, $this->orderDir);
-      });
-  }
-
-  public $perPage = 6;
-  #[Computed()]
-  public function products()
-  {
-    return $this->productsTemplate()->paginate($this->perPage);
+      })
+      ->paginate($this->perPage);
   }
 
   public function loadMore()

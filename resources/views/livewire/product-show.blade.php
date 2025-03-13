@@ -49,9 +49,9 @@
                         </div>
 
                         <div class="mt-6 sm:gap-4 sm:items-center sm:flex sm:mt-8">
-                            <livewire:add-to-cart-button :key='$this->product->id' :product_slug="$this->product_slug" :svg='true'
+                            <livewire:add-to-cart-button :productId="$this->product->id" :svg='true'
                                 class="text-gray-900 mt-4 dark:hover:text-white sm:mt-0 bg-white hover:bg-teal-500 border-2 border-gray-200 font-medium rounded-lg shadow-xl text-sm px-5 py-2.5 dark:bg-primary-600 focus:outline-none flex items-center justify-center" />
-                            <livewire:add-to-favorites-button :key="'favorite-button-' . $this->product->id" :product_slug="$this->product_slug" type="show" />
+                            <livewire:add-to-favorites-button :productId="$this->product->id" type="show" />
                         </div>
 
                         <hr class="my-6 border-gray-200 md:my-8 dark:border-gray-800" />
@@ -72,6 +72,6 @@
             </div>
         </section>
 
-        <livewire:product-reviews :product_slug="$this->product_slug" />
+        <livewire:product-reviews :productId="$this->product->id" />
     </div>
 </div>

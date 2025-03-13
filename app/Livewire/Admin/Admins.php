@@ -6,6 +6,7 @@ use App\Livewire\Forms\Admin\AdminCreateForm;
 use App\Livewire\Forms\Admin\AdminEditForm;
 use App\Models\Role;
 use App\Models\User;
+use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithTryCatch;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 use Livewire\WithPagination;
@@ -26,49 +28,46 @@ class Admins extends Component
   use WithFileUploads;
   use WithPagination;
   use WithTryCatch;
+  use WithRefreshFlowbite;
 
   public AdminCreateForm $createForm;
   public AdminEditForm $editForm;
 
-  public $page;
-  public function updatedPage()
+  public function boot()
   {
-    $this->dispatch("refresh-flowbite");
+    $this->refreshFlobwite();
   }
 
   public $sortDir = "";
   public $sortBy = "";
   public $keyword = "";
-  public function updatedKeyword()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
   public $rolesFilter = [];
-  public function updatedRolesFilter()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
   public $perPage = 10;
-  public function updatedPerPage()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
+  public $columns = [
+    "full_name" => "Admin",
+    "email" => "Email",
+    "phone_number" => "Phone Number",
+    "role" => "Role"
+  ];
+
+  #[Url()]
   public $withTrashed = false;
-  public $onlyTrashed = false;
   public function updatedWithTrashed()
   {
-    $this->withTrashed == true ? $this->onlyTrashed = false : "";
-    $this->dispatch("refresh-flowbite");
-
+    if ($this->withTrashed == true)
+      $this->onlyTrashed = false;
   }
+
+  #[Url()]
+  public $onlyTrashed = false;
   public function updatedOnlyTrashed()
   {
-    $this->onlyTrashed == true ? $this->withTrashed = false : "";
-    $this->dispatch("refresh-flowbite");
+    if ($this->onlyTrashed == true)
+      $this->withTrashed = false;
   }
 
   #[Computed()]
-  public function adminsTemplate()
+  public function admins()
   {
     return User::where("is_admin", true)->search($this->keyword)
       ->when($this->sortBy != "full_name" && $this->sortBy != "role", function ($query) {
@@ -99,13 +98,8 @@ class Admins extends Component
       })
       ->when($this->onlyTrashed == true, function ($query) {
         $query->onlyTrashed();
-      });
-  }
-
-  #[Computed()]
-  public function admins()
-  {
-    return $this->adminsTemplate->paginate(($this->perPage >= 5) ? $this->perPage : 5);
+      })
+      ->paginate(($this->perPage >= 5) ? $this->perPage : 5);
   }
 
   #[Computed()]
@@ -125,22 +119,24 @@ class Admins extends Component
     return $roles;
   }
 
-  #[Computed()]
-  public function columns()
-  {
-    return [
-      "full_name" => "Admin",
-      "email" => "Email",
-      "phone_number" => "Phone Number",
-      "role" => "Role"
-    ];
-  }
-
   public function setSortBy($column)
   {
     $this->sortBy = $column;
     $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
-    $this->dispatch("refresh-flowbite");
+  }
+
+  public function resetCreateFormFields()
+  {
+    $this->createForm->reset();
+    $this->createForm->resetErrorBag();
+  }
+
+  public function removeImage()
+  {
+    $this->editForm->reset("profile_image");
+    $this->editForm->resetErrorBag("profile_image");
+    $this->createForm->reset("profile_image");
+    $this->createForm->resetErrorBag("profile_image");
   }
 
   public $selectedAdmin;
@@ -263,7 +259,6 @@ class Admins extends Component
         $this->dispatch("close-admin-create-modal");
         $this->resetCreateFormFields();
         $this->dispatch("create_admin_success");
-        $this->dispatch("refresh-flowbite");
       },
       [
         ModelNotFoundException::class => function ($e) {
@@ -276,20 +271,6 @@ class Admins extends Component
         }
       ]
     );
-  }
-
-  public function resetCreateFormFields()
-  {
-    $this->createForm->reset();
-    $this->createForm->resetErrorBag();
-  }
-
-  public function removeImage()
-  {
-    $this->editForm->reset("profile_image");
-    $this->editForm->resetErrorBag("profile_image");
-    $this->createForm->reset("profile_image");
-    $this->createForm->resetErrorBag("profile_image");
   }
 
   #[On("delete-admin-modal-is-confirmed")]

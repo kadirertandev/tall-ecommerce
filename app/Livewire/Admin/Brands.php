@@ -6,6 +6,7 @@ use App\Livewire\Forms\Admin\BrandCreateForm;
 use App\Livewire\Forms\Admin\BrandEditForm;
 use App\Models\Brand;
 use App\Models\Product;
+use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithTryCatch;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
@@ -24,48 +25,60 @@ class Brands extends Component
   use WithFileUploads;
   use WithPagination;
   use WithTryCatch;
+  use WithRefreshFlowbite;
 
   public BrandCreateForm $createForm;
   public BrandEditForm $editForm;
 
-  public $page;
-  public function updatedPage()
+  public function boot()
   {
-    $this->dispatch("refresh-flowbite");
+    $this->refreshFlobwite();
   }
 
   public $sortDir = "";
   public $sortBy = "";
   public $keyword = "";
-  public function updatedKeyword()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
   public $perPage = 10;
-  public function updatedPerPage()
-  {
-    $this->dispatch("refresh-flowbite");
-  }
+  public $columns = [
+    "name" => "Brand",
+    "slug" => "Slug",
+    "updated_at" => "Last Update"
+  ];
 
   #[Url()]
   public $withTrashed = false;
-  #[Url()]
-  public $onlyTrashed = false;
-
   public function updatedWithTrashed()
   {
-    $this->withTrashed == true ? $this->onlyTrashed = false : "";
-    $this->dispatch("refresh-flowbite");
-
+    if ($this->withTrashed == true)
+      $this->onlyTrashed = false;
   }
+
+  #[Url()]
+  public $onlyTrashed = false;
   public function updatedOnlyTrashed()
   {
-    $this->onlyTrashed == true ? $this->withTrashed = false : "";
-    $this->dispatch("refresh-flowbite");
+    if ($this->onlyTrashed == true)
+      $this->withTrashed = false;
+  }
+
+  public function updatedCreateFormName()
+  {
+    $this->createForm->slug = Str::slug($this->createForm->name);
+  }
+
+  public function updatedEditFormName()
+  {
+    $this->editForm->slug = Str::slug($this->editForm->name);
+  }
+
+  public function resetCreateFormFields()
+  {
+    $this->createForm->reset();
+    $this->createForm->resetErrorBag();
   }
 
   #[Computed()]
-  public function brandsTemplate()
+  public function brands()
   {
     return Brand::search($this->keyword)
       ->when($this->sortBy && $this->sortDir, function ($query) {
@@ -76,30 +89,14 @@ class Brands extends Component
       })
       ->when($this->onlyTrashed == true, function ($query) {
         $query->onlyTrashed();
-      });
-  }
-
-  #[Computed()]
-  public function brands()
-  {
-    return $this->brandsTemplate->paginate(($this->perPage >= 5) ? $this->perPage : 5);
-  }
-
-  #[Computed()]
-  public function columns()
-  {
-    return [
-      "name" => "Brand",
-      "slug" => "Slug",
-      "updated_at" => "Last Update"
-    ];
+      })
+      ->paginate(($this->perPage >= 5) ? $this->perPage : 5);
   }
 
   public function setSortBy($column)
   {
     $this->sortBy = $column;
     $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
-    $this->dispatch("refresh-flowbite");
   }
 
   public $selectedBrand;
@@ -130,16 +127,6 @@ class Brands extends Component
     });
   }
 
-  public function updatedCreateFormName()
-  {
-    $this->createForm->slug = Str::slug($this->createForm->name);
-  }
-
-  public function updatedEditFormName()
-  {
-    $this->editForm->slug = Str::slug($this->editForm->name);
-  }
-
   public function create()
   {
     $this->createForm->validate();
@@ -162,14 +149,7 @@ class Brands extends Component
       $this->dispatch("close-brand-create-modal");
       $this->resetCreateFormFields();
       $this->dispatch("create_brand_success");
-      $this->dispatch("refresh-flowbite");
     });
-  }
-
-  public function resetCreateFormFields()
-  {
-    $this->createForm->reset();
-    $this->createForm->resetErrorBag();
   }
 
   public function update()

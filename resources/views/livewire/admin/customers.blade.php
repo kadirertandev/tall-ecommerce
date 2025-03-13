@@ -13,7 +13,7 @@
                         </div>
                         <div class="flex items-center gap-2">
                             <div class="relative block w-80">
-                                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <div class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3">
                                     <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -22,7 +22,7 @@
                                     <span class="sr-only">Search icon</span>
                                 </div>
                                 <input wire:model.live.debounce.300ms='keyword' type="text" id="search-navbar"
-                                    class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg ps-10 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="Search...">
                                 <button wire:click="$set('keyword','')" @class([
                                     'absolute inset-y-0 rtl:inset-r-0 end-0 flex items-center pe-3',
@@ -44,7 +44,7 @@
                             <span class="text-gray-500">Show</span>
 
                             <button id="dropdownDefaultButton123" data-dropdown-toggle="dropdown123"
-                                class="text-gray-900 bg-gray-50 border border-gray-300 focus:ring-2 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm p-1 gap-4 text-center inline-flex items-center "
+                                class="inline-flex items-center gap-4 p-1 text-sm font-medium text-center text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:outline-none focus:ring-gray-300 "
                                 type="button">{{ $this->perPage }} <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true"
                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -67,18 +67,18 @@
                                     <li class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 ">
                                         <input wire:model.live.debounce.300ms='perPage' type="number" min="5"
                                             value="{{ $this->perPage }}"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-600 focus:border-primary-600 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                     </li>
                                 </ul>
                             </div>
 
                             <span>entries</span>
                         </h5>
-                        <div class="flex flex-col flex-shrink-0 md:flex-row md:items-center lg:justify-end gap-2">
+                        <div class="flex flex-col flex-shrink-0 gap-2 md:flex-row md:items-center lg:justify-end">
 
                             <div class="flex items-center justify-center">
                                 <button id="dropdownDefault" data-dropdown-toggle="dropdown"
-                                    class="bg-teal-500 flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg hover:bg-teal-600 focus:ring-4 focus:ring-primary-300 focus:outline-none"
+                                    class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-teal-500 rounded-lg hover:bg-teal-600 focus:ring-4 focus:ring-primary-300 focus:outline-none"
                                     type="button">
                                     Filter
                                     <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor"
@@ -98,7 +98,7 @@
                                                 <div
                                                     class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-teal-300 dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-teal-600">
                                                 </div>
-                                                <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">With
+                                                <span class="text-sm font-medium text-gray-900 ms-3 dark:text-gray-300">With
                                                     Trashed</span>
                                             </label>
                                             <label class="inline-flex items-center w-full p-2 cursor-pointer">
@@ -106,7 +106,7 @@
                                                 <div
                                                     class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-teal-300 dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-teal-600">
                                                 </div>
-                                                <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Only
+                                                <span class="text-sm font-medium text-gray-900 ms-3 dark:text-gray-300">Only
                                                     Trashed</span>
                                             </label> --}}
                                             <label class="inline-flex items-center w-full p-2 cursor-pointer">
@@ -115,7 +115,7 @@
                                                 <div
                                                     class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-teal-300 dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-teal-600">
                                                 </div>
-                                                <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">With
+                                                <span class="text-sm font-medium text-gray-900 ms-3 dark:text-gray-300">With
                                                     Delete Request</span>
                                             </label>
                                             <label class="inline-flex items-center w-full p-2 cursor-pointer">
@@ -124,7 +124,7 @@
                                                 <div
                                                     class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-teal-300 dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-teal-600">
                                                 </div>
-                                                <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Only
+                                                <span class="text-sm font-medium text-gray-900 ms-3 dark:text-gray-300">Only
                                                     Delete Request</span>
                                             </label>
                                         @endcan
@@ -141,7 +141,7 @@
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
-                                @foreach ($this->columns as $key => $value)
+                                @foreach ($columns as $key => $value)
                                     <th wire:key='heading-{{ $key }}-{{ $value }}'
                                         wire:click='setSortBy("{{ $key }}")' scope="col"
                                         class="px-4 py-3">
@@ -203,7 +203,7 @@
                                             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200 *:cursor-pointer"
                                                 aria-labelledby="dropdownMenuIconButton-{{ $customer->id }}">
                                                 <li wire:click='showViewModal({{ $customer->id }})'
-                                                    class="px-4 py-2 hover:bg-gray-100 flex items-center gap-1">
+                                                    class="flex items-center gap-1 px-4 py-2 hover:bg-gray-100">
                                                     <svg class="w-4 h-4 text-gray-800 dark:text-white"
                                                         aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                         fill="none" viewBox="0 0 24 24">
@@ -217,7 +217,7 @@
                                                 </li>
                                                 @can('edit customers')
                                                     <li wire:click='showEditModal({{ $customer->id }})'
-                                                        class="px-4 py-2 hover:bg-cyan-500 group hover:text-white flex items-center gap-1">
+                                                        class="flex items-center gap-1 px-4 py-2 hover:bg-cyan-500 group hover:text-white">
                                                         <svg class="w-4 h-4 text-gray-800 dark:text-white group-hover:text-white"
                                                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                             fill="none" viewBox="0 0 24 24">
@@ -231,7 +231,7 @@
                                                 @if ($customer->delete_request)
                                                     @can('force delete customers')
                                                         <li wire:click="delete({{ $customer->id }})"
-                                                            class="px-4 py-2 hover:bg-red-800 group hover:text-white flex items-center gap-1">
+                                                            class="flex items-center gap-1 px-4 py-2 hover:bg-red-800 group hover:text-white">
                                                             <svg class="w-4 h-4 text-gray-800 dark:text-white group-hover:text-white"
                                                                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                                 fill="none" viewBox="0 0 24 24">
@@ -249,7 +249,7 @@
                                 </tr>
                             @empty
                                 <tr class="border-b border-gray-600 hover:bg-gray-100">
-                                    <td colspan="9" class="text-2xl text-thin text-center">No customers
+                                    <td colspan="9" class="text-2xl text-center text-thin">No customers
                                         found.</td>
                                 </tr>
                             @endforelse
@@ -270,13 +270,3 @@
     <x-admin.admin.edit-modal :admin="$selectedAdmin" :editForm="$this->editForm" :roles="$this->roles()"></x-admin.admin.edit-modal> --}}
 
 </div>
-@script
-    <script>
-        Livewire.on("refresh-flowbite", function() {
-            setTimeout(() => {
-                initFlowbite();
-                console.log("flowbite initialized")
-            }, 300);
-        })
-    </script>
-@endscript
