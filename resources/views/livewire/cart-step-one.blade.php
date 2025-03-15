@@ -11,8 +11,8 @@
                 <div class="w-4/12"></div>
             </div>
 
-            <div class="mt-6 gap-6 flex items-start {{-- bg-blue-400 --}}">
-                <div class="mx-auto w-8/12 lg:max-w-2xl xl:max-w-4xl {{-- bg-red-400 --}}">
+            <div class="mt-6 gap-6 flex items-start">
+                <div class="mx-auto w-8/12 lg:max-w-2xl xl:max-w-4xl">
                     <div class="space-y-6">
                         @forelse ($this->cartItems as $item)
                             <div wire:key='{{ $item->id }}'
@@ -30,7 +30,7 @@
                                                 type="cart" />
 
                                             <button type="button"
-                                                @click="$dispatch('remove-from-cart-modal', {cartItemId: {{ $item->id }}})"
+                                                wire:click="$parent.traitAskRemoveFromCart('{{ $item->id }}')"
                                                 class="inline-flex items-center text-sm font-medium text-red-600 hover:underline dark:text-red-500">
                                                 <svg class="me-1.5 h-5 w-5" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -46,9 +46,8 @@
                                     <div class="flex items-center justify-between md:justify-end">
 
                                         <p class="flex items-center gap-4 text-gray-500">
-                                            {{-- <span>{{ __('frontend.cart.quantity') }}</span> --}}
-                                            <button {{-- wire:key='btn-decrease-{{ $item->id }}' --}}
-                                                wire:click='decreaseQuantity({{ $item->id }})' {{-- @click="$dispatch('decrease-quantity', {id: {{ $item->id }}})" --}}
+
+                                            <button wire:click="$parent.traitDecreaseQuantity('{{ $item->id }}')"
                                                 class="p-4 rounded-full bg-gray-50 hover:bg-gray-100 group">
                                                 <svg class="w-3 h-3 text-gray-800 group-hover:text-red-500! dark:text-white"
                                                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
@@ -60,8 +59,7 @@
 
                                             <span>{{ $item->quantity }}</span>
 
-                                            <button wire:click='increaseQuantity({{ $item->id }})'
-                                                {{-- @click="$dispatch('increase-quantity',{id:{{ $item->id }}})" --}}
+                                            <button wire:click="$parent.traitIncreaseQuantity('{{ $item->id }}')"
                                                 class="p-4 rounded-full bg-gray-50 hover:bg-gray-100 group">
                                                 <svg class="w-3 h-3 text-gray-800 group-hover:text-teal-500! dark:text-white"
                                                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
@@ -98,10 +96,10 @@
                     </div>
                 </div>
 
-                <div class="mx-auto w-4/12 {{-- flex-1 --}} space-y-6 {{-- bg-green-400 --}}">
+                <div class="mx-auto w-4/12 space-y-6">
                     <div
                         class="p-4 space-y-4 bg-white border border-gray-200 rounded-lg shadow-xs dark:border-gray-700 dark:bg-gray-800">
-                        <p class="text-xl font-thin text-nowrap text-gray-900  {{-- bg-orange-300 --}}">
+                        <p class="text-xl font-thin text-nowrap text-gray-900">
                             Order
                             summary</p>
 
@@ -126,7 +124,7 @@
 
                         <div class="flex items-center justify-center gap-2">
                             @if (count($this->cartItems) > 0)
-                                <button type="button" @click="$dispatch('set-cart-step',{step:2})"
+                                <button type="button" wire:click="$parent.setStep(2)"
                                     class="inline-flex items-center gap-2 text-white bg-linear-to-r! from-teal-400! via-teal-500! to-teal-600! hover:bg-linear-to-br! focus:ring-2 focus:outline-hidden focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-md px-5 py-2.5 text-center me-2 mb-2">
                                     <span>{{ __('frontend.cart.continue') }}</span>
                                     <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"

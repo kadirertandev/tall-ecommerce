@@ -80,7 +80,6 @@
                                                     <p class="flex items-center gap-4 text-gray-500">
                                                         <span>{{ __('frontend.cart.quantity') }}</span>
                                                         <button wire:click='decreaseQuantity({{ $item->id }})'
-                                                            {{-- @click="$dispatch('decrease-quantity', {id: {{ $item->id }}})" --}}
                                                             class="p-4 rounded-full hover:bg-gray-50 group">
                                                             <svg class="w-3 h-3 text-gray-800 group-hover:text-red-500! dark:text-white"
                                                                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -92,7 +91,6 @@
                                                         </button>
                                                         <span>{{ $item->quantity }}</span>
                                                         <button wire:click='increaseQuantity({{ $item->id }})'
-                                                            {{-- @click="$dispatch('increase-quantity', {id: {{ $item->id }}})" --}}
                                                             class="p-4 rounded-full hover:bg-gray-50 group">
                                                             <svg class="w-3 h-3 text-gray-800 group-hover:text-teal-500! dark:text-white"
                                                                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -105,8 +103,8 @@
                                                         </button>
                                                     </p>
                                                     <div class="flex">
-                                                        <button type="button" {{-- wire:click='removeFromCart({{ $item->id }})' --}}
-                                                            @click="$dispatch('remove-from-cart-modal', {cartItemId: {{ $item->id }}})"
+                                                        <button type="button"
+                                                            wire:click='askRemoveFromCart({{ $item->id }})'
                                                             class="font-medium text-red-400! hover:bg-gray-100 hover:text-red-600! p-2 rounded-lg">{{ __('frontend.cart.remove') }}</button>
                                                     </div>
                                                 </div>

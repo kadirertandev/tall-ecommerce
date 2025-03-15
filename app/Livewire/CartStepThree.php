@@ -2,19 +2,86 @@
 
 namespace App\Livewire;
 
-class CartStepThree extends BaseCartComponent
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Traits\CartData;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\UnauthorizedException;
+use Livewire\Component;
+use Throwable;
+
+class CartStepThree extends Component
 {
+  use CartData;
+
   public function rendering()
   {
     if ($this->cartItemsCount == 0) {
       $this->dispatch('set-cart-step', step: 1);
     }
   }
+
   public function mount()
   {
     if (session()->has("selected-address-for-cart")) {
       $this->selectedAddress = session()->get("selected-address-for-cart");
     }
+  }
+
+  public function giveOrder()
+  {
+    if (
+      !$this->tryCatch(function () {
+        if (Gate::denies("customer")) {
+          throw new UnauthorizedException("This action is unauthorized!");
+        }
+      })
+    ) {
+      return;
+    }
+
+    if ($this->cartItemsCount == 0) {
+      session()->remove("selected-address-for-cart");
+      $this->dispatch('set-cart-step', step: 1);
+      return;
+    }
+
+
+    $this->tryCatch(function () {
+      DB::beginTransaction();
+
+      $order = Order::create([
+        "user_id" => auth()->user()->id,
+        "city" => $this->finalAddress->city,
+        "district" => $this->finalAddress->district,
+        "neighborhood" => $this->finalAddress->neighborhood,
+        "address_line" => $this->finalAddress->address_line,
+        "total_price" => $this->cart->subtotal()
+      ]);
+
+      foreach ($this->cartItems as $cartItem) {
+        OrderItem::create([
+          "order_id" => $order->id,
+          "product_id" => $cartItem->product->id,
+          "price" => $cartItem->price,
+          "quantity" => $cartItem->quantity,
+          "item_total_price" => $cartItem->item_total_price,
+        ]);
+      }
+
+      $this->cart->delete();
+
+      DB::commit();
+
+      return to_route("auth.user.orders");
+    }, [
+      Throwable::class => function ($e) {
+        DB::rollBack();
+        dd($e);
+        $this->dispatch("something-went-wrong");
+      }
+    ]);
   }
 
   public function render()

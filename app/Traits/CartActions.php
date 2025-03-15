@@ -8,12 +8,15 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Livewire\Attributes\On;
 use Throwable;
 
-trait CartService
+trait CartActions
 {
   use WithTryCatch;
+  use CartData;
 
+  #[On("add-to-cart")]
   public function addToCart($productID)
   {
     $this->tryCatch(function () use ($productID) {
@@ -70,6 +73,13 @@ trait CartService
     ]);
   }
 
+  public function askRemoveFromCart($cartItemId)
+  {
+    $this->dispatch("remove-from-cart-modal", cartItemId: $cartItemId);
+  }
+
+  #[On("remove-form-cart-modal-is-confirmed")]
+  #[On("remove-form-cart-modal-is-denied")]
   public function removeFromCart($cartItemId, $addFavorites)
   {
     $this->tryCatch(
@@ -115,7 +125,7 @@ trait CartService
           "item_total_price" => $cartItem->quantity * ($cartItem->product->price - (float) $cartItem->product->discount_amount)
         ]);
       } else {
-        $this->dispatch("remove-from-cart-modal", cartItemId: $cartItem->id);
+        $this->askRemoveFromCart($cartItem->id);
       }
 
       $this->dispatch("refresh-cart");
