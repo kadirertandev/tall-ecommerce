@@ -48,10 +48,10 @@ class UserProfileAddresses extends Component
   }
   public function update()
   {
-    $this->tryCatch(function () {
-      $address = UserAddress::findOrFail($this->selectedAddressId);
+    $validated = $this->form->validate();
 
-      $validated = $this->form->validate();
+    $this->tryCatch(function () use ($validated) {
+      $address = UserAddress::findOrFail($this->selectedAddressId);
 
       # if makeDefault checkbox is checked
       # set all existing addresses of user to non-default before making selected address the default

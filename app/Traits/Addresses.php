@@ -63,8 +63,9 @@ trait Addresses
 
   public function add()
   {
-    $this->tryCatch(function () {
-      $validated = $this->form->validate();
+    $validated = $this->form->validate();
+
+    $this->tryCatch(function () use ($validated) {
 
       # if makeDefault checkbox is checked
       # set all existing addresses of user to non-default before making selected address the default
