@@ -2,22 +2,22 @@
 <div x-data="{ show: false }" x-show="show" x-on:open-order-view-modal.window="show = true"
     x-on:close-order-view-modal.window="show = false,$dispatch('order-view-modal-closed')" class="relative z-10"
     aria-labelledby="modal-title" role="dialog" aria-modal="true" wire:ignore.self style="display: none;">
-    <div class="fixed inset-0 bg-gray-500 opacity-40 transition-opacity"></div>
+    <div class="fixed inset-0 transition-opacity bg-gray-500 opacity-40"></div>
 
     <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+        <div class="flex items-end justify-center min-h-full p-4 text-center sm:items-center sm:p-0">
             <div
-                class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                class="relative overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:w-full sm:max-w-lg">
                 {{-- modal content --}}
                 <div class="bg-white" @click.outside="$dispatch('close-order-view-modal')">
                     {{-- header --}}
-                    <div class="flex items-center justify-between p-4 border-b  dark:border-gray-600">
+                    <div class="flex items-center justify-between p-4 border-b  border-gray-600!">
                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                             {{ $order?->user->full_name() }}'s Order
                         </h3>
 
                         <button type="button" @click="$dispatch('close-order-view-modal')"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            class="inline-flex items-center justify-center w-8 h-8 text-sm text-gray-400 bg-transparent rounded-lg hover:bg-gray-200 hover:text-gray-900 ms-auto dark:hover:bg-gray-600 dark:hover:text-white"
                             data-modal-hide="default-modal">
                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 14 14">
@@ -30,7 +30,7 @@
                     {{-- body --}}
                     <div class="p-4 space-y-2">
 
-                        <div class="hidden mb-5 flex gap-2 items-start">
+                        <div class="flex items-start hidden gap-2 mb-5">
                             @if ($order->profile_image ?? false)
                                 <img src="{{ asset('storage/' . $order->profile_image) }}"
                                     class="w-24 h-auto rounded-md">
@@ -41,35 +41,35 @@
                             <div>
                                 <div class="grid grid-cols-2 gap-2 mb-2">
                                     <div>
-                                        <h2 class="text-md text-gray-400">First Name</h2>
+                                        <h2 class="text-gray-400 text-md">First Name</h2>
                                         <h2 class="text-md">{{ $order?->first_name }}</h2>
                                     </div>
                                     <div>
-                                        <h2 class="text-md text-gray-400">Last Name</h2>
+                                        <h2 class="text-gray-400 text-md">Last Name</h2>
                                         <h2 class="text-md">{{ $order?->last_name }}</h2>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-2 mb-2">
                                     <div>
-                                        <h2 class="text-md text-gray-400">Email</h2>
+                                        <h2 class="text-gray-400 text-md">Email</h2>
                                         <h2 class="text-md">{{ $order?->email }}</h2>
                                     </div>
                                     <div>
-                                        <h2 class="text-md text-gray-400">Phone Number</h2>
+                                        <h2 class="text-gray-400 text-md">Phone Number</h2>
                                         <h2 class="text-md">{{ $order?->phone_number ?? 'NULL' }}</h2>
                                     </div>
                                 </div>
                                 <div class="grid grid-cols-2 gap-2 mb-2">
                                     <div>
-                                        <h2 class="text-md text-gray-400">Date of Birth</h2>
+                                        <h2 class="text-gray-400 text-md">Date of Birth</h2>
                                         <h2 class="text-md">{{ $order?->date_of_birth ?? 'NULL' }}</h2>
                                     </div>
                                     <div>
-                                        <h2 class="text-md text-gray-400">Addresses</h2>
+                                        <h2 class="text-gray-400 text-md">Addresses</h2>
                                         @if (count($order?->addresses ?? []) > 0)
                                             <button id="multiLevelDropdownButton" data-dropdown-toggle="multi-dropdown"
                                                 data-dropdown-placement="left"
-                                                class="w-full inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-4 focus:outline-none"
+                                                class="inline-flex items-center w-full px-4 py-2 text-sm font-medium text-center text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:outline-hidden"
                                                 type="button">
                                                 <svg class="w-2.5 h-2.5 me-3" aria-hidden="true"
                                                     xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -82,7 +82,7 @@
 
                                             <!-- Dropdown menu -->
                                             <div id="multi-dropdown"
-                                                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
                                                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
                                                     aria-labelledby="multiLevelDropdownButton">
 
@@ -104,17 +104,17 @@
                                                             </svg>
                                                         </button>
                                                         <div id="doubleDropdown-{{ $order?->defaultAddress()->id }}"
-                                                            class="z-10 hidden bg-white divide-y divide-gray-100 border-2 border-gray-300 shadow min-w-44 dark:bg-gray-700">
-                                                            <ul class="p-2 text-sm text-gray-700 dark:text-gray-200 space-y-2"
+                                                            class="z-10 hidden bg-white border-2 border-gray-300 divide-y divide-gray-100 shadow-sm min-w-44 dark:bg-gray-700">
+                                                            <ul class="p-2 space-y-2 text-sm text-gray-700 dark:text-gray-200"
                                                                 aria-labelledby="doubleDropdownButton-{{ $order?->defaultAddress()->id }}">
                                                                 {{-- <li>
                                                               <a href="#"
                                                                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Overview</a>
                                                           </li> --}}
-                                                                <p class="font-roboto font-thin text-black text-md">
+                                                                <p class="font-thin text-black font-roboto text-md">
                                                                     {{ $order?->defaultAddress()->neighborhood }}
                                                                 </p>
-                                                                <p class="font-roboto font-thin text-black text-md">
+                                                                <p class="font-thin text-black font-roboto text-md">
                                                                     {{ $order?->defaultAddress()->address_line }}
                                                                 </p>
                                                                 <p class="text-xl text-nowrap">
@@ -142,18 +142,18 @@
                                                                 </svg>
                                                             </button>
                                                             <div id="doubleDropdown-{{ $address->id }}"
-                                                                class="z-10 hidden bg-white divide-y divide-gray-100 border-2 border-gray-300 shadow min-w-44 dark:bg-gray-700">
-                                                                <ul class="p-2 text-sm text-gray-700 dark:text-gray-200 space-y-2"
+                                                                class="z-10 hidden bg-white border-2 border-gray-300 divide-y divide-gray-100 shadow-sm min-w-44 dark:bg-gray-700">
+                                                                <ul class="p-2 space-y-2 text-sm text-gray-700 dark:text-gray-200"
                                                                     aria-labelledby="doubleDropdownButton-{{ $address->id }}">
                                                                     {{-- <li>
                                                                     <a href="#"
                                                                         class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Overview</a>
                                                                 </li> --}}
                                                                     <p
-                                                                        class="font-roboto font-thin text-black text-md">
+                                                                        class="font-thin text-black font-roboto text-md">
                                                                         {{ $address->neighborhood }}</p>
                                                                     <p
-                                                                        class="font-roboto font-thin text-black text-md">
+                                                                        class="font-thin text-black font-roboto text-md">
                                                                         {{ $address->address_line }}</p>
                                                                     <p class="text-xl text-nowrap">
                                                                         {{ $address->district }}
@@ -176,7 +176,7 @@
                         </div>
 
                         <div
-                            class="bg-gray-200 text-gray-600 p-3 grid grid-cols-2 mb-4 rounded-t-lg border-b-2 pb-3 border-b-gray-200">
+                            class="grid grid-cols-2 p-3 pb-3 mb-4 text-gray-600 bg-gray-200 border-b-2 rounded-t-lg border-b-gray-200">
                             <div>
                                 <div class="grid grid-cols-2">
                                     <h1 class="font-medium">Sipariş No</h1>
@@ -208,8 +208,8 @@
                         </div>
                         @foreach ($order?->items ?? [] as $item)
                             <div class="flex items-start justify-between gap-6 mb-2">
-                                <div class="w-9/12 flex items-start justify-between gap-4">
-                                    <div class="flex gap-8 items-start ">
+                                <div class="flex items-start justify-between w-9/12 gap-4">
+                                    <div class="flex items-start gap-8 ">
                                         <a
                                             href="{{ route('products.show', ['category_slug' => $item->product->category->slug, 'product_slug' => $item->product->slug]) }}">
                                             <img src="{{ asset('storage/' . $item->product->image) }}"
@@ -217,7 +217,7 @@
                                         </a>
                                         <p class="flex items-center gap-2">
                                             <span>{{ $item->quantity }}</span>
-                                            <svg class="mt-2 h-5 w-5" aria-hidden="true"
+                                            <svg class="w-5 h-5 mt-2" aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-linecap="round"

@@ -34,7 +34,7 @@
             <div class="px-4 py-2 mb-4 bg-white border border-gray-200 rounded-lg rounded-t-lg ">
                 <label for="comment" class="sr-only">Your comment</label>
                 <textarea wire:model='comment' id="comment" rows="6"
-                    class="w-full px-0 text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:placeholder-gray-400 "
+                    class="w-full px-0 text-sm text-gray-900 border-0 focus:ring-0 focus:outline-hidden darkplaceholder-gray-400"
                     placeholder="Write a comment..." required></textarea>
             </div>
             @error('comment')
@@ -43,7 +43,7 @@
                 </div>
             @enderror
             <button wire:click.prevent='create' type="submit"
-                class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-teal-500 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-teal-600">
+                class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-teal-500 rounded-lg focus:ring-2 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-teal-600!">
                 {{ __('frontend.post-comment') }}
             </button>
         </form>
@@ -51,7 +51,7 @@
         <div id="reviews-pagination">{{ $this->reviews()->links(data: ['scrollTo' => '#reviews-pagination']) }}</div>
         @foreach ($this->reviews() as $review)
             <article wire:key='review-{{ $review->id }}' id="review-{{ $review->id }}"
-                class="py-4 my-4 border-b-2 border-red-200 shadow-sm border-s-2 ps-4 shadow-red-300">
+                class="py-4 my-4 border-b-2 border-red-200 shadow-xs border-s-2 ps-4 shadow-red-300">
                 <div class="flex items-start justify-between mb-4">
                     <div class="flex items-center mb-4">
                         @if ($review->user->profile_image)
@@ -73,7 +73,7 @@
 
                             <div wire:key='popover-content-{{ $review->id }}' data-popover
                                 id="popover-right{{ $review->id }}" role="tooltip"
-                                class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+                                class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-xs opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
                                 <div
                                     class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
                                     <h3 class="font-semibold text-gray-900 dark:text-white">Exact Join Date</h3>
@@ -90,7 +90,7 @@
                     <div wire:key='dropdown-container-{{ $review->id }}'>
                         <button id="dropdownComment{{ $review->id }}Button"
                             data-dropdown-toggle="dropdownComment{{ $review->id }}"
-                            class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-500 bg-white rounded-lg dark:text-gray-400 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                            class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-500 bg-white rounded-lg dark:text-gray-400 hover:bg-gray-100 focus:ring-2 focus:outline-hidden focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                             type="button">
                             <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                 fill="currentColor" viewBox="0 0 16 3">
@@ -101,7 +101,7 @@
                         </button>
                         <!-- Dropdown menu -->
                         <div id="dropdownComment{{ $review->id }}"
-                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded shadow w-36 dark:bg-gray-700 dark:divide-gray-600">
+                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-sm shadow-sm w-36 dark:bg-gray-700 dark:divide-gray-600">
                             <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
                                 aria-labelledby="dropdownMenuIconHorizontalButton">
                                 @can('admin')
@@ -136,18 +136,9 @@
                     <h3 class="text-sm font-semibold text-gray-900 ms-2 dark:text-white">{{ $review->title }}</h3>
                 </div>
                 <footer class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                    {{-- <p>Reviewed in the United Kingdom on <time datetime="2017-03-03 19:00">March 3, 2017</time>
-                    </p> --}}
-                    {{-- <p>Reviewed on {{ $review->created_at }}</p> --}}
-                    {{-- <p>Reviewed on {{ $review->created_at->toDateString() }}</p> --}}
-                    {{-- <p>Reviewed on {{ $review->created_at->toTimeString() }}</p> --}}
-                    {{-- <p>Reviewed on {{ $review->created_at->toDateTimeString() }}</p> --}}
                     <p>Reviewed on {{ $review->created_at->toFormattedDateString() }}</p>
-                    {{-- <p>Reviewed on {{ $review->created_at->toDayDateTimeString() }}</p> --}}
-                    {{-- <p>{{ Carbon\Carbon::now()->addMonths(3)->addHours(4) }}</p> --}}
                 </footer>
                 <p class="mb-2 text-gray-500 dark:text-gray-400">{{ $review->comment }}</p>
-                {{-- <p class="mb-3 text-gray-500 dark:text-gray-400"></p> --}}
                 <a href="#"
                     class="block mb-5 text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">Read
                     more</a>
@@ -155,7 +146,7 @@
                     <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">19 people found this helpful</p>
                     <div class="flex items-center mt-3">
                         <a href="#"
-                            class="px-2 py-1.5 text-xs font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Helpful</a>
+                            class="px-2 py-1.5 text-xs font-medium text-gray-900 focus:outline-hidden bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Helpful</a>
                         <a href="#"
                             class="text-sm font-medium text-blue-600 border-gray-200 ps-4 hover:underline dark:text-blue-500 ms-4 border-s md:mb-0 dark:border-gray-600">Report
                             abuse</a>

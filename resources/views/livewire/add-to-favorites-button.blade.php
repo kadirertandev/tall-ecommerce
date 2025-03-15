@@ -3,16 +3,16 @@
         @php
             $buttonClass =
                 $type === 'show'
-                    ? 'group flex relative items-center justify-center py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border-2 shadow-xl border-gray-200 hover:bg-red-500 focus:z-10 dark:hover:text-white'
+                    ? 'group flex relative items-center justify-center py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-hidden bg-white rounded-lg border-2 shadow-xl border-gray-200 hover:bg-red-500! focus:z-10 hover:text-white!'
                     : ($type === 'cart'
-                        ? 'inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 hover:underline dark:text-gray-400 dark:hover:text-white'
+                        ? 'group inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-900 hover:underline dark:text-gray-400 dark:hover:text-white'
                         : 'absolute max-w-md:bottom-0 max-w-md:right-1/2 max-w-md:left-1/2 md:right-0 md:top-0');
 
             $svgClass =
                 $type === 'show'
                     ? 'w-5 h-5 -ms-2 me-2 group-hover:fill-white'
                     : ($type === 'cart'
-                        ? 'me-1.5 h-5 w-5'
+                        ? 'me-1.5 h-5 w-5 group-hover:fill-main-red! group-hover:stroke-main-red!'
                         : 'w-10 h-10 -ms-2 me-2 group-hover:fill-white');
 
             $svgPath = !auth()->user()->favorites->contains($this->productId)
@@ -23,9 +23,8 @@
         @if (!auth()->user()->favorites->contains($this->productId))
             <button wire:click='addToFavorites' class="{{ $buttonClass }}" role="button">
                 <svg class="{{ $svgClass }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="{{ $svgPath }}" />
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $svgPath }}" />
                 </svg>
                 @if ($showLabel)
                     <span>{{ __('frontend.favorites.add-to-favorites') }}</span>
@@ -46,7 +45,7 @@
 
     @guest
         <a @click="$dispatch('add-to-favorites-guest-error')"
-            class="group flex relative items-center justify-center py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border-2 shadow-xl border-gray-200 hover:bg-red-500 focus:z-10 dark:hover:text-white "
+            class="group flex relative items-center justify-center py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-hidden bg-white rounded-lg border-2 shadow-xl border-gray-200 hover:bg-red-500! focus:z-10 hover:text-white!"
             role="button">
             <svg class="w-5 h-5 -ms-2 me-2 group-hover:fill-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                 width="24" height="24" fill="none" viewBox="0 0 24 24">

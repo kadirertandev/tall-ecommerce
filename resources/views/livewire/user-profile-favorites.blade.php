@@ -1,7 +1,7 @@
 <div class="w-full mb-4 text-gray-500 bg-white rounded-lg text-medium dark:text-gray-400 dark:bg-gray-800">
     <div class="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div
-            class="{{-- col-span-4 --}}w-full sm:w-7/12 lg:w-9/12 flex items-center justify-between bg-gray-50 ring-2 ring-gray-100 px-3 rounded-lg">
+            class="{{-- col-span-4 --}}w-full sm:w-7/12 lg:w-9/12 flex items-center justify-between bg-gray-50 ring-2 ring-gray-100! px-3 rounded-lg">
             <h1 class="text-3xl">{{ __('frontend.favorites.favorites') }}</h1>
             @if ($this->favorites->count() > 0)
                 <p>{{ $this->favorites->total() . ' ' . Str::lower(__('frontend.product.product')) }}
@@ -19,7 +19,7 @@
             </button>
             <!-- Dropdown menu -->
             <div id="dropdown" wire:ignore.self
-                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
                     <li wire:click='$set("cols",2)'>
                         <a href="#"
@@ -50,7 +50,7 @@
             <h2 class="text-xl">{{ __('frontend.filters.sort') }}</h2>
             <div>
                 <button id="dropdownDefaultButtonasdf" data-dropdown-toggle="dropdownasdf"
-                    class="text-black bg-white ring-2 ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center "
+                    class="text-black bg-white ring-2 ring-gray-200! font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center "
                     type="button">
                     {{ $orderFrontend }}
                     <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -61,7 +61,7 @@
                 </button>
                 <!-- Dropdown menu -->
                 <div id="dropdownasdf" wire:ignore.self
-                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
                         aria-labelledby="dropdownDefaultButtonasdf">
                         <li wire:click='lastAdded'>
@@ -107,7 +107,7 @@
     <div class="flex items-center mt-2">
         <div class="relative">
             <button id="dropdownBgHoverButton" data-dropdown-toggle="dropdownBgHover" {{-- wire:click='$toggle("opened")' --}}
-                class="text-black bg-white ring-2 ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center "
+                class="text-black bg-white ring-2 ring-gray-200! font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center "
                 type="button">{{ __('frontend.categories') }}<svg class="w-2.5 h-2.5 ms-3" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -140,13 +140,13 @@
                     aria-labelledby="dropdownBgHoverButton">
                     @foreach ($this->categories as $id => $name)
                         <li wire:key='category-{{ md5($name) }}-{{ $id }}' {{-- wire:click='$set("opened",false)' --}}>
-                            <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                            <div class="flex items-center p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600">
                                 <input wire:key='category-check-{{ $name }}-{{ $id }}'
                                     wire:model.live='categoriesFilter' id="category-check-{{ md5($name) }}"
                                     type="checkbox" value="{{ $id }}"
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                 <label for="category-check-{{ md5($name) }}"
-                                    class="w-full text-sm font-medium text-gray-900 rounded ms-2">{{ $name }}</label>
+                                    class="w-full text-sm font-medium text-gray-900 rounded-sm ms-2">{{ $name }}</label>
                             </div>
                         </li>
                     @endforeach
@@ -161,7 +161,7 @@
         class="mt-8 grid grid-cols-1 md:grid-cols-{{ $this->cols / 2 }} md:grid-cols-{{ $this->cols }} gap-3">
         @forelse ($this->favorites as $favorite)
             <div wire:key='favorite-card-{{ $favorite->name ? $favorite->id : $favorite->user_id }}'
-                class="p-3 shadow-lg ring-4 ring-gray-50">
+                class="p-3 shadow-lg ring-2 ring-gray-50!">
                 <div class="relative flex items-center gap-2 md:flex-col md:gap-2">
                     <div class="w-full min-w-24 h-48 max-h-48 flex items-center justify-center {{-- bg-red-500 --}}">
                         <img src="{{ asset('/storage/' . ($favorite->name ? $favorite->image : $favorite->product->image)) }}"

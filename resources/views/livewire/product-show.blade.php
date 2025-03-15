@@ -1,11 +1,12 @@
 <div>
-    <div class="main-container ">
+    <div class="main-container">
         <div class="my-4">
             {!! \App\Helpers\Breadcrumbs::generate($breadcrumbs) !!}
         </div>
         <section
-            class="py-8 mt-4 antialiased bg-white border-t-2 border-red-200 rounded-md shadow-2xl md:py-16 shadow-red-50 border-e-2">
-            <div class="max-w-screen-xl px-4 mx-auto 2xl:px-0">
+            class="py-8 mt-4 antialiased bg-white border-t-2! border-red-200! rounded-md shadow-2xl! md:py-16 shadow-red-50! border-e-2!">
+
+            <div class="max-w-(--breakpoint-xl) px-4 mx-auto 2xl:px-0">
                 <div class="lg:grid lg:grid-cols-2 lg:gap-8 xl:gap-16">
                     <div class="max-w-md mx-auto shrink-0 lg:max-w-lg">
                         <img class="w-full " src="{{ asset('/storage/' . $this->product->image) }}" alt="" />
@@ -50,7 +51,7 @@
 
                         <div class="mt-6 sm:gap-4 sm:items-center sm:flex sm:mt-8">
                             <livewire:add-to-cart-button :productId="$this->product->id" :svg='true'
-                                class="text-gray-900 mt-4 dark:hover:text-white sm:mt-0 bg-white hover:bg-teal-500 border-2 border-gray-200 font-medium rounded-lg shadow-xl text-sm px-5 py-2.5 dark:bg-primary-600 focus:outline-none flex items-center justify-center" />
+                                class="text-gray-900 mt-4 hover:text-white sm:mt-0 bg-white hover:bg-teal-500! border-2 border-gray-200 font-medium rounded-lg shadow-xl text-sm px-5 py-2.5 dark:bg-primary-600 focus:outline-hidden flex items-center justify-center" />
                             <livewire:add-to-favorites-button :productId="$this->product->id" type="show" />
                         </div>
 

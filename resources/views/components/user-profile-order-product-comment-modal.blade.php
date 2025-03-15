@@ -3,22 +3,22 @@
     x-on:close-user-profile-order-product-comment-modal.window="show = false,$dispatch('user-profile-order-product-comment-modal-closed')"
     class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true" wire:ignore.self
     style="display: none;">
-    <div class="fixed inset-0 bg-gray-500 opacity-40 transition-opacity"></div>
+    <div class="fixed inset-0 transition-opacity bg-gray-500 opacity-40"></div>
 
     <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+        <div class="flex items-end justify-center min-h-full p-4 text-center sm:items-center sm:p-0">
             <div
-                class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                class="relative overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:w-full sm:max-w-lg">
                 {{-- modal content --}}
                 <div class="bg-white" @click.outside="$dispatch('close-user-profile-order-product-comment-modal')">
                     {{-- header --}}
-                    <div class="flex items-center justify-between p-4 border-b  dark:border-gray-600">
+                    <div class="flex items-center justify-between p-4 border-b  border-gray-600!">
                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                             Yorum Oluştur
                         </h3>
 
                         <button type="button" @click="$dispatch('close-user-profile-order-product-comment-modal')"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            class="inline-flex items-center justify-center w-8 h-8 text-sm text-gray-400 bg-transparent rounded-lg hover:bg-gray-200 hover:text-gray-900 ms-auto dark:hover:bg-gray-600 dark:hover:text-white"
                             data-modal-hide="default-modal">
                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 14 14">
@@ -29,11 +29,11 @@
                         </button>
                     </div>
                     {{-- body --}}
-                    <div class="p-4 md:p-5 space-y-2">
-                        <div class="mb-4 grid grid-cols-10 gap-4">
-                            <img class="col-span-2 w-24 h-auto" src="{{ asset('storage/' . $product?->image) }}">
+                    <div class="p-4 space-y-2 md:p-5">
+                        <div class="grid grid-cols-10 gap-4 mb-4">
+                            <img class="w-24 h-auto col-span-2" src="{{ asset('storage/' . $product?->image) }}">
                             <div class="col-span-8">
-                                <h1 class="text-md font-semibold">{!! $product?->title() !!}</h1>
+                                <h1 class="font-semibold text-md">{!! $product?->title() !!}</h1>
                             </div>
                         </div>
                         <div class="flex items-center gap-2 mb-5">
@@ -42,7 +42,7 @@
                                     <button wire:key='star-{{ $i }}' wire:ignore
                                         onclick="rate({{ $i }})"
                                         wire:click='$set("rating",{{ $i }})'>
-                                        <svg id="star-{{ $i }}" class="w-6 h-6 ms-2 text-gray-300"
+                                        <svg id="star-{{ $i }}" class="w-6 h-6 text-gray-300 ms-2"
                                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                             viewBox="0 0 22 20">
                                             <path
@@ -52,7 +52,7 @@
                                 @endfor
                             </div>
                             <button wire:ignore id="btnClearRating" onclick="clearRate()" wire:click='$set("rating",0)'
-                                class="hidden text-xs bg-red-500 px-2 py-1 text-white rounded-lg">Temizle</button>
+                                class="hidden px-2 py-1 text-xs text-white bg-red-500 rounded-lg">Temizle</button>
                         </div>
                         <form class="mb-6">
                             <div class="mb-3">
@@ -60,34 +60,34 @@
                                     placeholder="Write a title..."
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
                                 @error('reviewForm.title')
-                                    <div class="p-2 mb-2 text-sm bg-red-500 text-white rounded-lg" role="alert">
+                                    <div class="p-2 mb-2 text-sm text-white bg-red-500 rounded-lg" role="alert">
                                         <span class="font-medium">{{ $message }}</span>
                                     </div>
                                 @enderror
                             </div>
-                            <div class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 ">
+                            <div class="px-4 py-2 mb-4 bg-white border border-gray-200 rounded-lg rounded-t-lg ">
                                 <label for="comment" class="sr-only">Your comment</label>
                                 <textarea wire:model='reviewForm.comment' id="comment" rows="6"
-                                    class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none  dark:placeholder-gray-400 "
+                                    class="w-full px-0 text-sm text-gray-900 border-0 focus:ring-0 focus:outline-hidden dark:placeholder-gray-400 "
                                     placeholder="Write a comment..." required></textarea>
                             </div>
                             @error('reviewForm.comment')
-                                <div class="p-2 mb-2 text-sm bg-red-500 text-white rounded-lg" role="alert">
+                                <div class="p-2 mb-2 text-sm text-white bg-red-500 rounded-lg" role="alert">
                                     <span class="font-medium">{{ $message }}</span>
                                 </div>
                             @enderror
                             <button wire:click.prevent='createComment' type="submit"
-                                class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-teal-500 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-teal-600">
+                                class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-teal-500! rounded-lg focus:ring-2 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-teal-600!">
                                 {{ __('frontend.post-comment') }}
                             </button>
                         </form>
                     </div>
                 </div>
-                {{-- <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                {{-- <div class="px-4 py-3 bg-gray-50 sm:flex sm:flex-row-reverse sm:px-6">
                     <button type="button"
-                        class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Deactivate</button>
+                        class="inline-flex justify-center w-full px-3 py-2 text-sm font-semibold text-white bg-red-600 rounded-md shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto">Deactivate</button>
                     <button type="button"
-                        class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button>
+                        class="inline-flex justify-center w-full px-3 py-2 mt-3 text-sm font-semibold text-gray-900 bg-white rounded-md shadow-xs ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button>
                 </div> --}}
             </div>
         </div>

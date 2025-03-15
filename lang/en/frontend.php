@@ -1,6 +1,7 @@
 <?php
 
 return [
+  "home" => "Home",
   "aboutus" => "About Us",
   "all" => "All",
   "all-categories" => "All Categories",

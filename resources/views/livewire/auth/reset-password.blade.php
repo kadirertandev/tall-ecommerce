@@ -57,7 +57,7 @@
                             required="">
                     </div>
                     <button wire:click.prevent='resetPassword' type="submit"
-                        class="w-full text-white bg-teal-500 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">{{ __('frontend.form.reset-password-form.reset') }}</button>
+                        class="w-full text-white bg-teal-500 hover:bg-primary-700 focus:ring-2 focus:outline-hidden focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">{{ __('frontend.form.reset-password-form.reset') }}</button>
                 </form>
             </div>
         </div>

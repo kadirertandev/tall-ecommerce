@@ -1,12 +1,12 @@
 <div>
     <section class="bg-gray-50 dark:bg-gray-900">
-        <div class="mx-auto max-w-screen-2xl">
+        <div class="mx-auto max-w-(--breakpoint-2xl)">
             <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                 <div class="flex flex-row items-end justify-between px-4 lg:space-y-0 lg:space-x-4">
                     <div class="flex-1">
                         <div wire:ignore class="flex flex-wrap gap-4 mt-4 mb-8 place-content-center">
                             <div
-                                class="flex flex-col items-center w-1/3 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                                class="flex flex-col items-center w-1/3 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-20 h-20" viewBox="0 0 48 48">
                                     <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
                                         <path d="M41 14L24 4L7 14v20l17 10l17-10z" />
@@ -20,7 +20,7 @@
                                 </h5>
                             </div>
                             <div
-                                class="flex flex-col items-center flex-1 w-1/3 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                                class="flex flex-col items-center flex-1 w-1/3 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-20 h-20" viewBox="0 0 24 24">
                                     <path fill="currentColor"
                                         d="M12 12.5a3.5 3.5 0 1 0 0 7a3.5 3.5 0 0 0 0-7M10.5 16a1.5 1.5 0 1 1 3 0a1.5 1.5 0 0 1-3 0" />
@@ -35,7 +35,7 @@
                                 </h5>
                             </div>
                             <div
-                                class="flex flex-col items-center w-1/3 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                                class="flex flex-col items-center w-1/3 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-20 h-20" viewBox="0 0 32 32">
                                     <path fill="currentColor"
                                         d="M0 6v2h19v15h-6.156c-.446-1.719-1.992-3-3.844-3c-1.852 0-3.398 1.281-3.844 3H4v-5H2v7h3.156c.446 1.719 1.992 3 3.844 3c1.852 0 3.398-1.281 3.844-3h8.312c.446 1.719 1.992 3 3.844 3c1.852 0 3.398-1.281 3.844-3H32v-8.156l-.063-.157l-2-6L29.72 10H21V6zm1 4v2h9v-2zm20 2h7.281L30 17.125V23h-1.156c-.446-1.719-1.992-3-3.844-3c-1.852 0-3.398 1.281-3.844 3H21zM2 14v2h6v-2zm7 8c1.117 0 2 .883 2 2s-.883 2-2 2s-2-.883-2-2s.883-2 2-2m16 0c1.117 0 2 .883 2 2s-.883 2-2 2s-2-.883-2-2s.883-2 2-2">
@@ -48,7 +48,7 @@
                                 </h5>
                             </div>
                             <div
-                                class="flex flex-col items-center w-1/3 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                                class="flex flex-col items-center w-1/3 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-20 h-20" viewBox="0 0 32 32">
                                     <path fill="currentColor" d="M8 18h6v2H8zm0 4h10v2H8z"></path>
                                     <path fill="currentColor"
@@ -62,7 +62,7 @@
                                 </h5>
                             </div>
                             <div
-                                class="flex flex-col items-center w-1/3 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                                class="flex flex-col items-center w-1/3 max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-20 h-20" viewBox="0 0 24 24">
                                     <circle cx="12" cy="6" r="4" fill="currentColor"></circle>
                                     <path fill="currentColor"
@@ -81,7 +81,7 @@
                             <h2 class="flex items-center justify-center gap-2">
                                 <span>Sales & Revenue - </span>
                                 <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
-                                    class="inline-flex items-center text-sm font-medium text-center text-black rounded-lg focus:ring-1 focus:ring-gray-400 {{-- ring-2 ring-gray-400 focus:outline-none --}}"
+                                    class="inline-flex items-center text-sm font-medium text-center text-black rounded-lg focus:ring-1 focus:ring-gray-400 {{-- ring-2 ring-gray-400 focus:outline-hidden --}}"
                                     type="button">
                                     @if (str_contains($filter, '_'))
                                         <span>Last
@@ -97,7 +97,7 @@
                                 </button>
                                 <!-- Dropdown menu -->
                                 <div id="dropdown"
-                                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
                                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
                                         aria-labelledby="dropdownDefaultButton">
                                         <li @click="$wire.set('filter','today')"

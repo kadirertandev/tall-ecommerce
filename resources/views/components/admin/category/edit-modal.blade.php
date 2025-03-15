@@ -12,7 +12,7 @@
                 {{-- modal content --}}
                 <div class="bg-white" @click.outside="$dispatch('close-category-edit-modal')">
                     {{-- header --}}
-                    <div class="flex items-center justify-between p-4 border-b dark:border-gray-600">
+                    <div class="flex items-center justify-between p-4 border-b border-gray-600!">
                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                             Update - {{ $category?->name }}
                         </h3>
@@ -58,7 +58,7 @@
                                 <input wire:model.live='editForm.is_popular'
                                     id="category-{{ $category?->id }}-is-popular" type="checkbox"
                                     value="{{ $category?->is_popular }}" @checked($category?->is_popular)
-                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                                     @change="$wire.updateCategoryIsPopular($el.checked)">
                                 <label for="category-{{ $category?->id }}-is-popular"
                                     class="text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">Is
@@ -70,7 +70,7 @@
                             <div>
                                 <button id="dropdownSearchButton" data-dropdown-toggle="dropdownSearch"
                                     data-dropdown-placement="top"
-                                    class="inline-flex items-center w-full px-4 py-2 text-sm font-medium text-center text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-4 focus:outline-none"
+                                    class="inline-flex items-center w-full px-4 py-2 text-sm font-medium text-center text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:outline-hidden"
                                     type="button">
                                     <span>Brands</span>
                                     <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -120,14 +120,14 @@
                                         aria-labelledby="dropdownSearchButton">
                                         @foreach ($brands as $brand)
                                             <li wire:key='brand-{{ $brand->id }}'
-                                                class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                class="flex items-center p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600">
                                                 <input wire:model.live='editForm.categoryBrands'
                                                     id="checkbox-brand-{{ $brand->id }}" type="checkbox"
                                                     value="{{ $brand->id }}"
-                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
                                                     @change="$wire.updateCategoryBrands({{ $brand->id }}, $el.checked)">
                                                 <label for="checkbox-brand-{{ $brand->id }}"
-                                                    class="w-full text-sm font-medium text-gray-900 rounded ms-2 dark:text-gray-300">
+                                                    class="w-full text-sm font-medium text-gray-900 rounded-sm ms-2 dark:text-gray-300">
                                                     {{ $brand->name }}</label>
                                             </li>
                                         @endforeach
@@ -164,7 +164,7 @@
                                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                         for="file_input">Upload file</label>
                                     <input wire:model.live='editForm.image'
-                                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-hidden dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                                         aria-describedby="file_input_help" id="file_input" type="file">
                                     <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">
                                         {{ implode(', ', App\Constants\MimeTypes::ALLOWED_PHOTO_MIMES_UPLOAD) }}
@@ -178,7 +178,7 @@
                         </div>
                         <div class="flex items-center space-x-4">
                             <button wire:click.prevent='update' type="submit"
-                                class="text-white bg-teal-500 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                                class="text-white bg-teal-500 hover:bg-primary-800 focus:ring-2 focus:outline-hidden focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                                 <span>Update category</span>
                             </button>
                         </div>

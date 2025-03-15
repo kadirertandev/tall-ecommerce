@@ -1,6 +1,6 @@
 <div class="mb-4">
     <section {{-- wire:poll.10s --}} class="py-4 antialiased bg-white dark:bg-gray-900">
-        <div class="max-w-screen-xl mx-auto">
+        <div class="max-w-(--breakpoint-xl) mx-auto">
             <div class="flex gap-6">
                 <div class="flex items-center justify-between w-8/12 ">
                     <h2 class="text-3xl font-thin text-gray-900">{{ __('frontend.cart.shopping-cart') }}</h2>
@@ -16,7 +16,7 @@
                     <div class="space-y-6">
                         @forelse ($this->cartItems as $item)
                             <div wire:key='{{ $item->id }}'
-                                class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
+                                class="p-4 bg-white border border-gray-200 rounded-lg shadow-xs dark:border-gray-700 dark:bg-gray-800 md:p-6">
                                 <div class="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
                                     <a href="#" class="flex items-center w-24 h-24 shrink-0">
                                         <img class="flex-1 w-full h-auto"
@@ -50,7 +50,7 @@
                                             <button {{-- wire:key='btn-decrease-{{ $item->id }}' --}}
                                                 wire:click='decreaseQuantity({{ $item->id }})' {{-- @click="$dispatch('decrease-quantity', {id: {{ $item->id }}})" --}}
                                                 class="p-4 rounded-full bg-gray-50 hover:bg-gray-100 group">
-                                                <svg class="w-3 h-3 text-gray-800 group-hover:text-red-500 dark:text-white"
+                                                <svg class="w-3 h-3 text-gray-800 group-hover:text-red-500! dark:text-white"
                                                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                                                     height="24" fill="none" viewBox="0 0 24 24">
                                                     <path stroke="currentColor" stroke-linecap="round"
@@ -63,7 +63,7 @@
                                             <button wire:click='increaseQuantity({{ $item->id }})'
                                                 {{-- @click="$dispatch('increase-quantity',{id:{{ $item->id }}})" --}}
                                                 class="p-4 rounded-full bg-gray-50 hover:bg-gray-100 group">
-                                                <svg class="w-3 h-3 text-gray-800 group-hover:text-teal-500 dark:text-white"
+                                                <svg class="w-3 h-3 text-gray-800 group-hover:text-teal-500! dark:text-white"
                                                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                                                     height="24" fill="none" viewBox="0 0 24 24">
                                                     <path stroke="currentColor" stroke-linecap="round"
@@ -80,7 +80,7 @@
                             </div>
                         @empty
                             <div
-                                class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
+                                class="p-4 bg-white border border-gray-200 rounded-lg shadow-xs dark:border-gray-700 dark:bg-gray-800 md:p-6">
                                 <div class="flex flex-col items-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-20 h-20 text-red-500"
                                         viewBox="0 0 16 16">
@@ -100,7 +100,7 @@
 
                 <div class="mx-auto w-4/12 {{-- flex-1 --}} space-y-6 {{-- bg-green-400 --}}">
                     <div
-                        class="p-4 space-y-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                        class="p-4 space-y-4 bg-white border border-gray-200 rounded-lg shadow-xs dark:border-gray-700 dark:bg-gray-800">
                         <p class="text-xl font-thin text-nowrap text-gray-900  {{-- bg-orange-300 --}}">
                             Order
                             summary</p>
@@ -127,7 +127,7 @@
                         <div class="flex items-center justify-center gap-2">
                             @if (count($this->cartItems) > 0)
                                 <button type="button" @click="$dispatch('set-cart-step',{step:2})"
-                                    class="inline-flex items-center gap-2 text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-md px-5 py-2.5 text-center me-2 mb-2">
+                                    class="inline-flex items-center gap-2 text-white bg-linear-to-r! from-teal-400! via-teal-500! to-teal-600! hover:bg-linear-to-br! focus:ring-2 focus:outline-hidden focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-md px-5 py-2.5 text-center me-2 mb-2">
                                     <span>{{ __('frontend.cart.continue') }}</span>
                                     <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                         fill="none" viewBox="0 0 24 24">
@@ -137,7 +137,7 @@
                                 </button>
                             @else
                                 <a href="{{ route('home') }}"
-                                    class="cursor-pointer inline-flex items-center gap-2 text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-md px-5 py-2.5 text-center me-2 mb-2">
+                                    class="cursor-pointer inline-flex items-center gap-2 text-white bg-linear-to-r! from-teal-500! via-teal-600! to-teal-700! hover:bg-linear-to-br! focus:ring-2 focus:outline-hidden focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-md px-5 py-2.5 text-center me-2 mb-2">
                                     <span>{{ __('frontend.cart.start-shopping') }}</span>
                                     <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                         fill="none" viewBox="0 0 24 24">

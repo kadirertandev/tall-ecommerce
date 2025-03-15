@@ -11,7 +11,7 @@
             <div class="flex items-center justify-end w-10/12">
                 <div class="flex items-center space-x-3 md:space-x-0 rtl:space-x-reverse">
                     <button type="button"
-                        class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                        class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300!"
                         id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
                         data-dropdown-placement="left">
                         <span class="sr-only">Open user menu</span>
@@ -23,7 +23,7 @@
                         @endif
                     </button>
                     <!-- Dropdown menu -->
-                    <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+                    <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600"
                         id="user-dropdown">
                         <div class="px-4 py-3">
                             <span
@@ -34,11 +34,11 @@
                         <ul class="py-2" aria-labelledby="user-menu-button">
                             <li>
                                 <a href="#"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-400 hover:text-gray-100">Profile</a>
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-400 hover:text-gray-100!">Profile</a>
                             </li>
                             <li>
                                 <form action="{{ route('logout') }}" method="POST"
-                                    class="block text-sm text-gray-700 cursor-pointer hover:bg-gray-400 hover:text-gray-100">
+                                    class="block text-sm text-gray-700 cursor-pointer hover:bg-gray-400 hover:text-gray-100!">
                                     @csrf
                                     <button type="submit" class="flex items-center w-full gap-1 px-4 py-2 text-left">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -52,16 +52,6 @@
                             </li>
                         </ul>
                     </div>
-                    <button data-collapse-toggle="navbar-user" type="button"
-                        class="inline-flex items-center justify-center w-10 h-10 p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:focus:ring-gray-600"
-                        aria-controls="navbar-user" aria-expanded="false">
-                        <span class="sr-only">Open main menu</span>
-                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 17 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M1 1h15M1 7h15M1 13h15" />
-                        </svg>
-                    </button>
                 </div>
             </div>
         </div>
@@ -76,7 +66,7 @@
                     <li>
                         <a wire:navigate href="{{ route('admin.dashboard') }}" @class([
                             'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
-                            'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                            'bg-gray-200 [&>svg]:text-gray-900! hover:bg-gray-200' => request()->routeIs(
                                 'admin.dashboard'),
                         ])>
                             <svg aria-hidden="true"
@@ -92,7 +82,7 @@
                         <li>
                             <a wire:navigate href="{{ route('admin.admins.index') }}" @class([
                                 'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
-                                'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                                'bg-gray-200 [&>svg]:text-gray-900! hover:bg-gray-200' => request()->routeIs(
                                     'admin.admins.index'),
                             ])>
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -109,7 +99,7 @@
                         <li>
                             <a wire:navigate href="{{ route('admin.products.index') }}" @class([
                                 'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
-                                'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                                'bg-gray-200 [&>svg]:text-gray-900! hover:bg-gray-200' => request()->routeIs(
                                     'admin.products.index'),
                             ])>
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -127,11 +117,11 @@
                         <li>
                             <a wire:navigate href="{{ route('admin.categories.index') }}" @class([
                                 'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
-                                'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                                'bg-gray-200 [&>svg]:text-gray-900! hover:bg-gray-200' => request()->routeIs(
                                     'admin.categories.index'),
                             ])>
                                 <svg xmlns="http://www.w3.org/2000/svg"
-                                    class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                    class="w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900! dark:group-hover:text-white"
                                     viewBox="0 0 24 24">
                                     <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                         stroke-width="2.5">
@@ -149,7 +139,7 @@
                         <li>
                             <a wire:navigate href="{{ route('admin.brands.index') }}" @class([
                                 'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
-                                'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                                'bg-gray-200 [&>svg]:text-gray-900! hover:bg-gray-200' => request()->routeIs(
                                     'admin.brands.index'),
                             ])>
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -166,7 +156,7 @@
                         <li>
                             <a wire:navigate href="{{ route('admin.customers.index') }}" @class([
                                 'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
-                                'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                                'bg-gray-200 [&>svg]:text-gray-900! hover:bg-gray-200' => request()->routeIs(
                                     'admin.customers.index'),
                             ])>
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -184,7 +174,7 @@
                         <li>
                             <a wire:navigate href="{{ route('admin.orders.index') }}" @class([
                                 'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
-                                'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                                'bg-gray-200 [&>svg]:text-gray-900! hover:bg-gray-200' => request()->routeIs(
                                     'admin.orders.index'),
                             ])>
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -201,7 +191,7 @@
                         <li>
                             <a wire:navigate href="{{ route('admin.reviews.index') }}" @class([
                                 'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
-                                'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                                'bg-gray-200 [&>svg]:text-gray-900! hover:bg-gray-200' => request()->routeIs(
                                     'admin.reviews.index'),
                             ])>
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -221,11 +211,11 @@
                     <li>
                         <a href="#" @class([
                             'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
-                            'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                            'bg-gray-200 [&>svg]:text-gray-900! hover:bg-gray-200' => request()->routeIs(
                                 'admin.dashboard'),
                         ])>
                             <svg aria-hidden="true"
-                                class="flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                class="w-6 h-6 text-gray-400 transition duration-75 shrink-0 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
                                 <path fill-rule="evenodd"
@@ -238,11 +228,11 @@
                     <li>
                         <a href="#" @class([
                             'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
-                            'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                            'bg-gray-200 [&>svg]:text-gray-900! hover:bg-gray-200' => request()->routeIs(
                                 'admin.dashboard'),
                         ])>
                             <svg aria-hidden="true"
-                                class="flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                class="w-6 h-6 text-gray-400 transition duration-75 shrink-0 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z">
@@ -254,11 +244,11 @@
                     <li>
                         <a href="#" @class([
                             'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 group',
-                            'bg-gray-200 [&>svg]:text-gray-900 hover:bg-gray-200' => request()->routeIs(
+                            'bg-gray-200 [&>svg]:text-gray-900! hover:bg-gray-200' => request()->routeIs(
                                 'admin.dashboard'),
                         ])>
                             <svg aria-hidden="true"
-                                class="flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                class="w-6 h-6 text-gray-400 transition duration-75 shrink-0 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
                                     d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-2 0c0 .993-.241 1.929-.668 2.754l-1.524-1.525a3.997 3.997 0 00.078-2.183l1.562-1.562C15.802 8.249 16 9.1 16 10zm-5.165 3.913l1.58 1.58A5.98 5.98 0 0110 16a5.976 5.976 0 01-2.516-.552l1.562-1.562a4.006 4.006 0 001.789.027zm-4.677-2.796a4.002 4.002 0 01-.041-2.08l-.08.08-1.53-1.533A5.98 5.98 0 004 10c0 .954.223 1.856.619 2.657l1.54-1.54zm1.088-6.45A5.974 5.974 0 0110 4c.954 0 1.856.223 2.657.619l-1.54 1.54a4.002 4.002 0 00-2.346.033L7.246 4.668zM12 10a2 2 0 11-4 0 2 2 0 014 0z"

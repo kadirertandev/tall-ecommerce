@@ -1,14 +1,12 @@
 <div>
     <section class="bg-gray-50 dark:bg-gray-900">
-        <div class="mx-auto max-w-screen-2xl">
-            <div class="relative {{-- overflow-hidden --}} bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
-                <div
-                    class="{{-- bg-purple-300 --}} flex px-4 {{-- py-3 --}} {{-- space-y-3 --}} flex-row items-end justify-between lg:space-y-0 lg:space-x-4">
-                    <div class="flex-1 {{-- bg-red-400 --}}">
+        <div class="mx-auto max-w-(--breakpoint-2xl)">
+            <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+                <div class="flex flex-row items-end justify-between px-4 lg:space-y-0 lg:space-x-4">
+                    <div class="flex-1">
                         <div class="flex items-center space-x-4 ">
                             <h5>
                                 <span class="text-gray-500">All Products:</span>
-                                {{-- {{ dd($this->products) }} --}}
                                 <span class="">{{ $this->products->total() }}</span>
                             </h5>
                             <h5>
@@ -16,229 +14,149 @@
                                 <span class="">{{ App\Helpers::formatPrice($this->totalRevenue) }} TL</span>
                             </h5>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <div class="relative block w-80">
-                                <div class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                                    </svg>
-                                    <span class="sr-only">Search icon</span>
-                                </div>
-                                <input wire:model.live.debounce.300ms='keyword' type="text" id="search-navbar"
-                                    class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg ps-10 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    placeholder="Search...">
-                                <button wire:click="$set('keyword','')" @class([
-                                    'absolute inset-y-0 rtl:inset-r-0 end-0 flex items-center pe-3',
-                                    'hidden' => strlen($this->keyword) <= 0,
-                                ]) type="button">
-                                    <svg class="w-4 h-4 text-red-500 hover:w-5 hover:h-5" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill=""
-                                        viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
+
+                        <x-admin.search-bar />
+
                     </div>
                     <div class="flex flex-col items-end">
-                        <h5 class="flex items-center gap-1">
-                            <span class="text-gray-500">Show</span>
+                        {{-- show x entries --}}
+                        <x-admin.entry-per-page-dropdown />
+                        {{-- show x entries --}}
 
-                            <button id="dropdownDefaultButton123" data-dropdown-toggle="dropdown123"
-                                class="inline-flex items-center gap-4 p-1 text-sm font-medium text-center text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:outline-none focus:ring-gray-300 "
-                                type="button">{{ $this->perPage }} <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="m1 1 4 4 4-4" />
-                                </svg>
-                            </button>
+                        <div class="flex flex-col gap-2 shrink-0 md:flex-row md:items-center lg:justify-end">
 
-                            <!-- per page dropdown menu -->
-                            <div id="dropdown123"
-                                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
-                                {{-- wire:ignore.self --}}>
-                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200 *:cursor-pointer"
-                                    aria-labelledby="dropdownDefaultButton123">
-                                    @foreach ([5, 10, 25, 50, 100] as $perPage)
-                                        <li @click="$wire.set('perPage',{{ $perPage }})"
-                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 ">
-                                            {{ $perPage }}
-                                        </li>
-                                    @endforeach
-                                    <li class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 ">
-                                        <input wire:model.live.debounce.300ms='perPage' type="number" min="5"
-                                            value="{{ $this->perPage }}"
-                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-600 focus:border-primary-600 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                    </li>
-                                </ul>
-                            </div>
+                            <x-admin.dropdown-filter>
+                                @can('force delete products')
+                                    <x-slot:toggles>
+                                        <x-admin.toggle toggle="withTrashed" text="With Trashed" />
+                                        <x-admin.toggle toggle="onlyTrashed" text="Only Trashed" />
+                                    </x-slot:toggles>
+                                @endcan
+                                <x-slot:footer>
+                                    <h2 id="accordion-collapse-heading-1">
+                                        <button type="button"
+                                            class="flex items-center justify-between w-full gap-3 p-2 font-medium text-gray-500 bg-white border-b-2 border-b-gray-300 rtl:text-right dark:text-gray-400"
+                                            data-accordion-target="#accordion-collapse-body-1"
+                                            aria-controls="accordion-collapse-body-1">
+                                            <span>Category</span>
+                                            <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0"
+                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 10 6">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5" />
+                                            </svg>
+                                        </button>
+                                    </h2>
+                                    <div id="accordion-collapse-body-1" class="hidden"
+                                        aria-labelledby="accordion-collapse-heading-1" wire:ignore.self>
+                                        <ul class="space-y-2 text-sm max-h-[200px] overflow-y-scroll"
+                                            aria-labelledby="dropdownDefault">
+                                            @foreach ($this->categories as $category)
+                                                <li wire:key='filter-category-{{ $category->id }}'
+                                                    class="flex items-center">
+                                                    <input wire:model.live='categoriesFilter'
+                                                        id="{{ $category->name . '-' . $category->id }}" type="checkbox"
+                                                        value="{{ $category->id }}"
+                                                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded-sm text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
 
-                            <span>entries</span>
-                        </h5>
-                        <div class="flex flex-col flex-shrink-0 gap-2 md:flex-row md:items-center lg:justify-end">
-                            <div class="flex items-center justify-center">
-                                <button id="dropdownDefault" data-dropdown-toggle="dropdown"
-                                    class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-teal-500 rounded-lg hover:bg-teal-600 focus:ring-4 focus:ring-primary-300 focus:outline-none"
-                                    type="button">
-                                    Filter
-                                    <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7"></path>
-                                    </svg>
-                                </button>
+                                                    <label for="{{ $category->name . '-' . $category->id }}"
+                                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                        {{ $category->name }}
+                                                    </label>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                    <h2 id="accordion-collapse-heading-2">
+                                        <button type="button"
+                                            class="flex items-center justify-between w-full gap-3 p-2 font-medium text-gray-500 bg-white border-b-2 border-b-gray-300 rtl:text-right dark:text-gray-400"
+                                            data-accordion-target="#accordion-collapse-body-2"
+                                            aria-controls="accordion-collapse-body-2">
+                                            <span>Brand</span>
+                                            <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0"
+                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 10 6">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5" />
+                                            </svg>
+                                        </button>
+                                    </h2>
+                                    <div id="accordion-collapse-body-2" class="hidden"
+                                        aria-labelledby="accordion-collapse-heading-2" wire:ignore.self>
+                                        <ul class="space-y-2 text-sm max-h-[200px] overflow-y-scroll"
+                                            aria-labelledby="dropdownDefault">
+                                            @foreach ($this->brands as $brand)
+                                                <li wire:key='filter-brand-{{ $brand->id }}'
+                                                    class="flex items-center">
+                                                    <input wire:model.live='brandsFilter'
+                                                        id="{{ $brand->name . '-' . $brand->id }}" type="checkbox"
+                                                        value="{{ $brand->id }}"
+                                                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded-sm text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
 
-                                <!-- Dropdown menu -->
-                                <div id="dropdown" class="z-10 hidden w-56 p-2 bg-white rounded-lg shadow"
-                                    {{-- wire:ignore.self --}}>
-                                    <div id="accordion-collapse" data-accordion="collapse">
-                                        @can('force delete products')
-                                            <label class="inline-flex items-center w-full p-2 cursor-pointer">
-                                                <input wire:model.live="withTrashed" type="checkbox" class="sr-only peer">
-                                                <div
-                                                    class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-teal-300 dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-teal-600">
-                                                </div>
-                                                <span class="text-sm font-medium text-gray-900 ms-3 dark:text-gray-300">With
-                                                    Trashed</span>
-                                            </label>
-                                            <label class="inline-flex items-center w-full p-2 cursor-pointer">
-                                                <input wire:model.live="onlyTrashed" type="checkbox" class="sr-only peer">
-                                                <div
-                                                    class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-teal-300 dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-teal-600">
-                                                </div>
-                                                <span class="text-sm font-medium text-gray-900 ms-3 dark:text-gray-300">Only
-                                                    Trashed</span>
-                                            </label>
-                                        @endcan
-                                        <h2 id="accordion-collapse-heading-1">
-                                            <button type="button"
-                                                class="flex items-center justify-between w-full gap-3 p-2 font-medium text-gray-500 bg-white border-b-2 border-b-gray-300 rtl:text-right dark:text-gray-400"
-                                                data-accordion-target="#accordion-collapse-body-1"
-                                                {{-- aria-expanded="true" --}} aria-controls="accordion-collapse-body-1">
-                                                <span>Category</span>
-                                                <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0"
-                                                    aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none" viewBox="0 0 10 6">
-                                                    <path stroke="currentColor" stroke-linecap="round"
-                                                        stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5" />
-                                                </svg>
-                                            </button>
-                                        </h2>
-                                        <div id="accordion-collapse-body-1" class="hidden"
-                                            aria-labelledby="accordion-collapse-heading-1" wire:ignore.self>
-                                            <ul class="space-y-2 text-sm max-h-[200px] overflow-y-scroll"
-                                                aria-labelledby="dropdownDefault">
-                                                @foreach ($this->categories as $category)
-                                                    <li wire:key='filter-category-{{ $category->id }}'
-                                                        class="flex items-center">
-                                                        <input wire:model.live='categoriesFilter'
-                                                            id="{{ $category->name . '-' . $category->id }}"
-                                                            type="checkbox" value="{{ $category->id }}"
-                                                            class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-
-                                                        <label for="{{ $category->name . '-' . $category->id }}"
-                                                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                            {{ $category->name }}
-                                                        </label>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                        <h2 id="accordion-collapse-heading-2">
-                                            <button type="button"
-                                                class="flex items-center justify-between w-full gap-3 p-2 font-medium text-gray-500 bg-white border-b-2 border-b-gray-300 rtl:text-right dark:text-gray-400"
-                                                data-accordion-target="#accordion-collapse-body-2"
-                                                {{-- aria-expanded="true" --}} aria-controls="accordion-collapse-body-2">
-                                                <span>Brand</span>
-                                                <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0"
-                                                    aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none" viewBox="0 0 10 6">
-                                                    <path stroke="currentColor" stroke-linecap="round"
-                                                        stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5" />
-                                                </svg>
-                                            </button>
-                                        </h2>
-                                        <div id="accordion-collapse-body-2" class="hidden"
-                                            aria-labelledby="accordion-collapse-heading-2" wire:ignore.self>
-                                            <ul class="space-y-2 text-sm max-h-[200px] overflow-y-scroll"
-                                                aria-labelledby="dropdownDefault">
-                                                @foreach ($this->brands as $brand)
-                                                    <li wire:key='filter-brand-{{ $brand->id }}'
-                                                        class="flex items-center">
-                                                        <input wire:model.live='brandsFilter'
-                                                            id="{{ $brand->name . '-' . $brand->id }}"
-                                                            type="checkbox" value="{{ $brand->id }}"
-                                                            class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-
-                                                        <label for="{{ $brand->name . '-' . $brand->id }}"
-                                                            class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                            {{ $brand->name }}
-                                                        </label>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                        <h2 id="accordion-collapse-heading-3">
-                                            <button type="button"
-                                                class="flex items-center justify-between w-full gap-3 p-2 font-medium text-gray-500 bg-white border-b-2 border-b-gray-300 rtl:text-right dark:text-gray-400"
-                                                data-accordion-target="#accordion-collapse-body-3"
-                                                {{-- aria-expanded="true" --}} aria-controls="accordion-collapse-body-3">
-                                                <span>Price</span>
-                                                <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0"
-                                                    aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none" viewBox="0 0 10 6">
-                                                    <path stroke="currentColor" stroke-linecap="round"
-                                                        stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5" />
-                                                </svg>
-                                            </button>
-                                        </h2>
-                                        <div id="accordion-collapse-body-3" class="hidden"
-                                            aria-labelledby="accordion-collapse-heading-3" wire:ignore.self>
-                                            <div class="relative flex flex-col max-w-xs gap-2 mx-auto">
-                                                <div class="flex items-center justify-between gap-2 my-1">
-                                                    <input wire:model='minPrice' type="text" id="min_price"
-                                                        data-input-counter aria-describedby="helper-text-explanation"
-                                                        class="rounded-lg bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                        placeholder="Min" required />
-                                                    <input wire:model='maxPrice' type="text" id="max_price"
-                                                        data-input-counter aria-describedby="helper-text-explanation"
-                                                        class="rounded-lg bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                                        placeholder="Max" required />
-                                                </div>
-                                                <div class="flex items-center justify-center gap-2">
-                                                    <button wire:click='setPrices' type="button" id="btnSortByPrice"
-                                                        class="p-2 text-white bg-red-500 rounded-lg hover:bg-red-600">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                            viewBox="0 0 24 24" stroke-width="1.5"
-                                                            stroke="currentColor" class="w-6 h-6">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                                                        </svg>
-                                                    </button>
-                                                    <button wire:click='resetPrices' type="button"
-                                                        id="btnSortByPrice"
-                                                        class="p-2 text-white bg-red-500 rounded-lg hover:bg-red-600">
-                                                        <svg class="w-6 h-6" aria-hidden="true"
-                                                            xmlns="http://www.w3.org/2000/svg" width="24"
-                                                            height="24" fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-linecap="round"
-                                                                stroke-linejoin="round" stroke-width="2"
-                                                                d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4" />
-                                                        </svg>
-                                                    </button>
-                                                </div>
+                                                    <label for="{{ $brand->name . '-' . $brand->id }}"
+                                                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                        {{ $brand->name }}
+                                                    </label>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                    <h2 id="accordion-collapse-heading-3">
+                                        <button type="button"
+                                            class="flex items-center justify-between w-full gap-3 p-2 font-medium text-gray-500 bg-white border-b-2 border-b-gray-300 rtl:text-right dark:text-gray-400"
+                                            data-accordion-target="#accordion-collapse-body-3"
+                                            aria-controls="accordion-collapse-body-3">
+                                            <span>Price</span>
+                                            <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0"
+                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 10 6">
+                                                <path stroke="currentColor" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5" />
+                                            </svg>
+                                        </button>
+                                    </h2>
+                                    <div id="accordion-collapse-body-3" class="hidden"
+                                        aria-labelledby="accordion-collapse-heading-3" wire:ignore.self>
+                                        <div class="relative flex flex-col max-w-xs gap-2 mx-auto">
+                                            <div class="flex items-center justify-between gap-2 my-1">
+                                                <input wire:model='minPrice' type="text" id="min_price"
+                                                    data-input-counter aria-describedby="helper-text-explanation"
+                                                    class="rounded-lg bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                    placeholder="Min" required />
+                                                <input wire:model='maxPrice' type="text" id="max_price"
+                                                    data-input-counter aria-describedby="helper-text-explanation"
+                                                    class="rounded-lg bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                    placeholder="Max" required />
+                                            </div>
+                                            <div class="flex items-center justify-center gap-2">
+                                                <button wire:click='setPrices' type="button" id="btnSortByPrice"
+                                                    class="p-2 text-white bg-red-500 rounded-lg hover:bg-red-600">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                        class="w-6 h-6">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                                                    </svg>
+                                                </button>
+                                                <button wire:click='resetPrices' type="button" id="btnSortByPrice"
+                                                    class="p-2 text-white bg-red-500 rounded-lg hover:bg-red-600">
+                                                    <svg class="w-6 h-6" aria-hidden="true"
+                                                        xmlns="http://www.w3.org/2000/svg" width="24"
+                                                        height="24" fill="none" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="2"
+                                                            d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4" />
+                                                    </svg>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
+                                </x-slot:footer>
 
-                                </div>
-                            </div>
+                            </x-admin.dropdown-filter>
                             @can('create products')
                                 <button @click="$dispatch('open-product-create-modal')" type="button"
-                                    class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-teal-500 rounded-lg hover:bg-teal-600 focus:ring-4 focus:ring-primary-300 focus:outline-none">
+                                    class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-teal-500 rounded-lg hover:bg-teal-600 focus:ring-2 focus:ring-primary-300 focus:outline-hidden">
                                     <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
                                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                         <path clip-rule="evenodd" fill-rule="evenodd"
@@ -268,10 +186,10 @@
                         <tbody>
                             @forelse ($this->products as $product)
                                 <tr wire:key='product-tr-{{ $product->id }}' @class([
-                                    'border-b border-gray-600',
-                                    'hover:bg-gray-100' => !$product->deleted_at,
-                                    'bg-red-100 hover:bg-red-200' => $product->deleted_at,
-                                    'last:border-b-0' => false,
+                                    'border-b! border-gray-600!',
+                                    'hover:bg-gray-100!' => !$product->deleted_at,
+                                    'bg-red-100! hover:bg-red-200!' => $product->deleted_at,
+                                    'last:border-b-0!' => false,
                                 ])>
 
                                     <th scope="row"
@@ -282,11 +200,11 @@
                                     </th>
                                     <td class="px-4 py-2">
                                         <span
-                                            class="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-primary-900 dark:text-primary-300">{{ $product->category?->name ?? 'NULL' }}</span>
+                                            class="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded-sm dark:bg-primary-900 dark:text-primary-300">{{ $product->category?->name ?? 'NULL' }}</span>
                                     </td>
                                     <td class="px-4 py-2">
                                         <span
-                                            class="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-primary-900 dark:text-primary-300">{{ $product->brand->name }}</span>
+                                            class="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded-sm dark:bg-primary-900 dark:text-primary-300">{{ $product->brand->name }}</span>
                                     </td>
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         <div class="flex items-center">
@@ -316,7 +234,7 @@
                                         <button id="dropdownMenuIconButton-{{ $product->id }}"
                                             data-dropdown-toggle="dropdownDots-{{ $product->id }}"
                                             data-dropdown-placement="left"
-                                            class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-transparent rounded-lg hover:bg-gray-300 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                                            class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-transparent rounded-lg hover:bg-gray-300 focus:ring-2 focus:outline-hidden dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                                             type="button">
                                             <svg class="w-5 h-5" aria-hidden="true"
                                                 xmlns="http://www.w3.org/2000/svg" fill="currentColor"
@@ -328,7 +246,7 @@
 
                                         <!-- Dropdown menu -->
                                         <div id="dropdownDots-{{ $product->id }}" style="z-index: 8888"
-                                            class="hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                            class="hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600">
                                             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200 *:cursor-pointer"
                                                 aria-labelledby="dropdownMenuIconButton-{{ $product->id }}">
                                                 <li wire:click='showViewModal({{ $product->id }})'

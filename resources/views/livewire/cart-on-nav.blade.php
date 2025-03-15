@@ -1,10 +1,10 @@
 <div x-data="cartDrawer">
     <button @click="showDrawer"
-        class="group hover:text-main-red  font-medium text-sm inline-flex items-center gap-1 rounded-md p-1"
+        class="inline-flex items-center gap-1 p-1 text-sm font-medium rounded-md group hover:text-main-red"
         type="button">
         <div class="relative">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6 group-hover:fill-main-red">
+                stroke="currentColor" class="w-6 h-6 group-hover:fill-main-red group-hover:stroke-main-red">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
             </svg>
@@ -17,42 +17,26 @@
             @endauth
         </div>
 
-        <h1>{{ __('frontend.cart.cart') }}</h1>
+        <h1 class="group-hover:text-main-red">{{ __('frontend.cart.cart') }}</h1>
     </button>
 
     <!-- drawer component -->
     <div id="cart-drawer-right" wire:ignore.self
         class="fixed top-0 right-0 z-40 h-screen  overflow-y-auto transition-transform translate-x-full bg-white w-[405px] min-w-96 max-w-max dark:bg-gray-800"
         tabindex="-1" aria-labelledby="drawer-right-label">
-        {{-- <h5 id="drawer-right-label"
-            class="inline-flex items-center mb-4 text-base font-semibold text-gray-500 dark:text-gray-400"><svg
-                class="w-4 h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                viewBox="0 0 20 20">
-                <path
-                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-            </svg>Right drawer</h5>
-        <button type="button" @click="hideDrawer"
-            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white">
-            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 14 14">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-            </svg>
-            <span class="sr-only">Close menu</span>
-        </button> --}}
-        <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+        <div class="flex flex-col h-full overflow-y-scroll bg-white shadow-xl">
             @auth
                 @if ($this->cartItemsCount > 0)
-                    <div class="flex-1 {{-- overflow-y-auto --}} px-4 py-6 sm:px-6">
+                    <div class="flex-1 px-4 py-6 sm:px-6">
                         <div class="flex items-start justify-between">
                             <h2 class="text-lg font-medium text-gray-900" id="slide-over-title">
                                 {{ __('frontend.cart.shopping-cart') }}</h2>
-                            <div class="ml-3 flex h-7 items-center">
+                            <div class="flex items-center ml-3 h-7">
                                 <button @click="hideDrawer" type="button"
-                                    class="relative -m-2 p-2 text-gray-400 hover:text-gray-500">
+                                    class="relative text-gray-400 hover:text-gray-500">
                                     <span class="absolute -inset-0.5"></span>
                                     <span class="sr-only">Close panel</span>
-                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                         stroke="currentColor" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
@@ -60,26 +44,26 @@
                             </div>
                         </div>
 
-                        <div class="mt-8">
+                        <div class="">
                             <div class="flow-root">
                                 <ul role="list" class="-my-6 divide-y divide-gray-200">
                                     @foreach ($this->cartItems as $item)
                                         <li wire:key={{ $item->id }} class="flex py-6">
                                             <div
-                                                class="h-24 w-24 flex-shrink-0 flex items-center overflow-hidden rounded-md border border-gray-200">
+                                                class="flex items-center w-24 h-24 overflow-hidden border border-gray-200 rounded-md shrink-0">
                                                 <img src="{{ asset('storage/' . $item->product->image) }}"
                                                     alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt."
-                                                    class="w-full h-auto flex-1">
+                                                    class="flex-1 w-full h-auto">
                                             </div>
 
-                                            <div class="ml-4 flex flex-1 flex-col">
+                                            <div class="flex flex-col flex-1 ml-4">
                                                 <div>
-                                                    <div class="{{-- flex justify-between --}} text-base font-medium text-gray-900">
+                                                    <div class="text-base font-medium text-gray-900">
                                                         <h3>
                                                             <a
                                                                 href="{{ route('products.show', ['category_slug' => $item->product->category->slug, 'product_slug' => $item->product->slug]) }}">{{ $item->product->name }}</a>
                                                         </h3>
-                                                        <div class="{{-- ml-4 --}} text-nowrap">
+                                                        <div class="text-nowrap">
                                                             @if ($item->product->discount_amount)
                                                                 <p
                                                                     class="text-[#9B9B9B] font-thin line-through decoration-2">
@@ -91,15 +75,14 @@
                                                             </p>
                                                         </div>
                                                     </div>
-                                                    {{-- <p class="mt-1 text-sm text-gray-500">Salmon</p> --}}
                                                 </div>
-                                                <div class="flex flex-1 items-end justify-between text-sm">
-                                                    <p class="text-gray-500 flex items-center gap-4">
+                                                <div class="flex items-center justify-between flex-1 text-sm">
+                                                    <p class="flex items-center gap-4 text-gray-500">
                                                         <span>{{ __('frontend.cart.quantity') }}</span>
                                                         <button wire:click='decreaseQuantity({{ $item->id }})'
                                                             {{-- @click="$dispatch('decrease-quantity', {id: {{ $item->id }}})" --}}
-                                                            class="rounded-full p-4 hover:bg-gray-50 group">
-                                                            <svg class="w-3 h-3 text-gray-800 group-hover:text-red-500 dark:text-white"
+                                                            class="p-4 rounded-full hover:bg-gray-50 group">
+                                                            <svg class="w-3 h-3 text-gray-800 group-hover:text-red-500! dark:text-white"
                                                                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                                 width="24" height="24" fill="none"
                                                                 viewBox="0 0 24 24">
@@ -110,8 +93,8 @@
                                                         <span>{{ $item->quantity }}</span>
                                                         <button wire:click='increaseQuantity({{ $item->id }})'
                                                             {{-- @click="$dispatch('increase-quantity', {id: {{ $item->id }}})" --}}
-                                                            class="rounded-full p-4 hover:bg-gray-50 group">
-                                                            <svg class="w-3 h-3 text-gray-800 group-hover:text-teal-500 dark:text-white"
+                                                            class="p-4 rounded-full hover:bg-gray-50 group">
+                                                            <svg class="w-3 h-3 text-gray-800 group-hover:text-teal-500! dark:text-white"
                                                                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                                 width="24" height="24" fill="none"
                                                                 viewBox="0 0 24 24">
@@ -124,75 +107,38 @@
                                                     <div class="flex">
                                                         <button type="button" {{-- wire:click='removeFromCart({{ $item->id }})' --}}
                                                             @click="$dispatch('remove-from-cart-modal', {cartItemId: {{ $item->id }}})"
-                                                            class="font-medium text-indigo-600 hover:text-indigo-500">{{ __('frontend.cart.remove') }}</button>
+                                                            class="font-medium text-red-400! hover:bg-gray-100 hover:text-red-600! p-2 rounded-lg">{{ __('frontend.cart.remove') }}</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </li>
                                     @endforeach
-                                    {{-- <li class="flex py-6">
-                                    <div class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                        <img src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg"
-                                            alt="Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch."
-                                            class="h-full w-full object-cover object-center">
-                                    </div>
-
-                                    <div class="ml-4 flex flex-1 flex-col">
-                                        <div>
-                                            <div class="flex justify-between text-base font-medium text-gray-900">
-                                                <h3>
-                                                    <a href="#">Medium Stuff Satchel</a>
-                                                </h3>
-                                                <p class="ml-4">$32.00</p>
-                                            </div>
-                                            <p class="mt-1 text-sm text-gray-500">Blue</p>
-                                        </div>
-                                        <div class="flex flex-1 items-end justify-between text-sm">
-                                            <p class="text-gray-500">Qty 1</p>
-
-                                            <div class="flex">
-                                                <button type="button"
-                                                    class="font-medium text-indigo-600 hover:text-indigo-500">Remove</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li> --}}
                                 </ul>
                             </div>
                         </div>
                     </div>
 
-                    <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
+                    <div class="px-4 py-6 border-t border-gray-200 sm:px-6">
                         <div class="flex justify-between text-base font-medium text-gray-900">
                             <p>{{ __('frontend.cart.subtotal') }}</p>
                             <p>{{ App\Helpers::formatPrice($this->cart->subtotal()) }} TL</p>
                         </div>
-                        {{-- <p class="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p> --}}
                         <div class="mt-6">
                             <a href="{{ route('auth.user.cart') }}"
-                                class="flex items-center justify-center rounded-md border border-transparent bg-main-red px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">{{ __('frontend.cart.checkout') }}</a>
+                                class="flex items-center justify-center px-6 py-3 text-base font-medium text-white border border-transparent rounded-md shadow-xs bg-main-red hover:bg-indigo-700!">{{ __('frontend.cart.checkout') }}</a>
                         </div>
-                        {{-- <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
-                  <p>
-                      or
-                      <button type="button" class="font-medium text-indigo-600 hover:text-indigo-500">
-                          Continue Shopping
-                          <span aria-hidden="true"> &rarr;</span>
-                      </button>
-                  </p>
-              </div> --}}
                     </div>
                 @else
-                    <div class=" {{-- overflow-y-auto --}} px-4 py-6 sm:px-6">
+                    <div class="px-4 py-6 sm:px-6">
                         <div class="flex items-start justify-between">
                             <h2 class="text-lg font-medium text-gray-900" id="slide-over-title">Shopping cart
                             </h2>
-                            <div class="ml-3 flex h-7 items-center">
+                            <div class="flex items-center ml-3 h-7">
                                 <button @click="hideDrawer" type="button"
-                                    class="relative -m-2 p-2 text-gray-400 hover:text-gray-500">
+                                    class="relative p-2 -m-2 text-gray-400 hover:text-gray-500">
                                     <span class="absolute -inset-0.5"></span>
                                     <span class="sr-only">Close panel</span>
-                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                         stroke="currentColor" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
@@ -200,7 +146,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex-1 {{-- bg-orange-200 --}} px-4 flex items-center justify-center">
+                    <div class="flex items-center justify-center flex-1 px-4">
                         <div class="flex flex-col items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-20 h-20 text-red-500" viewBox="0 0 16 16">
                                 <g fill="currentColor">
@@ -216,7 +162,6 @@
                 @endif
             @endauth
             @guest
-
                 <div>
                     <livewire:auth.login-form />
                 </div>

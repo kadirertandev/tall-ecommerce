@@ -105,7 +105,7 @@ class ProductsByBrand extends Component
     return $this->brand->categories;
   }
 
-  public $perPage = 1;
+  public $perPage = 6;
   #[Computed()]
   public function products()
   {

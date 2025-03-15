@@ -1,10 +1,10 @@
 <div class="flex-1 hidden md:block">
     <form class="max-w-lg mx-auto">
-        <div class="flex">
+        <div class="flex" x-data="">
             <label for="search-dropdown" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Your
                 Email</label>
-            <button id="dropdown-button" data-dropdown-toggle="dropdown-categories"
-                class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
+            <button id="dropdown-button" x-ref="btnToggle" data-dropdown-toggle="dropdown-categories"
+                class="shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-2 focus:outline-hidden focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
                 type="button">
                 <span>{{ $this->selectedCategoryTitle }}</span>
                 <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -13,16 +13,18 @@
                         d="m1 1 4 4 4-4" />
                 </svg>
             </button>
+
             <div id="dropdown-categories" wire:ignore
-                class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-button">
-                    <li>
+                class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
+                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                    aria-labelledby="dropdown-button dropdown-button2 dropdown-button3">
+                    <li @click="$refs.btnToggle.click()">
                         <button @click="$wire.setSelectedCategory('All Categories',0)" type="button"
                             class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">All
                             Categories</button>
                     </li>
                     @foreach ($categories as $category)
-                        <li>
+                        <li @click="$refs.btnToggle.click()">
                             <button type="button"
                                 @click="$wire.setSelectedCategory('{{ __('categories.' . $category->slug . '.name') }}',{{ $category->id }})"
                                 class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">
@@ -39,7 +41,7 @@
                     placeholder="Search products, categories or brands" required />
                 @if ($thereAreResults)
 
-                    <div class="absolute w-full bg-white shadow-2xl border-2 border-gray-50 z-[9999]">
+                    <div class="absolute w-full bg-white border-2 shadow-2xl border-gray-50 z-9999">
                         <div class="grid grid-cols-10 gap-2 p-2">
                             <div @class([
                                 'col-span-2' =>
@@ -53,13 +55,6 @@
                             ])>
                                 <h1 class="text-xl font-thin">Categories</h1>
                                 @foreach ($this->categoryResults as $result)
-                                    {{-- <div
-                                    class="px-3 py-2 border-gray-200 rounded-md shadow-xl cursor-pointer group border-1 hover:bg-rose-500">
-                                    <a href="{{ route('category-slug', ['slug' => $result->slug]) }}"
-                                        class="text-sm font-medium text-gray-600 group-hover:text-white group-hover:font-semibold">
-                                        {{ $result->name }}</a>
-                                </div> --}}
-
                                     <a href="{{ route('category-slug', ['slug' => $result->slug]) }}"
                                         class="block px-3 py-2 text-sm font-medium text-gray-600 border-gray-200 rounded-md shadow-xl cursor-pointer border-1 hover:bg-rose-500 hover:text-white hover:font-semibold">
                                         {{ $result->name }} </a>
@@ -77,13 +72,6 @@
                             ])>
                                 <h1 class="text-xl font-thin">Brands</h1>
                                 @foreach ($this->brandResults as $result)
-                                    {{-- <div
-                                    class="px-3 py-2 border-gray-200 rounded-md shadow-xl cursor-pointer group border-1 hover:bg-rose-500">
-                                    <a href="{{ route('brand-slug', ['slug' => $result->slug]) }}"
-                                        class="text-sm font-medium text-gray-600 group-hover:text-white group-hover:font-semibold">
-                                        {{ $result->name }}</a>
-                                </div> --}}
-
                                     <a href="{{ route('brand-slug', ['slug' => $result->slug]) }}"
                                         class="block px-3 py-2 text-sm font-medium text-gray-600 border-gray-200 rounded-md shadow-xl cursor-pointer border-1 hover:bg-rose-500 hover:text-white hover:font-semibold">
 
@@ -117,7 +105,7 @@
                     </div>
                 @endif
                 @if (!$thereAreResults && strlen($this->search) > 2)
-                    <div class="absolute w-full bg-white shadow-2xl border-2 border-gray-50 z-[9999]">
+                    <div class="absolute w-full bg-white border-2 shadow-2xl border-gray-50 z-9999">
                         <div class="p-2">
                             No results.
                         </div>

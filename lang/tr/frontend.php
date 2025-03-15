@@ -1,6 +1,7 @@
 <?php
 
 return [
+  "home" => "Anasayfa",
   "aboutus" => "Hakkımızda",
   "all" => "Tümü",
   "all-categories" => "Tüm Kategoriler",

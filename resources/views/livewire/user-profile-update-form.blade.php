@@ -104,7 +104,7 @@
             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 for="file_input">{{ __('frontend.form.user-profile-update-form.profile-image') }}</label>
             <input wire:model='form.profile_image'
-                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-hidden dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                 id="file_input" type="file">
             @error('form.profile_image')
                 <p class="flex items-center gap-1 p-2 bg-red-500 text-white mt-1 rounded-lg text-sm">
@@ -120,12 +120,12 @@
 
         </div>
         <button wire:click.prevent='update' wire:loading.remove type="submit"
-            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-hidden
             focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600
             dark:hover:bg-blue-700 dark:focus:ring-blue-800">{{ __('frontend.form.update') }}
         </button>
         <button wire:loading wire:target='update'' disabled type="submit"
-            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-hidden
             focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600
             dark:hover:bg-blue-700 dark:focus:ring-blue-800">
             <div role="status">

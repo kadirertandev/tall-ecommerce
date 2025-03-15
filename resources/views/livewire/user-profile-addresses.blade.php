@@ -1,12 +1,12 @@
 <div x-data="addressModal"
     class="w-full mb-4 text-gray-500 bg-white rounded-lg text-medium dark:text-gray-400 dark:bg-gray-800">
     <div class="flex items-center justify-between gap-12 mb-4">
-        <div class="flex items-center justify-between flex-1 px-3 rounded-lg bg-gray-50 ring-2 ring-gray-100">
+        <div class="flex items-center justify-between flex-1 px-3 rounded-lg bg-gray-50 ring-2 ring-gray-100!">
             <h1 class="text-3xl">{{ __('frontend.auth.dropdown-on-nav.addresses') }}</h1>
         </div>
         <div class="flex items-center justify-end">
             <button type="button" @click="$dispatch('open-address-modal', {name: 'new-address'})"
-                class=" focus:outline-none text-white bg-teal-500 hover:bg-teal-700 focus:ring-4 focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5">
+                class=" focus:outline-hidden text-white bg-teal-500 hover:bg-teal-700 focus:ring-2 focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5">
                 Add new address
             </button>
         </div>
@@ -14,7 +14,7 @@
     <div class="grid grid-cols-2 gap-3">
         @foreach ($this->addresses as $address)
             <div wire:key='address-{{ $address->id }}' @class([
-                'bg-gray-50 ring-2 ring-gray-100 rounded-lg shadow-xl p-3',
+                'bg-gray-50 ring-2 ring-gray-100! rounded-lg shadow-xl p-3',
                 'order-first' => $this->defaultAddress?->id == $address->id,
             ])>
                 @if ($this->defaultAddress?->id == $address->id)

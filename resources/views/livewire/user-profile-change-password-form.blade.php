@@ -1,19 +1,19 @@
 <div wire:loading.class='animate-pulse' wire:target='changePassword'
-    class="bg-white  text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full">
+    class="w-full text-gray-500 bg-white rounded-lg text-medium dark:text-gray-400 dark:bg-gray-800">
     <div class="flex items-center justify-between gap-12 mb-8">
-        <div class="flex-1 flex items-center justify-between bg-gray-50 ring-2 ring-gray-100 px-3 rounded-lg">
+        <div class="flex items-center justify-between flex-1 bg-gray-50 ring-2 ring-gray-100! px-3 rounded-lg">
             <h1 class="text-3xl">{{ __('frontend.auth.change-password') }}</h1>
         </div>
     </div>
     <form>
         <div class="mb-4">
             <label for="password"
-                class="block mb-2 text-md font-medium text-gray-900 dark:text-white">{{ __('frontend.form.change-password-form.current-password') }}</label>
+                class="block mb-2 font-medium text-gray-900 text-md dark:text-white">{{ __('frontend.form.change-password-form.current-password') }}</label>
             <input wire:model='currentPassword' type="password" name="password" id="password" placeholder="••••••••"
                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required="">
             @error('currentPassword')
-                <p class="flex items-center gap-1 p-2 bg-red-500 text-white mt-1 rounded-lg text-sm">
+                <p class="flex items-center gap-1 p-2 mt-1 text-sm text-white bg-red-500 rounded-lg">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -25,13 +25,13 @@
         </div>
         <div class="mb-4">
             <label for="password_confirmation"
-                class="block mb-2 text-md font-medium text-gray-900 dark:text-white">{{ __('frontend.form.change-password-form.new-password') }}</label>
+                class="block mb-2 font-medium text-gray-900 text-md dark:text-white">{{ __('frontend.form.change-password-form.new-password') }}</label>
             <input wire:model='newPassword' type="password" name="password_confirmation" id="password_confirmation"
                 placeholder="••••••••"
                 class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required="">
             @error('newPassword')
-                <p class="flex items-center gap-1 p-2 bg-red-500 text-white mt-1 rounded-lg text-sm">
+                <p class="flex items-center gap-1 p-2 mt-1 text-sm text-white bg-red-500 rounded-lg">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -44,7 +44,7 @@
 
         <button wire:click.prevent='changePassword' wire:loading.class.remove='py-2.5' wire:target='changePassword'
             type="submit"
-            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-hidden
             focus:ring-blue-300 font-medium rounded-lg text-md w-full px-5 py-2.5 text-center dark:bg-blue-600
             dark:hover:bg-blue-700 dark:focus:ring-blue-800">
             <span wire:loading.remove wire:target='changePassword'>{{ __('frontend.form.update') }}</span>

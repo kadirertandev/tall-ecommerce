@@ -2,22 +2,22 @@
 <div x-data="{ show: false }" x-show="show" x-on:open-category-create-modal.window="show = true"
     x-on:close-category-create-modal.window="show = false,$dispatch('category-create-modal-closed')" class="relative z-10"
     aria-labelledby="modal-title" role="dialog" aria-modal="true" wire:ignore.self style="display: none;">
-    <div class="fixed inset-0 bg-gray-500 opacity-40 transition-opacity"></div>
+    <div class="fixed inset-0 transition-opacity bg-gray-500 opacity-40"></div>
 
     <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+        <div class="flex items-end justify-center min-h-full p-4 text-center sm:items-center sm:p-0">
             <div
-                class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                class="relative overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:w-full sm:max-w-lg">
                 {{-- modal content --}}
                 <div class="bg-white" @click.outside="$dispatch('close-category-create-modal')" wire:ignore.self>
                     {{-- header --}}
-                    <div class="flex items-center justify-between p-4 border-b  dark:border-gray-600">
+                    <div class="flex items-center justify-between p-4 border-b  border-gray-600!">
                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                             Create New Category
                         </h3>
 
                         <button type="button" @click="$dispatch('close-category-create-modal')"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            class="inline-flex items-center justify-center w-8 h-8 text-sm text-gray-400 bg-transparent rounded-lg hover:bg-gray-200 hover:text-gray-900 ms-auto dark:hover:bg-gray-600 dark:hover:text-white"
                             data-modal-hide="default-modal">
                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 14 14">
@@ -53,13 +53,13 @@
                                 @enderror
                             </div>
 
-                            <div class="col-span-2 flex items-center justify-between">
-                                <div class="col-span-2 flex items-center">
+                            <div class="flex items-center justify-between col-span-2">
+                                <div class="flex items-center col-span-2">
                                     <input wire:model='createForm.is_popular' id="createCategoryIsPopular"
                                         type="checkbox"
-                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="createCategoryIsPopular"
-                                        class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Is
+                                        class="text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">Is
                                         Popular</label>
                                 </div>
                                 <div>
@@ -71,7 +71,7 @@
                                         <option value="tr">TR</option>
                                     </select>
                                     <div data-popover id="popover-hover-language" role="tooltip"
-                                        class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+                                        class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-xs opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
                                         <div
                                             class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
                                             <h3 class="font-semibold text-gray-900 dark:text-white">Category Language
@@ -90,7 +90,7 @@
                                 </div>
                             </div>
 
-                            <div class="sm:col-span-2 flex justify-between items-end gap-2">
+                            <div class="flex items-end justify-between gap-2 sm:col-span-2">
                                 @if ($this->createForm->image)
                                     @if (in_array(
                                             $this->createForm->image->getClientOriginalExtension(),
@@ -114,7 +114,7 @@
                                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                         for="file_input">Upload file</label>
                                     <input wire:model.live='createForm.image'
-                                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-hidden dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                                         aria-describedby="file_input_help" id="file_input" type="file">
                                     <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">
                                         {{ implode(', ', App\Constants\MimeTypes::ALLOWED_PHOTO_MIMES_UPLOAD) }}
@@ -128,7 +128,7 @@
                         </div>
                         <div class="flex items-center justify-between gap-1">
                             <button wire:click.prevent='create' type="submit"
-                                class="w-full flex justify-center items-center space-x-2 text-white bg-teal-500 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                                class="w-full flex justify-center items-center space-x-2 text-white bg-teal-500 hover:bg-primary-800 focus:ring-2 focus:outline-hidden focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                                 <span wire:loading.remove wire:target='create'>Create category</span>
                                 <div wire:loading wire:target='create' role="status">
                                     <svg aria-hidden="true"
@@ -161,7 +161,7 @@
                             </button>
 
                             <div data-popover id="popover-hover" role="tooltip"
-                                class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-300 rounded-lg shadow-sm opacity-0 dark:text-gray-600 dark:border-gray-600 dark:bg-gray-800">
+                                class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-300 rounded-lg shadow-xs opacity-0 dark:text-gray-600 dark:border-gray-600 dark:bg-gray-800">
                                 {{-- <div
                                     class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
                                     <h3 class="font-semibold text-gray-900 dark:text-white">Popover hover</h3>

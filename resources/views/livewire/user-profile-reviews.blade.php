@@ -1,14 +1,14 @@
-<div class=" bg-white text-medium text-gray-500 dark:text-gray-400 dark:bg-gray-800 rounded-lg w-full mb-4">
-    <div class="bg-gray-50 ring-2 ring-gray-100 px-3 rounded-lg">
+<div class="w-full mb-4 text-gray-500 bg-white rounded-lg text-medium dark:text-gray-400 dark:bg-gray-800">
+    <div class="bg-gray-50 ring-2 ring-gray-100! px-3 rounded-lg">
         <h1 class="text-3xl">Reviews</h1>
     </div>
 
     @forelse (auth()->user()->reviews as $review)
-        <div class="bg-gray-100 rounded-lg p-3 my-4">
+        <div class="p-3 my-4 bg-gray-100 rounded-lg">
             <div class="flex items-start justify-between">
                 <div class="flex gap-2 mb-4">
                     <div>
-                        <img class="max-w-20 aspect-auto" src="{{ asset('storage/' . $review->product->image) }}"
+                        <img class="max-w-20! aspect-auto!" src="{{ asset('storage/' . $review->product->image) }}"
                             alt="">
                     </div>
                     <div class="space-y-1">
@@ -26,7 +26,7 @@
                             </p>
 
                             <div data-popover id="popover-{{ $review->id }}" role="tooltip"
-                                class="absolute z-10 invisible inline-block min-w-min text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+                                class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-xs opacity-0 min-w-min dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
                                 <div
                                     class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
                                     <h3 class="font-semibold text-gray-900 dark:text-white">Explanations</h3>
@@ -90,8 +90,8 @@
             <p class="font-thin">{{ $review->comment }}</p>
         </div>
     @empty
-        <div class="w-full sm:w-7/12 lg:w-9/12 flex items-center justify-between px-3 rounded-lg">
-            <h1 class="text-xl my-2">No reviews found.</h1>
+        <div class="flex items-center justify-between w-full px-3 rounded-lg sm:w-7/12 lg:w-9/12">
+            <h1 class="my-2 text-xl">No reviews found.</h1>
         </div>
     @endforelse
 

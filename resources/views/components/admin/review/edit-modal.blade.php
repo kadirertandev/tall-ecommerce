@@ -12,7 +12,7 @@
                 {{-- modal content --}}
                 <div class="bg-white" @click.outside="$dispatch('close-review-edit-modal')">
                     {{-- header --}}
-                    <div class="flex items-center justify-between p-4 border-b dark:border-gray-600">
+                    <div class="flex items-center justify-between p-4 border-b border-gray-600!">
                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                             Update Review by {{ $review?->user->full_name() }} for {{ $review?->product->name }}
                         </h3>
@@ -56,7 +56,7 @@
                         {{-- </div> --}}
                         <div class="flex items-center justify-between space-x-4">
                             <button wire:click.prevent='update' type="submit"
-                                class="text-white bg-teal-500 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                                class="text-white bg-teal-500 hover:bg-primary-800 focus:ring-2 focus:outline-hidden focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                                 <span>Update review</span>
                             </button>
                         </div>

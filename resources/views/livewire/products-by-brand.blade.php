@@ -11,7 +11,6 @@
                             <h1 class="text-3xl font-thin font-roboto">
                                 {{ Str::of($slug)->headline() }}</h1>
                             <div class="flex items-center justify-between col-span-3">
-                                {{-- <p>{{ Lang::get('frontend.product.x-product-found', ['x' => $this->productsCount]) }}</p> --}}
                                 @if ($this->products->total() > 0)
                                     <p>{{ Lang::get('frontend.product.x-product-found', ['x' => $this->products->total()]) }}
                                 @endif
@@ -19,7 +18,7 @@
                                 <div>
                                     <button id="dropdownHoverButton2" data-dropdown-toggle="dropdownHover2"
                                         data-dropdown-trigger="hover"
-                                        class="text-black {{-- hover:text-red-500 --}} ring-1 ring-gray-400 focus:outline-none  hover:ring-red-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center   dark:focus:ring-blue-800"
+                                        class="text-black ring-1! ring-gray-400! focus:outline-hidden  hover:ring-red-500! font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center   dark:focus:ring-blue-800"
                                         type="button"><span id="sort-text">{{ $orderFrontend }}</span> <svg
                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="red" class="w-5 h-5 ms-2">
@@ -30,7 +29,7 @@
 
                                     <!-- Dropdown menu -->
                                     <div id="dropdownHover2"
-                                        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
                                         <ul class="*:cursor-pointer py-2 text-sm text-gray-700 dark:text-gray-200"
                                             aria-labelledby="dropdownHoverButton2">
                                             <li @click="$dispatch('orderByLowestPrice')">
@@ -92,7 +91,7 @@
                                                     <input wire:model.live='selectedCategories'
                                                         id="filter-category-{{ $category->id }}"
                                                         value="{{ $category->id }}" type="checkbox"
-                                                        class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                                                        class="w-4 h-4 text-indigo-600 border-gray-300 rounded-sm focus:ring-indigo-500">
                                                     <label for="filter-category-{{ $category->id }}"
                                                         class="ml-3 text-sm text-gray-600">{{ $category->name }}</label>
                                                 </div>
@@ -136,7 +135,7 @@
                                                     class="rounded-lg bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="Max" required />
                                                 <button wire:click='setPrices' type="button" id="btnSortByPrice"
-                                                    class="p-2 text-white bg-red-500 rounded-lg hover:bg-red-600">
+                                                    class="p-2 text-white bg-red-500 rounded-lg hover:bg-red-600!">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                                                         class="w-6 h-6">
@@ -145,7 +144,7 @@
                                                     </svg>
                                                 </button>
                                                 <button wire:click='resetPrices' type="button" id="btnSortByPrice"
-                                                    class="p-2 text-white bg-red-500 rounded-lg hover:bg-red-600">
+                                                    class="p-2 text-white bg-red-500 rounded-lg hover:bg-red-600!">
                                                     <svg class="w-6 h-6" aria-hidden="true"
                                                         xmlns="http://www.w3.org/2000/svg" width="24"
                                                         height="24" fill="none" viewBox="0 0 24 24">
@@ -166,8 +165,7 @@
                                 @forelse ($this->products as $product)
                                     <div wire:key='product-container-{{ $product->id }}'
                                         class="flex flex-col justify-between gap-4 p-2 border-2 border-gray-100 shadow-xl">
-                                        <div
-                                            class="w-full flex justify-center {{-- bg-red-300 --}} flex-1 items-center">
+                                        <div class="flex items-center justify-center flex-1 w-full">
                                             <a
                                                 href="{{ route('products.show', ['category_slug' => $product->category->slug, 'product_slug' => $product->slug]) }}">
                                                 <img src="{{ asset('storage/' . $product->image) }}"
@@ -184,9 +182,7 @@
                                                     <h3 class="font-thin">({{ $product->ratingAverage() }})</h3>
                                                 @endif
                                             </div>
-                                            <div class="flex flex-wrap items-end justify-between ">
-                                                {{-- <h1 class="text-3xl font-thin">
-                                                    {{ App\Helpers::formatPrice($product->price) }} TL</h1> --}}
+                                            <div class="flex flex-wrap items-end justify-between">
                                                 <div>
                                                     <h1 @class([
                                                         'text-3xl font-thin' => !$product->discount_amount,
@@ -204,7 +200,7 @@
                                                 </div>
                                                 <livewire:add-to-cart-button :key='$product->id' :productId="$product->id"
                                                     :svg="false"
-                                                    class="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center" />
+                                                    class="text-white bg-linear-to-r! from-teal-500! via-teal-600! to-teal-700! hover:bg-linear-to-br! focus:ring-2! focus:outline-hidden! focus:ring-teal-300! dark:focus:ring-teal-800! font-medium rounded-lg text-sm px-5 py-2.5 text-center" />
                                             </div>
                                         </div>
                                     </div>

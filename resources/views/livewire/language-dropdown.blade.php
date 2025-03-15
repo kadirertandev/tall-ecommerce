@@ -1,6 +1,6 @@
 <div>
     <button id="states-button" data-dropdown-toggle="dropdown-states"
-        class="z-10 inline-flex items-center flex-shrink-0 p-2 text-sm font-medium text-center text-gray-500 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
+        class="z-10 inline-flex items-center shrink-0 p-2 text-sm font-medium text-center text-gray-500 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 focus:ring-2 focus:outline-hidden focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
         type="button">
 
         @php
@@ -60,7 +60,7 @@
         </svg>
     </button>
     <div id="dropdown-states"
-        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
         <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="states-button">
 
             <button type="button" wire:click="setLocale('tr')"

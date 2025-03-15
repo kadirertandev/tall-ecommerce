@@ -389,7 +389,7 @@ window.addEventListener("delete-product-modal", function (event) {
     customClass: {
       icon: 'border-0',
       popup: "mt-20 max-w-max",
-      container: "z-[8889]",
+      container: "z-[8889]!",
       title: "text-xl",
     },
     showConfirmButton: true,
@@ -453,7 +453,7 @@ window.addEventListener("force-delete-product-modal", function (event) {
     customClass: {
       icon: 'border-0',
       popup: "mt-20 max-w-max",
-      container: "z-[8889]",
+      container: "z-[8889]!",
       title: "text-xl",
     },
     showConfirmButton: true,
@@ -531,7 +531,7 @@ window.addEventListener("delete-category-modal", function (event) {
     customClass: {
       icon: 'border-0',
       popup: "mt-20 max-w-max",
-      container: "z-[8889]",
+      container: "z-[8889]!",
       title: "text-xl",
     },
     showConfirmButton: true,
@@ -594,7 +594,7 @@ window.addEventListener("force-delete-category-modal", function (event) {
     customClass: {
       icon: 'border-0',
       popup: "mt-20 max-w-max",
-      container: "z-[8889]",
+      container: "z-[8889]!",
       title: "text-xl",
     },
     showConfirmButton: true,
@@ -671,7 +671,7 @@ window.addEventListener("delete-brand-modal", function (event) {
     customClass: {
       icon: 'border-0',
       popup: "mt-20 max-w-max",
-      container: "z-[8889]",
+      container: "z-[8889]!",
       title: "text-xl",
     },
     showConfirmButton: true,
@@ -734,7 +734,7 @@ window.addEventListener("force-delete-brand-modal", function (event) {
     customClass: {
       icon: 'border-0',
       popup: "mt-20 max-w-max",
-      container: "z-[8889]",
+      container: "z-[8889]!",
       title: "text-xl",
     },
     showConfirmButton: true,
@@ -811,7 +811,7 @@ window.addEventListener("delete-admin-modal", function (event) {
     customClass: {
       icon: 'border-0',
       popup: "mt-20 max-w-max",
-      container: "z-[8889]",
+      container: "z-[8889]!",
       title: "text-xl",
     },
     showConfirmButton: true,
@@ -856,7 +856,7 @@ window.addEventListener("force-delete-admin-modal", function (event) {
     customClass: {
       icon: 'border-0',
       popup: "mt-20 max-w-max",
-      container: "z-[8889]",
+      container: "z-[8889]!",
       title: "text-xl",
     },
     showConfirmButton: true,
@@ -934,7 +934,7 @@ window.addEventListener("delete-review-modal", function (event) {
     customClass: {
       icon: 'border-0',
       popup: "mt-20 max-w-max",
-      container: "z-[8889]",
+      container: "z-[8889]!",
       title: "text-xl",
     },
     showConfirmButton: true,
@@ -979,7 +979,7 @@ window.addEventListener("force-delete-review-modal", function (event) {
     customClass: {
       icon: 'border-0',
       popup: "mt-20 max-w-max",
-      container: "z-[8889]",
+      container: "z-[8889]!",
       title: "text-xl",
     },
     showConfirmButton: true,
