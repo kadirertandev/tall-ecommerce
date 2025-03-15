@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Product;
 use App\Models\ProductReview;
 use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithTryCatch;
@@ -54,7 +55,9 @@ class ProductReviews extends Component
       $validated = $this->validate();
 
       $this->tryCatch(function () use ($validated) {
-        $this->authorize("canReview", $this->productId);
+        $product = Product::findOrFail($this->productId);
+
+        $this->authorize("canReview", $product);
 
         $validated["rating"] = $this->rating ?? 0;
         $validated["user_id"] = auth()->user()->id;
