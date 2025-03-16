@@ -21,15 +21,17 @@
         @endphp
 
         @if (!auth()->user()->favorites->contains($this->productId))
-            <button wire:click='addToFavorites' class="{{ $buttonClass }}" role="button">
-                <svg class="{{ $svgClass }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $svgPath }}" />
-                </svg>
-                @if ($showLabel)
-                    <span>{{ __('frontend.favorites.add-to-favorites') }}</span>
-                @endif
-            </button>
+            @if ($type !== 'profile')
+                <button wire:click='addToFavorites' class="{{ $buttonClass }}" role="button">
+                    <svg class="{{ $svgClass }}" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $svgPath }}" />
+                    </svg>
+                    @if ($showLabel)
+                        <span>{{ __('frontend.favorites.add-to-favorites') }}</span>
+                    @endif
+                </button>
+            @endif
         @else
             <button wire:click='removeFromFavorites' class="{{ $buttonClass }}" role="button">
                 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="{{ $svgClass }}" viewBox="0 0 24 24"

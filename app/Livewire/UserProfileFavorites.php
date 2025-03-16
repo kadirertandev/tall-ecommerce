@@ -83,7 +83,7 @@ class UserProfileFavorites extends Component
     // $this->resetPage();
   }
 
-  #[On("remove-from-favorites")]
+  #[On("removed-from-favorites")]
   public function render()
   {
     return view('livewire.user-profile-favorites');

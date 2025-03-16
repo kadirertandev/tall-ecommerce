@@ -49,6 +49,8 @@ class AddToFavoritesButton extends Component
         auth()->user()->favorites()->detach($this->productId);
       }
 
+      $this->dispatch("removed-from-favorites");
+
       $this->swalToast([
         "titleText" => __('frontend.favorites.removed-from-favorites'),
         "text" => "",
