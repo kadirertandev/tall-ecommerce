@@ -57,6 +57,7 @@ class UserProfileFavorites extends Component
       ->when($this->categoriesFilter, function ($query) {
         return $query->whereIn("products.category_id", $this->categoriesFilter);
       })
+      ->select(["products.*"])
       ->paginate($this->perPage);
   }
 
