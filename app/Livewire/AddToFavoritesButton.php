@@ -5,6 +5,8 @@ namespace App\Livewire;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
 use Livewire\Component;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\UnauthorizedException;
 
 class AddToFavoritesButton extends Component
 {
@@ -27,6 +29,10 @@ class AddToFavoritesButton extends Component
   public function addToFavorites()
   {
     $this->tryCatch(function () {
+      if (Gate::denies("customer")) {
+        throw new UnauthorizedException("This action is unauthorized!");
+      }
+
       if (!auth()->user()->favorites()->where("product_id", $this->productId)->exists()) {
         auth()->user()->favorites()->attach($this->productId, ['created_at' => now()]);
       }
