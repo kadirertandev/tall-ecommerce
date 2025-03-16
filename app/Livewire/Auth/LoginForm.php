@@ -4,30 +4,52 @@ namespace App\Livewire\Auth;
 
 use App\Events\Login;
 use App\Livewire\Forms\LoginForm as FormsLoginForm;
-use App\Traits\CartService;
+use App\Traits\CartActions;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class LoginForm extends Component
 {
-  public FormsLoginForm $form;
-
-  use CartService {
-    CartService::addToCart as traitAddToCart;
+  use CartActions {
+    CartActions::addToCart as traitAddToCart;
   }
 
-  public function mount()
+  public FormsLoginForm $form;
+
+  private $svgEmail = '<svg xmlns="http://www.w3.org/2000/svg" class="w-24 h-24" viewBox="0 0 16 16">
+	<path fill="none" stroke="currentColor" stroke-linejoin="round" d="m5 4l4.5 3L14 4M2 8.5h5m-4 2h5m-3.5 2h10v-9h-10v3H1" stroke-width="1" />
+</svg>';
+
+  public function checkForAlerts()
   {
     if (session()->has("reset-password-mail-sent")) {
-      $this->dispatch("reset-password-mail-sent");
+      $this->swalSuccess([
+        "titleText" => "Check Your Inbox",
+        "text" => "We have sent you password reset email!",
+        "showConfirmButton" => true,
+        "timer" => false,
+        "iconHtml" => $this->svgEmail,
+        "customClass" => [
+          "icon" => "border-0!"
+        ]
+      ]);
+
       session()->remove("reset-password-mail-sent");
     }
+
     if (session()->has("reset-password-success")) {
-      $this->dispatch("reset-password-success");
+      $this->swalSuccess([
+        "titleText" => "Password Reset Successful!"
+      ]);
+
       session()->remove("reset-password-success");
     }
+
     if (session()->has("change-password-success")) {
-      $this->dispatch("change-password-success");
+      $this->swalSuccess([
+        "titleText" => "Change Password Successful!"
+      ]);
+
       session()->remove("change-password-success");
     }
   }

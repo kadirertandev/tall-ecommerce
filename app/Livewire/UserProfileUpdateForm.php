@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Livewire\Forms\UserProfileUpdateForm as FormsUserProfileUpdateForm;
+use App\Traits\WithSweetAlert;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -10,6 +11,8 @@ use Livewire\WithFileUploads;
 class UserProfileUpdateForm extends Component
 {
   use WithFileUploads;
+  use WithSweetAlert;
+
   public FormsUserProfileUpdateForm $form;
 
   public function mount()
@@ -36,7 +39,9 @@ class UserProfileUpdateForm extends Component
 
     auth()->user()->update($validated);
 
-    $this->dispatch("user-profile-update", $this->form->all());
+    $this->swalSuccess([
+      "titleText" => "Profile updated!"
+    ]);
   }
 
   public function render()

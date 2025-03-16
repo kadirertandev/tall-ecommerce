@@ -120,7 +120,7 @@
                                                 @endcan
                                                 @if (!$brand->deleted_at)
                                                     @can('delete brands')
-                                                        <li @click="$dispatch('delete-brand-modal',{brandId: {{ $brand->id }}})"
+                                                        <li wire:click="askDeleteBrand({{ $brand->id }})"
                                                             class="flex items-center gap-1 px-4 py-2 hover:bg-red-500 group hover:text-white">
                                                             <svg class="w-4 h-4 text-gray-800 dark:text-white group-hover:text-white"
                                                                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -144,7 +144,7 @@
                                                             </svg>
                                                             <span>Restore</span>
                                                         </li>
-                                                        <li @click="$dispatch('force-delete-brand-modal',{brandId: {{ $brand->id }}})"
+                                                        <li wire:click="askDeleteBrand({{ $brand->id }}, {{ true }})"
                                                             class="flex items-center gap-1 px-4 py-2 hover:bg-red-800 group hover:text-white">
                                                             <svg class="w-4 h-4 text-gray-800 dark:text-white group-hover:text-white"
                                                                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg"

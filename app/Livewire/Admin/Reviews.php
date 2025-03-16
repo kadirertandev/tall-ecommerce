@@ -6,6 +6,7 @@ use App\Enums\ReviewStatusType;
 use App\Livewire\Forms\Admin\ReviewEditForm;
 use App\Models\ProductReview;
 use App\Traits\WithRefreshFlowbite;
+use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
 use Exception;
 use Illuminate\Support\Carbon;
@@ -24,6 +25,7 @@ class Reviews extends Component
   use WithPagination;
   use WithTryCatch;
   use WithRefreshFlowbite;
+  use WithSweetAlert;
 
   public ReviewEditForm $editForm;
 
@@ -174,7 +176,9 @@ class Reviews extends Component
       ]);
 
       $this->dispatch("close-review-edit-modal");
-      $this->dispatch("update_review_success");
+      $this->swalToast([
+        "titleText" => "Review updated successfully!"
+      ]);
     });
   }
 
@@ -191,7 +195,24 @@ class Reviews extends Component
     });
   }
 
-  #[On("delete-review-modal-is-confirmed")]
+  public function askDeleteReview($reviewId, $permanently = false)
+  {
+    $this->swalQuestion([
+      "titleText" => "Are you sure you want to delete this review " . ($permanently ? "permanently?" : "?"),
+      "confirmButtonText" => 'Yes',
+      "denyButtonText" => "No",
+      "onConfirm" => (!$permanently ? "" : "force-") . "delete-review-confirmed",
+      "onConfirmParameters" => [
+        "reviewId" => $reviewId
+      ],
+      "customClass" => [
+        "title" => "text-nowrap!",
+        "popup" => "min-w-max!"
+      ]
+    ]);
+  }
+
+  #[On("delete-review-confirmed")]
   public function delete($reviewId)
   {
     $this->tryCatch(function () use ($reviewId) {
@@ -210,18 +231,23 @@ class Reviews extends Component
         "deleted_by" => auth()->user()->id
       ]);
 
-      $this->dispatch("delete_review_success");
+      $this->swalToast([
+        "titleText" => "Review deleted successfully!"
+      ]);
     }, [
       Throwable::class => function ($e) {
         if ($e->getCode() == 401) {
-          return $this->dispatch("error-with-message", message: "Can not delete nonrejected reviews.", timer: 1500);
+          return $this->swalError([
+            "titleText" => "Can not delete nonrejected reviews."
+          ]);
         }
-        $this->dispatch("something-went-wrong");
+
+        $this->swalTemplateSomethingWentWrong();
       }
     ]);
   }
 
-  #[On("force-delete-review-modal-is-confirmed")]
+  #[On("force-delete-review-confirmed")]
   public function forceDelete($reviewId)
   {
     $this->tryCatch(function () use ($reviewId) {
@@ -231,7 +257,9 @@ class Reviews extends Component
 
       ProductReview::withTrashed()->findOrFail($reviewId)->forceDelete();
 
-      $this->dispatch("force-delete-review-success");
+      $this->swalToast([
+        "titleText" => "Review deleted permanently successfully!"
+      ]);
     });
   }
 
@@ -243,6 +271,10 @@ class Reviews extends Component
       }
 
       ProductReview::withTrashed()->findOrFail($reviewId)->restore();
+
+      $this->swalToast([
+        "titleText" => "Review restored successfully!"
+      ]);
     });
   }
 

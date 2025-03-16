@@ -15,6 +15,7 @@ trait CartActions
 {
   use WithTryCatch;
   use CartData;
+  use WithSweetAlert;
 
   #[On("add-to-cart")]
   public function addToCart($productID)
@@ -57,7 +58,14 @@ trait CartActions
 
       DB::commit();
 
-      $this->dispatch("added-to-cart", product: $product, text: __('frontend.cart.added-to-cart'));
+      $this->swalToast([
+        "titleText" => $product->name,
+        "text" => __('frontend.cart.added-to-cart'),
+        "iconHtml" => $this->svgAddToCart,
+        "customClass" => [
+          "icon" => "border-0!"
+        ]
+      ]);
     }, [
       ModelNotFoundException::class => function ($e) {
         DB::rollBack();
@@ -68,22 +76,36 @@ trait CartActions
       },
       Throwable::class => function ($e) {
         DB::rollBack();
-        $this->dispatch("something-went-wrong");
+        $this->swalTemplateSomethingWentWrong();
       }
     ]);
   }
 
   public function askRemoveFromCart($cartItemId)
   {
-    $this->dispatch("remove-from-cart-modal", cartItemId: $cartItemId);
+    $this->swalQuestion([
+      "titleText" => "Are you sure you want to remove this product from cart?",
+      "confirmButtonText" => 'Yes',
+      "denyButtonText" => "Remove and add to favorites",
+      "onConfirm" => "remove-product-from-cart-confirmed",
+      "onDeny" => "remove-product-from-cart-denied",
+      "onConfirmParameters" => [
+        "cartItemId" => $cartItemId,
+        "addToFavorites" => false
+      ],
+      "onDenyParameters" => [
+        "cartItemId" => $cartItemId,
+        "addToFavorites" => true
+      ],
+    ]);
   }
 
-  #[On("remove-form-cart-modal-is-confirmed")]
-  #[On("remove-form-cart-modal-is-denied")]
-  public function removeFromCart($cartItemId, $addFavorites)
+  #[On("remove-product-from-cart-confirmed")]
+  #[On("remove-product-from-cart-denied")]
+  public function removeFromCart($cartItemId, $addToFavorites)
   {
     $this->tryCatch(
-      function () use ($cartItemId, $addFavorites) {
+      function () use ($cartItemId, $addToFavorites) {
         if (Gate::denies("customer")) {
           throw new AuthorizationException("This action is unauthorized!");
         }
@@ -91,13 +113,28 @@ trait CartActions
         $cartItem = CartItem::findOrFail($cartItemId);
         $cartItem->delete();
 
-        if ($addFavorites) {
+        if ($addToFavorites) {
           if (!auth()->user()->favorites->contains($cartItem->product->id)) {
             auth()->user()->favorites()->attach($cartItem->product->id);
           }
-          $this->dispatch("removed-from-cart-and-added-favorites", product: $cartItem->product, text: __('frontend.cart.removed-from-cart-and-added-to-favorites'));
+
+          $this->swalToast([
+            "titleText" => $cartItem->product->name,
+            "text" => __('frontend.cart.removed-from-cart-and-added-to-favorites'),
+            "iconHtml" => $this->svgRemoveFromCartAddToFavorites,
+            "customClass" => [
+              "icon" => "border-0! text-red-500!"
+            ]
+          ]);
         } else {
-          $this->dispatch("removed-from-cart", product: $cartItem->product, text: __('frontend.cart.removed-from-cart'));
+          $this->swalToast([
+            "titleText" => $cartItem->product->name,
+            "text" => __('frontend.cart.removed-from-cart'),
+            "iconHtml" => $this->svgRemoveFromCart,
+            "customClass" => [
+              "icon" => "border-0! text-red-500!"
+            ],
+          ]);
         }
 
         $this->dispatch("refresh-cart");

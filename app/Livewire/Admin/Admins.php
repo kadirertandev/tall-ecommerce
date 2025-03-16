@@ -7,6 +7,7 @@ use App\Livewire\Forms\Admin\AdminEditForm;
 use App\Models\Role;
 use App\Models\User;
 use App\Traits\WithRefreshFlowbite;
+use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +30,7 @@ class Admins extends Component
   use WithPagination;
   use WithTryCatch;
   use WithRefreshFlowbite;
+  use WithSweetAlert;
 
   public AdminCreateForm $createForm;
   public AdminEditForm $editForm;
@@ -171,59 +173,6 @@ class Admins extends Component
     });
   }
 
-  public function assignRole($adminId, $roleId)
-  {
-    $this->tryCatch(
-      function () use ($adminId, $roleId) {
-        $admin = User::findOrFail($adminId);
-
-        if ($admin->role()->name == "owner") {
-          throw new UnauthorizedException("can not change role of owner");
-        }
-
-        $role = Role::findOrFail($roleId);
-        $admin->assignRole($role);
-
-        $this->dispatch("update_admin_success");
-      }
-    );
-  }
-
-  public function update()
-  {
-    $this->editForm->validate();
-
-    $this->tryCatch(function () {
-      if (!Gate::allows("edit admins") || !Gate::allows("assign role")) {
-        throw new UnauthorizedException("can not edit admin");
-      }
-
-      $admin = User::findOrFail($this->selectedAdmin->id);
-
-      if ($this->editForm->profile_image) {
-        $imageName = $this->editForm->profile_image->store("profile_images", "public");
-        if (Storage::disk("public")->exists($this->selectedAdmin->profile_image)) {
-          Storage::disk("public")->delete($this->selectedAdmin->profile_image);
-        }
-      }
-
-      $admin->update([
-        "first_name" => $this->editForm->first_name,
-        "last_name" => $this->editForm->last_name,
-        "email" => $this->editForm->email,
-        "phone_number" => $this->editForm->phone_number,
-        "date_of_birth" => $this->editForm->date_of_birth,
-        "profile_image" => $imageName ?? $this->selectedAdmin->profile_image
-      ]);
-
-      $role = Role::findOrFail($this->editForm->roleId);
-      $this->selectedAdmin->assignRole($role);
-
-      $this->dispatch("close-admin-edit-modal");
-      $this->dispatch("update_admin_success");
-    });
-  }
-
   public function create()
   {
     $this->createForm->validate();
@@ -258,22 +207,102 @@ class Admins extends Component
 
         $this->dispatch("close-admin-create-modal");
         $this->resetCreateFormFields();
-        $this->dispatch("create_admin_success");
+
+        $this->swalToast([
+          "titleText" => "Admin created successfully!"
+        ]);
       },
       [
         ModelNotFoundException::class => function ($e) {
           DB::rollBack();
-          $this->dispatch("error-with-message", message: Str::singular(Str::ucfirst(app($e->getModel())->getTable())) . " not found!");
+          $this->swalError([
+            "titleText" => Str::singular(Str::ucfirst(app($e->getModel())->getTable())) . " not found!"
+          ]);
         },
         Throwable::class => function ($e) {
           DB::rollBack();
-          $this->dispatch("something-went-wrong");
+          $this->swalTemplateSomethingWentWrong();
         }
       ]
     );
   }
 
-  #[On("delete-admin-modal-is-confirmed")]
+  public function update()
+  {
+    $this->editForm->validate();
+
+    $this->tryCatch(function () {
+      if (!Gate::allows("edit admins") || !Gate::allows("assign role")) {
+        throw new UnauthorizedException("can not edit admin");
+      }
+
+      $admin = User::findOrFail($this->selectedAdmin->id);
+
+      if ($this->editForm->profile_image) {
+        $imageName = $this->editForm->profile_image->store("profile_images", "public");
+        if (Storage::disk("public")->exists($this->selectedAdmin->profile_image)) {
+          Storage::disk("public")->delete($this->selectedAdmin->profile_image);
+        }
+      }
+
+      $admin->update([
+        "first_name" => $this->editForm->first_name,
+        "last_name" => $this->editForm->last_name,
+        "email" => $this->editForm->email,
+        "phone_number" => $this->editForm->phone_number,
+        "date_of_birth" => $this->editForm->date_of_birth,
+        "profile_image" => $imageName ?? $admin->profile_image
+      ]);
+
+      $role = Role::findOrFail($this->editForm->roleId);
+      $admin->assignRole($role);
+
+      $this->dispatch("close-admin-edit-modal");
+
+      $this->swalToast([
+        "titleText" => "Admin updated successfully!"
+      ]);
+    });
+  }
+
+  public function assignRole($adminId, $roleId)
+  {
+    $this->tryCatch(
+      function () use ($adminId, $roleId) {
+        $admin = User::findOrFail($adminId);
+
+        if ($admin->role()->name == "owner") {
+          throw new UnauthorizedException("can not change role of owner");
+        }
+
+        $role = Role::findOrFail($roleId);
+        $admin->assignRole($role);
+
+        $this->swalToast([
+          "titleText" => "Admin updated successfully!"
+        ]);
+      }
+    );
+  }
+
+  public function askDeleteAdmin($adminId, $permanently = false)
+  {
+    $this->swalQuestion([
+      "titleText" => "Are you sure you want to delete this admin " . ($permanently ? "permanently?" : "?"),
+      "confirmButtonText" => 'Yes',
+      "denyButtonText" => "No",
+      "onConfirm" => (!$permanently ? "" : "force-") . "delete-admin-confirmed",
+      "onConfirmParameters" => [
+        "adminId" => $adminId
+      ],
+      "customClass" => [
+        "title" => "text-nowrap!",
+        "popup" => "min-w-max!"
+      ]
+    ]);
+  }
+
+  #[On("delete-admin-confirmed")]
   public function delete($adminId)
   {
     $this->tryCatch(function () use ($adminId) {
@@ -288,11 +317,13 @@ class Admins extends Component
         "deleted_by" => auth()->user()->id
       ]);
 
-      $this->dispatch("delete_admin_success");
+      $this->swalToast([
+        "titleText" => "Admin deleted successfully!"
+      ]);
     });
   }
 
-  #[On("force-delete-admin-modal-is-confirmed")]
+  #[On("force-delete-admin-confirmed")]
   public function forceDelete($adminId)
   {
     $this->tryCatch(function () use ($adminId) {
@@ -304,7 +335,9 @@ class Admins extends Component
 
       $admin->forceDelete();
 
-      $this->dispatch("force-delete_admin_success");
+      $this->swalToast([
+        "titleText" => "Admin deleted permanently successfully!"
+      ]);
     });
   }
 
@@ -316,10 +349,13 @@ class Admins extends Component
       }
 
       User::withTrashed()->findOrFail($adminId)->restore();
+
+      $this->swalToast([
+        "titleText" => "Admin restored successfully!"
+      ]);
     });
   }
 
-  #[On("delete_admin_success")]
   public function render()
   {
     return view('livewire.admin.admins')

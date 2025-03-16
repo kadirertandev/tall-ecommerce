@@ -200,7 +200,7 @@
                                                 @if (!$admin->deleted_at)
                                                     @can('delete admins')
                                                         @if ($admin->isNot(auth()->user()))
-                                                            <li @click="$dispatch('delete-admin-modal',{adminId: {{ $admin->id }}})"
+                                                            <li wire:click="askDeleteAdmin({{ $admin->id }})"
                                                                 class="flex items-center gap-1 px-4 py-2 hover:bg-red-500 group hover:text-white">
                                                                 <svg class="w-4 h-4 text-gray-800 dark:text-white group-hover:text-white"
                                                                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -225,7 +225,7 @@
                                                             </svg>
                                                             <span>Restore</span>
                                                         </li>
-                                                        <li @click="$dispatch('force-delete-admin-modal',{adminId: {{ $admin->id }}})"
+                                                        <li wire:click="askDeleteAdmin({{ $admin->id }}, {{ true }})"
                                                             class="flex items-center gap-1 px-4 py-2 hover:bg-red-800 group hover:text-white">
                                                             <svg class="w-4 h-4 text-gray-800 dark:text-white group-hover:text-white"
                                                                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg"

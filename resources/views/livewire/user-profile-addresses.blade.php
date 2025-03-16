@@ -38,8 +38,7 @@
                         </svg>
                         <span class="group-hover:text-teal-500">Edit</span>
                     </button>
-                    <button @click="$dispatch('delete-address-modal', {addressId: {{ $address->id }}})"
-                        class="flex items-center group">
+                    <button wire:click="askDeleteAddress('{{ $address->id }}')" class="flex items-center group">
                         <svg class="w-6 h-6 text-gray-800 dark:text-white group-hover:fill-main-red" aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                             viewBox="0 0 24 24">

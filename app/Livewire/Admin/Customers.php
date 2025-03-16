@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\User;
 use App\Traits\WithRefreshFlowbite;
+use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -18,6 +19,7 @@ class Customers extends Component
   use WithPagination;
   use WithTryCatch;
   use WithRefreshFlowbite;
+  use WithSweetAlert;
 
   public function boot()
   {
@@ -105,9 +107,11 @@ class Customers extends Component
         if ($customer->delete_request) {
           $customer->forceDelete();
 
-          $this->dispatch("force_delete_customer_success");
+          $this->swalToast([
+            "titleText" => "Customer deleted permanently successfully!"
+          ]);
         } else {
-          $this->dispatch("something-went-wrong");
+          $this->swalTemplateSomethingWentWrong();
         }
       }
     );

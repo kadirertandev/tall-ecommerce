@@ -148,7 +148,10 @@ class Brands extends Component
 
       $this->dispatch("close-brand-create-modal");
       $this->resetCreateFormFields();
-      $this->dispatch("create_brand_success");
+
+      $this->swalToast([
+        "titleText" => "Brand created successfully!"
+      ]);
     });
   }
 
@@ -157,7 +160,7 @@ class Brands extends Component
     $this->editForm->validate();
 
     $this->tryCatch(function () {
-      if (Gate::allows("edit brands")) {
+      if (!Gate::allows("edit brands")) {
         throw new UnauthorizedException("can not edit brand");
       }
 
@@ -179,11 +182,30 @@ class Brands extends Component
       ]);
 
       $this->dispatch("close-brand-edit-modal");
-      $this->dispatch("update_brand_success");
+      $this->swalToast([
+        "titleText" => "Brand updated successfully!"
+      ]);
     });
   }
 
-  #[On("delete-brand-modal-is-confirmed")]
+  public function askDeleteBrand($brandId, $permanently = false)
+  {
+    $this->swalQuestion([
+      "titleText" => "Are you sure you want to delete this brand " . ($permanently ? "permanently?" : "?"),
+      "confirmButtonText" => 'Yes',
+      "denyButtonText" => "No",
+      "onConfirm" => (!$permanently ? "" : "force-") . "delete-brand-confirmed",
+      "onConfirmParameters" => [
+        "brandId" => $brandId
+      ],
+      "customClass" => [
+        "title" => "text-nowrap!",
+        "popup" => "min-w-max!"
+      ]
+    ]);
+  }
+
+  #[On("delete-brand-confirmed")]
   public function delete($brandId)
   {
     $this->tryCatch(function () use ($brandId) {
@@ -196,19 +218,24 @@ class Brands extends Component
       $hasRelatedProducts = Product::where("brand_id", $brand->id)->exists();
 
       if ($hasRelatedProducts) {
-        $this->dispatch("delete_brand_error", title: "There are associated products with this brand.", text: "Either reassign the products to a different brand or delete the products before deleting the brand.");
+        $this->swalTemplateAssociatedExistsError([
+          "titleText" => "There are associated products with this brand.",
+          "text" => "Either reassign the products to a different brand or delete the products before deleting the brand."
+        ]);
       } else {
         $brand->delete();
         $brand->update([
           "deleted_by" => auth()->user()->id
         ]);
 
-        $this->dispatch("delete_brand_success");
+        $this->swalToast([
+          "titleText" => "Brand deleted successfully!"
+        ]);
       }
     });
   }
 
-  #[On("force-delete-brand-modal-is-confirmed")]
+  #[On("force-delete-brand-confirmed")]
   public function forceDelete($brandId)
   {
     $this->tryCatch(function () use ($brandId) {
@@ -219,7 +246,9 @@ class Brands extends Component
       $brand = Brand::withTrashed()->findOrFail($brandId);
       $brand->forceDelete();
 
-      $this->dispatch("force-delete_brand_success");
+      $this->swalToast([
+        "titleText" => "Brand deleted permanently successfully!"
+      ]);
     });
   }
 
@@ -231,6 +260,10 @@ class Brands extends Component
       }
 
       Brand::withTrashed()->findOrFail($brandId)->restore();
+
+      $this->swalToast([
+        "titleText" => "Brand restored successfully!"
+      ]);
     });
   }
 

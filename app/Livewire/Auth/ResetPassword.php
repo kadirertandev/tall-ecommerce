@@ -3,6 +3,7 @@
 namespace App\Livewire\Auth;
 
 use App\Models\User;
+use App\Traits\WithSweetAlert;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Validate;
@@ -10,6 +11,8 @@ use Livewire\Component;
 
 class ResetPassword extends Component
 {
+  use WithSweetAlert;
+
   #[Validate("required|email|exists:users")]
   public $email;
   #[Validate("required|min:8|confirmed")]
@@ -51,7 +54,7 @@ class ResetPassword extends Component
       session()->put("reset-password-success", true);
       to_route("login");
     } else {
-      $this->dispatch("something-went-wrong");
+      $this->swalTemplateSomethingWentWrong();
     }
   }
   public function render()

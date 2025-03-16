@@ -2,15 +2,15 @@
 
 namespace App\Listeners;
 
-use App\Traits\CartService;
+use App\Traits\CartActions;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Livewire\Component;
 
 class AddToCartAfterLogin extends Component
 {
-  use CartService {
-    CartService::addToCart as traitAddToCart;
+  use CartActions {
+    CartActions::addToCart as traitAddToCart;
   }
   /**
    * Create the event listener.

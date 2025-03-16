@@ -10,29 +10,6 @@
                     {{ __('frontend.form.login-form.forgot-password') }}
                 </h1>
                 <form class="space-y-4 md:space-y-6">
-                    {{-- @if (session('reset-password-mail-sent'))
-                        <div class="px-4 py-2 text-white bg-teal-500">
-                            Reset password mail is sent.
-                        </div>
-                    @endif --}}
-                    {{-- <div>
-                        <label for="email"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ __('frontend.form.login-form.your-email') }}</label>
-                        <input wire:model.blur='email' type="email" name="email" id="email"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="name@company.com" required="">
-                        @error('email')
-                            <p class="flex items-center gap-1 p-2 mt-1 text-sm text-white bg-red-500 rounded-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-                                </svg>
-                                <span>{{ $message }}</span>
-                            </p>
-                        @enderror
-                    </div> --}}
-
                     <div class="relative z-0">
                         <input wire:model.blur='email' type="text" id="floating_standard"
                             @class([

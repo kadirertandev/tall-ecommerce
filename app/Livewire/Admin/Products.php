@@ -12,6 +12,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\WeeklyDealProduct;
 use App\Traits\WithRefreshFlowbite;
+use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -32,6 +33,7 @@ class Products extends Component
   use WithPagination;
   use WithTryCatch;
   use WithRefreshFlowbite;
+  use WithSweetAlert;
 
   public ProductCreateForm $createForm;
   public ProductEditForm $editForm;
@@ -233,6 +235,37 @@ class Products extends Component
     });
   }
 
+  public function create()
+  {
+    $this->createForm->validate();
+
+    $this->tryCatch(function () {
+      if (!Gate::allows("create products")) {
+        throw new UnauthorizedException("can not create product");
+      }
+
+      $imageName = $this->createForm->image->store("product_images", "public");
+
+      Product::create([
+        "name" => $this->createForm->name,
+        "slug" => $this->createForm->slug,
+        "description" => $this->createForm->description,
+        "price" => $this->createForm->price,
+        "category_id" => $this->createForm->category,
+        "brand_id" => $this->createForm->brand,
+        "image" => $imageName,
+        "created_by" => auth()->user()->id,
+        "created_at" => Carbon::now(),
+      ]);
+
+      $this->dispatch("close-product-create-modal");
+      $this->resetCreateFormFields();
+      $this->swalToast([
+        "titleText" => "Product created successfully!"
+      ]);
+    });
+  }
+
   public function update()
   {
     $this->editForm->validate();
@@ -264,40 +297,30 @@ class Products extends Component
       ]);
 
       $this->dispatch("close-product-edit-modal");
-      $this->dispatch("update_product_success");
-    });
-  }
-
-  public function create()
-  {
-    $this->createForm->validate();
-
-    $this->tryCatch(function () {
-      if (!Gate::allows("create products")) {
-        throw new UnauthorizedException("can not create product");
-      }
-
-      $imageName = $this->createForm->image->store("product_images", "public");
-
-      Product::create([
-        "name" => $this->createForm->name,
-        "slug" => $this->createForm->slug,
-        "description" => $this->createForm->description,
-        "price" => $this->createForm->price,
-        "category_id" => $this->createForm->category,
-        "brand_id" => $this->createForm->brand,
-        "image" => $imageName,
-        "created_by" => auth()->user()->id,
-        "created_at" => Carbon::now(),
+      $this->swalToast([
+        "titleText" => "Product updated successfully!"
       ]);
-
-      $this->dispatch("close-product-create-modal");
-      $this->resetCreateFormFields();
-      $this->dispatch("create_product_success");
     });
   }
 
-  #[On("delete-product-modal-is-confirmed")]
+  public function askDeleteProduct($productId, $permanently = false)
+  {
+    $this->swalQuestion([
+      "titleText" => "Are you sure you want to delete this product " . ($permanently ? "permanently?" : "?"),
+      "confirmButtonText" => 'Yes',
+      "denyButtonText" => "No",
+      "onConfirm" => (!$permanently ? "" : "force-") . "delete-product-confirmed",
+      "onConfirmParameters" => [
+        "productId" => $productId
+      ],
+      "customClass" => [
+        "title" => "text-nowrap!",
+        "popup" => "min-w-max!"
+      ]
+    ]);
+  }
+
+  #[On("delete-product-confirmed")]
   public function delete($productId)
   {
     $this->tryCatch(function () use ($productId) {
@@ -312,29 +335,29 @@ class Products extends Component
       $existsInAnyCart = CartItem::where("product_id", $productId)->exists();
 
       if ($existsInDailyDealProducts || $existsInWeeklyDealProducts) {
-        $this->dispatch(
-          "delete_product_error",
-          title: "Weekly and/or daily deal record(s) associated with this product found.",
-          text: "Delete the associated weekly and/or daily deal record(s) before deleting the product."
-        );
+        $this->swalTemplateAssociatedExistsError([
+          "titleText" => "Weekly and/or daily deal record(s) associated with this product found.",
+          "text" => "Delete the associated weekly and/or daily deal record(s) before deleting the product."
+        ]);
       } elseif ($existsInAnyCart) {
-        $this->dispatch(
-          "delete_product_error",
-          title: "Cart item record(s) associated with this product found.",
-          text: "You can not delete this product as of now."
-        );
+        $this->swalTemplateAssociatedExistsError([
+          "titleText" => "Cart item record(s) associated with this product found.",
+          "text" => "You can not delete this product as of now.",
+        ]);
       } else {
         $product->delete();
         $product->update([
           "deleted_by" => auth()->user()->id
         ]);
 
-        $this->dispatch("delete_product_success");
+        $this->swalToast([
+          "titleText" => "Product deleted successfully!"
+        ]);
       }
     });
   }
 
-  #[On("force-delete-product-modal-is-confirmed")]
+  #[On("force-delete-product-confirmed")]
   public function forceDelete($productId)
   {
     $this->tryCatch(function () use ($productId) {
@@ -344,7 +367,9 @@ class Products extends Component
 
       Product::withTrashed()->findOrFail($productId)->forceDelete();
 
-      $this->dispatch("force-delete_product_success");
+      $this->swalToast([
+        "titleText" => "Product deleted permanently successfully!"
+      ]);
     });
   }
 
@@ -356,10 +381,13 @@ class Products extends Component
       }
 
       Product::withTrashed()->findOrFail($productId)->restore();
+
+      $this->swalToast([
+        "titleText" => "Product restored successfully!"
+      ]);
     });
   }
 
-  #[On("delete_product_success")]
   public function render()
   {
     return view('livewire.admin.products')

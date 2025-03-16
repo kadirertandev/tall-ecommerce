@@ -5,22 +5,27 @@ namespace App\Traits;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
 use Illuminate\Validation\UnauthorizedException;
-use Illuminate\Auth\Access\AuthorizationException;
 use Throwable;
 
 trait WithTryCatch
 {
+  use WithSweetAlert;
+
   public function defaultExceptionHandlers()
   {
     return [
       UnauthorizedException::class => function ($e) {
-        $this->dispatch("unauthorized-action");
+        $this->swalError([
+          "titleText" => "THIS ACTION IS UNAUTHORIZED!"
+        ]);
       },
       ModelNotFoundException::class => function ($e) {
-        $this->dispatch("error-with-message", message: Str::singular(Str::ucfirst(app($e->getModel())->getTable())) . " not found!");
+        $this->swalError([
+          "titleText" => Str::singular(Str::ucfirst(app($e->getModel())->getTable())) . " not found!"
+        ]);
       },
       Throwable::class => function ($e) {
-        $this->dispatch("something-went-wrong");
+        $this->swalTemplateSomethingWentWrong();
       }
     ];
   }

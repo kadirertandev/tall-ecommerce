@@ -44,7 +44,7 @@
     @endauth
 
     @guest
-        <a @click="$dispatch('add-to-favorites-guest-error')"
+        <a wire:click.prevent='guestError'
             class="group flex relative items-center justify-center py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-hidden bg-white rounded-lg border-2 shadow-xl border-gray-200 hover:bg-red-500! focus:z-10 hover:text-white!"
             role="button">
             <svg class="w-5 h-5 -ms-2 me-2 group-hover:fill-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"

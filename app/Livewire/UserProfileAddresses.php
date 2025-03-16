@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Livewire\Forms\UserProfileAddressForm;
 use App\Models\UserAddress;
 use App\Traits\Addresses;
+use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -14,6 +15,7 @@ class UserProfileAddresses extends Component
 {
   use Addresses;
   use WithTryCatch;
+  use WithSweetAlert;
 
   public UserProfileAddressForm $form;
 
@@ -69,6 +71,10 @@ class UserProfileAddresses extends Component
         "is_default" => $this->form->makeDefault
       ]);
 
+      $this->swalToast([
+        "titleText" => "Address updated successfully!"
+      ]);
+
       $this->dispatch("address-updated");
       $this->dispatch("close-address-modal");
     });
@@ -81,13 +87,35 @@ class UserProfileAddresses extends Component
     $this->form->reset();
   }
 
-  #[On("delete-address-modal-is-confirmed")]
+  public function askDeleteAddress($addressId)
+  {
+    $this->swalQuestion([
+      "titleText" => "Are you sure you want to delete this address?",
+      "text" => null,
+      "confirmButtonText" => 'Yes',
+      "denyButtonText" => "No",
+      "onConfirm" => "delete-address-confirmed",
+      "onConfirmParameters" => [
+        "addressId" => $addressId
+      ],
+      "customClass" => [
+        "title" => "text-nowrap",
+        "popup" => "min-w-max"
+      ]
+    ]);
+  }
+
+  #[On("delete-address-confirmed")]
   public function delete($addressId)
   {
     $this->tryCatch(function () use ($addressId) {
       $address = UserAddress::findOrFail($addressId);
 
       $address->delete();
+
+      $this->swalToast([
+        "titleText" => "Address deleted successfully!"
+      ]);
 
       $this->dispatch("address-deleted");
     });

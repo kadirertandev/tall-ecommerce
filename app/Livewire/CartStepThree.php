@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Traits\CartData;
+use App\Traits\WithSweetAlert;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\UnauthorizedException;
@@ -14,6 +15,8 @@ use Throwable;
 class CartStepThree extends Component
 {
   use CartData;
+  use WithSweetAlert;
+
 
   public function rendering()
   {
@@ -78,8 +81,7 @@ class CartStepThree extends Component
     }, [
       Throwable::class => function ($e) {
         DB::rollBack();
-        dd($e);
-        $this->dispatch("something-went-wrong");
+        $this->swalTemplateSomethingWentWrong();
       }
     ]);
   }

@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use App\Jobs\InsertItemToCategoryLanguageFiles;
 use App\Jobs\RemoveItemFromCategoryLanguageFiles;
 use App\Traits\WithRefreshFlowbite;
+use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
 use App\Models\Product;
 use Livewire\Attributes\Url;
@@ -28,6 +29,7 @@ class Categories extends Component
   use WithPagination;
   use WithTryCatch;
   use WithRefreshFlowbite;
+  use WithSweetAlert;
 
   public CategoryCreateForm $createForm;
   public CategoryEditForm $editForm;
@@ -165,6 +167,37 @@ class Categories extends Component
     });
   }
 
+  public function create()
+  {
+    $this->createForm->validate();
+
+    $this->tryCatch(function () {
+      if (!Gate::allows("create categories")) {
+        throw new UnauthorizedException("can not create category");
+      }
+
+      $imageName = $this->createForm->image->store("category_images", "public");
+
+      Category::create([
+        "name" => Str::headline($this->createForm->name),
+        "slug" => $this->createForm->slug,
+        "image" => $imageName,
+        "is_popular" => $this->createForm->is_popular ? 1 : 0,
+        "created_by" => auth()->user()->id,
+        "created_at" => Carbon::now(),
+      ]);
+
+      dispatch(new InsertItemToCategoryLanguageFiles($this->createForm->name));
+
+      $this->dispatch("close-category-create-modal");
+      $this->resetCreateFormFields();
+
+      $this->swalToast([
+        "titleText" => "Category created successfully!"
+      ]);
+    });
+  }
+
   public function update()
   {
     $this->editForm->validate();
@@ -192,39 +225,31 @@ class Categories extends Component
       ]);
 
       $this->dispatch("close-category-edit-modal");
-      $this->dispatch("update_category_success");
-    });
-  }
 
-  public function create()
-  {
-    $this->createForm->validate();
-
-    $this->tryCatch(function () {
-      if (!Gate::allows("create categories")) {
-        throw new UnauthorizedException("can not create category");
-      }
-
-      $imageName = $this->createForm->image->store("category_images", "public");
-
-      Category::create([
-        "name" => Str::headline($this->createForm->name),
-        "slug" => $this->createForm->slug,
-        "image" => $imageName,
-        "is_popular" => $this->createForm->is_popular ? 1 : 0,
-        "created_by" => auth()->user()->id,
-        "created_at" => Carbon::now(),
+      $this->swalToast([
+        "titleText" => "Category updated successfully!"
       ]);
-
-      dispatch(new InsertItemToCategoryLanguageFiles($this->createForm->name));
-
-      $this->dispatch("close-category-create-modal");
-      $this->resetCreateFormFields();
-      $this->dispatch("create_category_success");
     });
   }
 
-  #[On("delete-category-modal-is-confirmed")]
+  public function askDeleteCategory($categoryId, $permanently = false)
+  {
+    $this->swalQuestion([
+      "titleText" => "Are you sure you want to delete this category " . ($permanently ? "permanently?" : "?"),
+      "confirmButtonText" => 'Yes',
+      "denyButtonText" => "No",
+      "onConfirm" => (!$permanently ? "" : "force-") . "delete-category-confirmed",
+      "onConfirmParameters" => [
+        "categoryId" => $categoryId
+      ],
+      "customClass" => [
+        "title" => "text-nowrap!",
+        "popup" => "min-w-max!"
+      ]
+    ]);
+  }
+
+  #[On("delete-category-confirmed")]
   public function delete($categoryId)
   {
     $this->tryCatch(function () use ($categoryId) {
@@ -237,19 +262,24 @@ class Categories extends Component
       $relatedProductsCount = Product::where("category_id", $category->id)->exists();
 
       if ($relatedProductsCount) {
-        $this->dispatch("delete_category_error", title: "There are associated products with this category.", text: "Either reassign the products to a different category or delete the products before deleting the category.");
+        $this->swalTemplateAssociatedExistsError([
+          "titleText" => "There are associated products with this category.",
+          "text" => "Either reassign the products to a different category or delete the products before deleting the category."
+        ]);
       } else {
         $category->delete();
         $category->update([
           "deleted_by" => auth()->user()->id
         ]);
 
-        $this->dispatch("delete_category_success");
+        $this->swalToast([
+          "titleText" => "Category deleted successfully!"
+        ]);
       }
     });
   }
 
-  #[On("force-delete-category-modal-is-confirmed")]
+  #[On("force-delete-category-confirmed")]
   public function forceDelete($categoryId)
   {
     $this->tryCatch(function () use ($categoryId) {
@@ -262,9 +292,12 @@ class Categories extends Component
 
       dispatch(new RemoveItemFromCategoryLanguageFiles($category->slug));
 
-      $this->dispatch("force-delete_category_success");
+      $this->swalToast([
+        "titleText" => "Category deleted permanently successfully!"
+      ]);
     });
   }
+
   public function restore($categoryId)
   {
     $this->tryCatch(function () use ($categoryId) {
@@ -273,10 +306,13 @@ class Categories extends Component
       }
 
       Category::withTrashed()->findOrFail($categoryId)->restore();
+
+      $this->swalToast([
+        "titleText" => "Category restored successfully!"
+      ]);
     });
   }
 
-  #[On("create_category_success")]
   public function render()
   {
     return view('livewire.admin.categories')
