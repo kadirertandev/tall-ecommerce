@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Livewire\Forms\UserProfileAddressForm;
 use App\Models\UserAddress;
 use App\Traits\Addresses;
+use App\Traits\WithInteractModal;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
 use Livewire\Attributes\Computed;
@@ -16,6 +17,7 @@ class UserProfileAddresses extends Component
   use Addresses;
   use WithTryCatch;
   use WithSweetAlert;
+  use WithInteractModal;
 
   public UserProfileAddressForm $form;
 
@@ -45,7 +47,7 @@ class UserProfileAddresses extends Component
       $this->form->addressLine = $address->address_line;
       $this->form->makeDefault = (bool) $address->is_default;
 
-      $this->dispatch('open-address-modal', name: 'edit-address');
+      $this->showModal("edit-address");
     });
   }
   public function update()
@@ -71,12 +73,14 @@ class UserProfileAddresses extends Component
         "is_default" => $this->form->makeDefault
       ]);
 
+      $this->closeModal("edit-address");
+
+      $this->form->reset();
+      $this->dispatch("address-updated");
+
       $this->swalToast([
         "titleText" => "Address updated successfully!"
       ]);
-
-      $this->dispatch("address-updated");
-      $this->dispatch("close-address-modal");
     });
   }
 

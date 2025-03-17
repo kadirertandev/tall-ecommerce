@@ -81,7 +81,5 @@
         </div>
     @endforelse
 
-    <x-user-profile-order-product-comment-modal :product="$productToComment" :rating="$rating">
-
-    </x-user-profile-order-product-comment-modal>
+    <x-modals.user-profile-order-product-comment-modal :product="$productToComment" :rating="$rating" />
 </div>

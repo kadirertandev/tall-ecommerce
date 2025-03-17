@@ -5,6 +5,7 @@ namespace App\Livewire\Admin;
 use App\Enums\ReviewStatusType;
 use App\Livewire\Forms\Admin\ReviewEditForm;
 use App\Models\ProductReview;
+use App\Traits\WithInteractModal;
 use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
@@ -26,10 +27,11 @@ class Reviews extends Component
   use WithTryCatch;
   use WithRefreshFlowbite;
   use WithSweetAlert;
+  use WithInteractModal;
 
   public ReviewEditForm $editForm;
 
-  public function mount()
+  public function handleSessionActions()
   {
     if (session()->has("review_id_to_edit")) {
       $this->showEditModal((int) session()->get("review_id_to_edit"), true);
@@ -116,7 +118,7 @@ class Reviews extends Component
     $this->tryCatch(function () use ($id) {
       $this->selectedReview = ProductReview::withTrashed()->findOrFail($id);
 
-      $this->dispatch("open-review-view-modal");
+      $this->showModal("view-review");
     });
   }
 
@@ -152,8 +154,7 @@ class Reviews extends Component
       $this->editForm->title = $review->title;
       $this->editForm->comment = $review->comment;
 
-      $referred ? $this->dispatch("open-review-edit-modal-referred") :
-        $this->dispatch("open-review-edit-modal");
+      $this->showModal("edit-review");
     });
   }
 
@@ -175,7 +176,10 @@ class Reviews extends Component
         "updated_at" => Carbon::now(),
       ]);
 
-      $this->dispatch("close-review-edit-modal");
+      $this->selectedReview = $review;
+
+      $this->closeModal("edit-review");
+
       $this->swalToast([
         "titleText" => "Review updated successfully!"
       ]);

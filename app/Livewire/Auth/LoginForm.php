@@ -20,7 +20,7 @@ class LoginForm extends Component
 	<path fill="none" stroke="currentColor" stroke-linejoin="round" d="m5 4l4.5 3L14 4M2 8.5h5m-4 2h5m-3.5 2h10v-9h-10v3H1" stroke-width="1" />
 </svg>';
 
-  public function checkForAlerts()
+  public function handleSessionActions()
   {
     if (session()->has("reset-password-mail-sent")) {
       $this->swalSuccess([

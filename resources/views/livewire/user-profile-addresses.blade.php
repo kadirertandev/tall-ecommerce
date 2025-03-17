@@ -5,7 +5,7 @@
             <h1 class="text-3xl">{{ __('frontend.auth.dropdown-on-nav.addresses') }}</h1>
         </div>
         <div class="flex items-center justify-end">
-            <button type="button" @click="$dispatch('open-address-modal', {name: 'new-address'})"
+            <button type="button" @click="$dispatch('open-modal', {name: 'new-address'})"
                 class=" focus:outline-hidden text-white bg-teal-500 hover:bg-teal-700 focus:ring-2 focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5">
                 Add new address
             </button>
@@ -54,8 +54,8 @@
         @endforeach
     </div>
 
-    <x-address-modal name="new-address" type="add" />
-    <x-address-modal name="edit-address" type="edit" />
+    <x-modals.address-modal name="new-address" type="add" />
+    <x-modals.address-modal name="edit-address" type="edit" />
 
 </div>
 

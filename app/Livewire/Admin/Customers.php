@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\User;
+use App\Traits\WithInteractModal;
 use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
@@ -20,6 +21,7 @@ class Customers extends Component
   use WithTryCatch;
   use WithRefreshFlowbite;
   use WithSweetAlert;
+  use WithInteractModal;
 
   public function boot()
   {
@@ -90,7 +92,7 @@ class Customers extends Component
     $this->tryCatch(function () use ($id) {
       $this->selectedCustomer = User::findOrFail($id);
 
-      $this->dispatch("open-customer-view-modal");
+      $this->showModal("view-customer");
     });
   }
 

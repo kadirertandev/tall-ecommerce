@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Jobs\InsertItemToCategoryLanguageFiles;
 use App\Jobs\RemoveItemFromCategoryLanguageFiles;
+use App\Traits\WithInteractModal;
 use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
@@ -30,6 +31,7 @@ class Categories extends Component
   use WithTryCatch;
   use WithRefreshFlowbite;
   use WithSweetAlert;
+  use WithInteractModal;
 
   public CategoryCreateForm $createForm;
   public CategoryEditForm $editForm;
@@ -84,12 +86,6 @@ class Categories extends Component
     $this->createForm->resetErrorBag("image");
   }
 
-  public function resetCreateFormFields()
-  {
-    $this->createForm->reset();
-    $this->createForm->resetErrorBag();
-  }
-
   public function setSortBy($column)
   {
     $this->sortBy = $column;
@@ -121,7 +117,7 @@ class Categories extends Component
     $this->tryCatch(function () use ($id) {
       $this->selectedCategory = Category::withTrashed()->findOrFail($id);
 
-      $this->dispatch("open-category-view-modal");
+      $this->showModal("view-category");
     });
   }
 
@@ -141,7 +137,7 @@ class Categories extends Component
       $this->editForm->categoryId = $category->id;
       $this->editForm->categoryBrands = $category->brands->pluck("id")->toArray();
 
-      $this->dispatch("open-category-edit-modal");
+      $this->showModal("edit-category");
     });
   }
 
@@ -189,8 +185,7 @@ class Categories extends Component
 
       dispatch(new InsertItemToCategoryLanguageFiles($this->createForm->name));
 
-      $this->dispatch("close-category-create-modal");
-      $this->resetCreateFormFields();
+      $this->closeModal("create-category");
 
       $this->swalToast([
         "titleText" => "Category created successfully!"
@@ -224,7 +219,9 @@ class Categories extends Component
         "updated_at" => Carbon::now(),
       ]);
 
-      $this->dispatch("close-category-edit-modal");
+      $this->selectedCategory = $category;
+
+      $this->closeModal("edit-category");
 
       $this->swalToast([
         "titleText" => "Category updated successfully!"

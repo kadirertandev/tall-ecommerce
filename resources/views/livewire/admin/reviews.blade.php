@@ -1,4 +1,4 @@
-<div>
+<div wire:init='handleSessionActions'>
     <section class="bg-gray-50 dark:bg-gray-900">
         <div class="mx-auto max-w-(--breakpoint-2xl)">
             <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
@@ -11,21 +11,21 @@
                             </h5>
                         </div>
 
-                        <x-admin.search-bar />
+                        <x-search-bar />
 
                     </div>
                     <div class="flex flex-col items-end">
                         {{-- show x entries --}}
-                        <x-admin.entry-per-page-dropdown />
+                        <x-entry-per-page-dropdown />
                         {{-- show x entries --}}
 
                         <div class="flex flex-col gap-2 shrink-0 md:flex-row md:items-center lg:justify-end">
-                            <x-admin.dropdown-filter>
+                            <x-dropdown-filter>
 
                                 @can('force delete reviews')
                                     <x-slot:toggles>
-                                        <x-admin.toggle toggle="withTrashed" text="With Trashed" />
-                                        <x-admin.toggle toggle="onlyTrashed" text="Only Trashed" />
+                                        <x-toggle toggle="withTrashed" text="With Trashed" />
+                                        <x-toggle toggle="onlyTrashed" text="Only Trashed" />
                                     </x-slot:toggles>
                                 @endcan
                                 <x-slot:footer>
@@ -63,7 +63,7 @@
                                         </ul>
                                     </div>
                                 </x-slot:footer>
-                            </x-admin.dropdown-filter>
+                            </x-dropdown-filter>
                         </div>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
                                 @foreach ($columns as $key => $value)
                                     <th wire:key='heading-{{ $key }}-{{ $value }}'
                                         wire:click='setSortBy("{{ $key }}")' scope="col" class="px-4 py-3">
-                                        <x-admin.sort-buttons :column="$key" :title="$value" :sortBy="$this->sortBy"
+                                        <x-sort-buttons :column="$key" :title="$value" :sortBy="$this->sortBy"
                                             :sortDir="$this->sortDir" />
                                     </th>
                                 @endforeach
@@ -267,18 +267,7 @@
     </div>
 </section>
 
-{{-- modals --}}
-<x-admin.review.view-modal :review="$selectedReview"></x-review.review.view-modal>
-    <x-admin.review.edit-modal :review="$selectedReview" :editForm="$this->editForm"></x-admin.review.edit-modal>
-    {{-- modals --}}
+<x-modals.admin.review.view-modal :review="$selectedReview" />
+<x-modals.admin.review.edit-modal :review="$selectedReview" :editForm="$this->editForm" />
 
 </div>
-@script
-<script>
-    Livewire.on("open-review-edit-modal-referred", function() {
-        setTimeout(() => {
-            Livewire.dispatch("open-review-edit-modal");
-        }, 300)
-    })
-</script>
-@endscript

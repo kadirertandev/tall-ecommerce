@@ -1,4 +1,4 @@
-<section wire:init='checkForAlerts'>
+<section wire:init='handleSessionActions'>
     <div
         class="min-h-screen flex flex-col items-center justify-center px-6 py-8 mx-auto my-4 {{-- my-16 --}} lg:py-0">
         <a href="/" class="mb-3 text-4xl main-red">

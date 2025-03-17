@@ -6,6 +6,7 @@ use App\Livewire\Forms\Admin\AdminCreateForm;
 use App\Livewire\Forms\Admin\AdminEditForm;
 use App\Models\Role;
 use App\Models\User;
+use App\Traits\WithInteractModal;
 use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
@@ -31,6 +32,7 @@ class Admins extends Component
   use WithTryCatch;
   use WithRefreshFlowbite;
   use WithSweetAlert;
+  use WithInteractModal;
 
   public AdminCreateForm $createForm;
   public AdminEditForm $editForm;
@@ -127,12 +129,6 @@ class Admins extends Component
     $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
   }
 
-  public function resetCreateFormFields()
-  {
-    $this->createForm->reset();
-    $this->createForm->resetErrorBag();
-  }
-
   public function removeImage()
   {
     $this->editForm->reset("profile_image");
@@ -146,7 +142,7 @@ class Admins extends Component
   {
     $this->tryCatch(function () use ($id) {
       $this->selectedAdmin = User::withTrashed()->findOrFail($id);
-      $this->dispatch("open-admin-view-modal");
+      $this->showModal("view-admin");
     });
   }
 
@@ -169,7 +165,7 @@ class Admins extends Component
       $this->editForm->userId = $admin->id;
       $this->editForm->roleId = $admin->role()->id;
 
-      $this->dispatch("open-admin-edit-modal");
+      $this->showModal("edit-admin");
     });
   }
 
@@ -205,8 +201,7 @@ class Admins extends Component
 
         DB::commit();
 
-        $this->dispatch("close-admin-create-modal");
-        $this->resetCreateFormFields();
+        $this->closeModal("create-admin");
 
         $this->swalToast([
           "titleText" => "Admin created successfully!"
@@ -245,6 +240,8 @@ class Admins extends Component
         }
       }
 
+      DB::beginTransaction();
+
       $admin->update([
         "first_name" => $this->editForm->first_name,
         "last_name" => $this->editForm->last_name,
@@ -257,12 +254,27 @@ class Admins extends Component
       $role = Role::findOrFail($this->editForm->roleId);
       $admin->assignRole($role);
 
-      $this->dispatch("close-admin-edit-modal");
+      DB::commit();
+
+      $this->selectedAdmin = $admin;
+
+      $this->closeModal("edit-admin");
 
       $this->swalToast([
         "titleText" => "Admin updated successfully!"
       ]);
-    });
+    }, [
+      ModelNotFoundException::class => function ($e) {
+        DB::rollBack();
+        $this->swalError([
+          "titleText" => Str::singular(Str::ucfirst(app($e->getModel())->getTable())) . " not found!"
+        ]);
+      },
+      Throwable::class => function ($e) {
+        DB::rollBack();
+        $this->swalTemplateSomethingWentWrong();
+      }
+    ]);
   }
 
   public function assignRole($adminId, $roleId)

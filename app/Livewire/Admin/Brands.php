@@ -6,6 +6,7 @@ use App\Livewire\Forms\Admin\BrandCreateForm;
 use App\Livewire\Forms\Admin\BrandEditForm;
 use App\Models\Brand;
 use App\Models\Product;
+use App\Traits\WithInteractModal;
 use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithTryCatch;
 use Illuminate\Support\Facades\Gate;
@@ -26,6 +27,7 @@ class Brands extends Component
   use WithPagination;
   use WithTryCatch;
   use WithRefreshFlowbite;
+  use WithInteractModal;
 
   public BrandCreateForm $createForm;
   public BrandEditForm $editForm;
@@ -71,12 +73,6 @@ class Brands extends Component
     $this->editForm->slug = Str::slug($this->editForm->name);
   }
 
-  public function resetCreateFormFields()
-  {
-    $this->createForm->reset();
-    $this->createForm->resetErrorBag();
-  }
-
   #[Computed()]
   public function brands()
   {
@@ -105,7 +101,7 @@ class Brands extends Component
     $this->tryCatch(function () use ($id) {
       $this->selectedBrand = Brand::withTrashed()->findOrFail($id);
 
-      $this->dispatch("open-brand-view-modal");
+      $this->showModal("view-brand");
     });
   }
 
@@ -123,7 +119,7 @@ class Brands extends Component
       $this->editForm->slug = $brand->slug;
       $this->editForm->brandId = $brand->id;
 
-      $this->dispatch("open-brand-edit-modal");
+      $this->showModal("edit-brand");
     });
   }
 
@@ -146,8 +142,7 @@ class Brands extends Component
         "created_at" => Carbon::now(),
       ]);
 
-      $this->dispatch("close-brand-create-modal");
-      $this->resetCreateFormFields();
+      $this->closeModal("create-brand");
 
       $this->swalToast([
         "titleText" => "Brand created successfully!"
@@ -181,7 +176,10 @@ class Brands extends Component
         "updated_at" => Carbon::now(),
       ]);
 
-      $this->dispatch("close-brand-edit-modal");
+      $this->selectedBrand = $brand;
+
+      $this->closeModal("edit-brand");
+
       $this->swalToast([
         "titleText" => "Brand updated successfully!"
       ]);

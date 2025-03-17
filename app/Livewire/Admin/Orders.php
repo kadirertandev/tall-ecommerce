@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Enums\OrderStatusType;
 use App\Models\Order;
+use App\Traits\WithInteractModal;
 use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithTryCatch;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,7 @@ class Orders extends Component
   use WithPagination;
   use WithTryCatch;
   use WithRefreshFlowbite;
+  use WithInteractModal;
 
   public function boot()
   {
@@ -72,7 +74,7 @@ class Orders extends Component
     $this->tryCatch(function () use ($id) {
       $this->selectedOrder = Order::findOrFail($id);
 
-      $this->dispatch("open-order-view-modal");
+      $this->showModal("view-order");
     });
   }
 

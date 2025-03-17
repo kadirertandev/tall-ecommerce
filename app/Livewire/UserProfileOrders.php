@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Livewire\Forms\ProductReviewForm;
 use App\Models\Product;
 use App\Models\ProductReview;
+use App\Traits\WithInteractModal;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -16,6 +17,7 @@ class UserProfileOrders extends Component
 {
   use WithTryCatch;
   use WithSweetAlert;
+  use WithInteractModal;
 
   public ProductReviewForm $reviewForm;
 
@@ -36,9 +38,7 @@ class UserProfileOrders extends Component
     $this->tryCatch(function () use ($id) {
       $this->productToComment = Product::findOrFail($id);
 
-      $this->reviewForm->resetErrorBag();
-      $this->reset("rating");
-      $this->dispatch("open-user-profile-order-product-comment-modal");
+      $this->showModal("user-profile-order-product-comment");
     });
   }
 
@@ -64,8 +64,7 @@ class UserProfileOrders extends Component
         ]
       ]);
 
-      $this->reset("rating");
-      $this->reviewForm->reset();
+      $this->closeModal("user-profile-order-product-comment");
     }, [
       AuthorizationException::class => function ($e) {
         $this->swalError([

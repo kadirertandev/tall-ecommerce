@@ -11,6 +11,7 @@ use App\Models\DailyDealProduct;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\WeeklyDealProduct;
+use App\Traits\WithInteractModal;
 use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
@@ -34,6 +35,7 @@ class Products extends Component
   use WithTryCatch;
   use WithRefreshFlowbite;
   use WithSweetAlert;
+  use WithInteractModal;
 
   public ProductCreateForm $createForm;
   public ProductEditForm $editForm;
@@ -107,19 +109,6 @@ class Products extends Component
     $this->editForm->resetErrorBag("image");
     $this->createForm->reset("image");
     $this->createForm->resetErrorBag("image");
-  }
-
-  #[On("product-edit-modal-closed")]
-  public function resetFields()
-  {
-    $this->editForm->resetErrorBag();
-    $this->editForm->reset("image");
-  }
-
-  public function resetCreateFormFields()
-  {
-    $this->createForm->reset();
-    $this->createForm->resetErrorBag();
   }
 
   #[Computed()]
@@ -208,7 +197,7 @@ class Products extends Component
     $this->tryCatch(function () use ($id) {
       $this->selectedProduct = Product::withTrashed()->findOrFail($id);
 
-      $this->dispatch("open-product-view-modal");
+      $this->showModal("view-product");
     });
   }
 
@@ -231,7 +220,7 @@ class Products extends Component
       $this->editForm->brand = $product->brand->id;
       $this->editForm->product_id = $product->id;
 
-      $this->dispatch("open-product-edit-modal");
+      $this->showModal("edit-product");
     });
   }
 
@@ -258,8 +247,8 @@ class Products extends Component
         "created_at" => Carbon::now(),
       ]);
 
-      $this->dispatch("close-product-create-modal");
-      $this->resetCreateFormFields();
+      $this->closeModal("create-product");
+
       $this->swalToast([
         "titleText" => "Product created successfully!"
       ]);
@@ -296,7 +285,10 @@ class Products extends Component
         "updated_at" => Carbon::now(),
       ]);
 
-      $this->dispatch("close-product-edit-modal");
+      $this->selectedProduct = $product;
+
+      $this->closeModal("edit-product");
+
       $this->swalToast([
         "titleText" => "Product updated successfully!"
       ]);

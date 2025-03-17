@@ -11,25 +11,25 @@
                             </h5>
                         </div>
 
-                        <x-admin.search-bar />
+                        <x-search-bar />
 
                     </div>
                     <div class="flex flex-col items-end">
                         {{-- show x entries --}}
-                        <x-admin.entry-per-page-dropdown />
+                        <x-entry-per-page-dropdown />
                         {{-- show x entries --}}
 
                         <div class="flex flex-col gap-2 shrink-0 md:flex-row md:items-center lg:justify-end">
                             @can('force delete brands')
-                                <x-admin.dropdown-filter>
+                                <x-dropdown-filter>
                                     <x-slot:toggles>
-                                        <x-admin.toggle toggle="withTrashed" text="With Trashed" />
-                                        <x-admin.toggle toggle="onlyTrashed" text="Only Trashed" />
+                                        <x-toggle toggle="withTrashed" text="With Trashed" />
+                                        <x-toggle toggle="onlyTrashed" text="Only Trashed" />
                                     </x-slot:toggles>
-                                </x-admin.dropdown-filter>
+                                </x-dropdown-filter>
                             @endcan
                             @can('create brands')
-                                <button @click="$dispatch('open-brand-create-modal')" type="button"
+                                <button @click="$dispatch('open-modal', {name: 'create-brand'})" type="button"
                                     class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-teal-500 rounded-lg hover:bg-teal-600 focus:ring-2 focus:ring-primary-300 focus:outline-hidden">
                                     <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
                                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -50,7 +50,7 @@
                                 @foreach ($columns as $key => $value)
                                     <th wire:key='heading-{{ $key }}-{{ $value }}'
                                         wire:click='setSortBy("{{ $key }}")' scope="col" class="px-4 py-3">
-                                        <x-admin.sort-buttons :column="$key" :title="$value" :sortBy="$this->sortBy"
+                                        <x-sort-buttons :column="$key" :title="$value" :sortBy="$this->sortBy"
                                             :sortDir="$this->sortDir" />
                                     </th>
                                 @endforeach
@@ -177,10 +177,8 @@
         </div>
     </section>
 
-    {{-- modals --}}
-    {{-- modals --}}
-    <x-admin.brand.create-modal></x-admin.brand.create-modal>
-    <x-admin.brand.view-modal :brand="$selectedBrand"></x-admin.brand.view-modal>
-    <x-admin.brand.edit-modal :brand="$selectedBrand" :editform="$this->editForm"></x-admin.brand.edit-modal>
+    <x-modals.admin.brand.create-modal />
+    <x-modals.admin.brand.view-modal :brand="$selectedBrand" />
+    <x-modals.admin.brand.edit-modal :brand="$selectedBrand" :editform="$this->editForm" />
 
 </div>

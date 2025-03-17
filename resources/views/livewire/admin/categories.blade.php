@@ -11,32 +11,32 @@
                             </h5>
                         </div>
 
-                        <x-admin.search-bar />
+                        <x-search-bar />
 
                     </div>
                     <div class="flex flex-col items-end">
                         {{-- show x entries --}}
-                        <x-admin.entry-per-page-dropdown />
+                        <x-entry-per-page-dropdown />
                         {{-- show x entries --}}
 
                         <div class="flex flex-col gap-2 shrink-0 md:flex-row md:items-center lg:justify-end">
                             {{-- dropdown-filter start --}}
-                            <x-admin.dropdown-filter>
+                            <x-dropdown-filter>
 
                                 <x-slot:toggles>
                                     @can('force delete categories')
-                                        <x-admin.toggle toggle="withTrashed" text="With Trashed" />
-                                        <x-admin.toggle toggle="onlyTrashed" text="Only Trashed" />
+                                        <x-toggle toggle="withTrashed" text="With Trashed" />
+                                        <x-toggle toggle="onlyTrashed" text="Only Trashed" />
                                     @endcan
                                 </x-slot:toggles>
                                 <x-slot:footer>
-                                    <x-admin.toggle toggle="onlyPopular" text="Only Popular" />
+                                    <x-toggle toggle="onlyPopular" text="Only Popular" />
                                 </x-slot:footer>
-                            </x-admin.dropdown-filter>
+                            </x-dropdown-filter>
                             {{-- dropdown-filter end --}}
 
                             @can('create categories')
-                                <button @click="$dispatch('open-category-create-modal')" type="button"
+                                <button @click="$dispatch('open-modal', {name: 'create-category'})" type="button"
                                     class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-teal-500 rounded-lg hover:bg-teal-600 focus:ring-2 focus:ring-primary-300 focus:outline-hidden">
                                     <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
                                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -57,7 +57,7 @@
                                 @foreach ($columns as $key => $value)
                                     <th wire:key='heading-{{ $key }}-{{ $value }}'
                                         wire:click='setSortBy("{{ $key }}")' scope="col" class="px-4 py-3">
-                                        <x-admin.sort-buttons :column="$key" :title="$value" :sortBy="$this->sortBy"
+                                        <x-sort-buttons :column="$key" :title="$value" :sortBy="$this->sortBy"
                                             :sortDir="$this->sortDir" />
                                     </th>
                                 @endforeach
@@ -184,10 +184,8 @@
         </div>
     </section>
 
-    {{-- modals --}}
-    {{-- modals --}}
-    <x-admin.category.create-modal></x-admin.category.create-modal>
-    <x-admin.category.view-modal :category="$selectedCategory"></x-admin.category.view-modal>
-    <x-admin.category.edit-modal :category="$selectedCategory" :brands="$this->editForm->brands()" :editform="$this->editForm"></x-admin.category.edit-modal>
+    <x-modals.admin.category.create-modal />
+    <x-modals.admin.category.view-modal :category="$selectedCategory" />
+    <x-modals.admin.category.edit-modal :category="$selectedCategory" :brands="$this->editForm->brands()" :editform="$this->editForm" />
 
 </div>

@@ -11,18 +11,18 @@
                             </h5>
                         </div>
 
-                        <x-admin.search-bar />
+                        <x-search-bar />
 
                     </div>
                     <div class="flex flex-col items-end">
                         {{-- show x entries --}}
-                        <x-admin.entry-per-page-dropdown />
+                        <x-entry-per-page-dropdown />
                         {{-- show x entries --}}
 
                         <div class="flex flex-col gap-2 shrink-0 md:flex-row md:items-center lg:justify-end">
 
 
-                            <x-admin.dropdown-filter dropdownPlacement="left">
+                            <x-dropdown-filter dropdownPlacement="left">
                                 <x-slot:footer>
                                     <h2 id="accordion-collapse-heading-1">
                                         <button type="button"
@@ -58,7 +58,7 @@
                                         </ul>
                                     </div>
                                 </x-slot:footer>
-                            </x-admin.dropdown-filter>
+                            </x-dropdown-filter>
 
 
                         </div>
@@ -73,7 +73,7 @@
                                 @foreach ($columns as $key => $value)
                                     <th wire:key='heading-{{ $key }}-{{ $value }}'
                                         wire:click='setSortBy("{{ $key }}")' scope="col" class="px-4 py-3">
-                                        <x-admin.sort-buttons :column="$key" :title="$value" :sortBy="$this->sortBy"
+                                        <x-sort-buttons :column="$key" :title="$value" :sortBy="$this->sortBy"
                                             :sortDir="$this->sortDir" />
                                     </th>
                                 @endforeach
@@ -223,7 +223,6 @@
         </div>
     </section>
 
-    {{-- modals --}}
-    {{-- modals --}}
-    <x-admin.order.view-modal :order="$selectedOrder"></x-admin.order.view-modal>
+    <x-modals.admin.order.view-modal :order="$selectedOrder" />
+
 </div>

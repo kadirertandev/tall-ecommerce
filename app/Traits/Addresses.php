@@ -11,6 +11,8 @@ use App\Models\UserAddress;
 trait Addresses
 {
   use WithTryCatch;
+  use WithSweetAlert;
+  use WithInteractModal;
 
   public UserProfileAddressForm $form;
 
@@ -84,7 +86,12 @@ trait Addresses
         "is_default" => $this->form->makeDefault
       ]);
 
-      $this->dispatch("close-address-modal");
+      $this->closeModal("new-address");
+
+      $this->swalToast([
+        "titleText" => "Address created successfully!"
+      ]);
+
       $this->form->reset();
     });
   }

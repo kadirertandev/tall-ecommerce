@@ -11,22 +11,22 @@
                             </h5>
                         </div>
 
-                        <x-admin.search-bar />
+                        <x-search-bar />
 
                     </div>
                     <div class="flex flex-col items-end">
                         {{-- show x entries --}}
-                        <x-admin.entry-per-page-dropdown />
+                        <x-entry-per-page-dropdown />
                         {{-- show x entries --}}
                         <div class="flex flex-col gap-2 shrink-0 md:flex-row md:items-center lg:justify-end">
-                            <x-admin.dropdown-filter>
+                            <x-dropdown-filter>
                                 @can('force delete customers')
                                     <x-slot:toggles>
-                                        <x-admin.toggle toggle="withDeleteRequest" text="With Delete Request" />
-                                        <x-admin.toggle toggle="onlyDeleteRequest" text="Only Delete Request" />
+                                        <x-toggle toggle="withDeleteRequest" text="With Delete Request" />
+                                        <x-toggle toggle="onlyDeleteRequest" text="Only Delete Request" />
                                     </x-slot:toggles>
                                 @endcan
-                            </x-admin.dropdown-filter>
+                            </x-dropdown-filter>
                         </div>
                     </div>
                 </div>
@@ -37,7 +37,7 @@
                                 @foreach ($columns as $key => $value)
                                     <th wire:key='heading-{{ $key }}-{{ $value }}'
                                         wire:click='setSortBy("{{ $key }}")' scope="col" class="px-4 py-3">
-                                        <x-admin.sort-buttons :column="$key" :title="$value" :sortBy="$this->sortBy"
+                                        <x-sort-buttons :column="$key" :title="$value" :sortBy="$this->sortBy"
                                             :sortDir="$this->sortDir" />
                                     </th>
                                 @endforeach
@@ -154,9 +154,6 @@
         </div>
     </section>
 
-    {{-- modals --}}
-    {{-- modals --}}
-    <x-admin.customer.view-modal :customer="$selectedCustomer"></x-admin.customer.view-modal>
-    {{-- <x-admin.admin.edit-modal :admin="$selectedAdmin" :editForm="$this->editForm" :roles="$this->roles()"></x-admin.admin.edit-modal> --}}
+    <x-modals.admin.customer.view-modal :customer="$selectedCustomer" />
 
 </div>
