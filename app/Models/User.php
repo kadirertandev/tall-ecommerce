@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-  use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+  use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasRoles;
 
   /**
    * The attributes that are mass assignable.
@@ -128,35 +129,14 @@ class User extends Authenticatable
   {
     return (bool) $this->is_admin;
   }
+
   public function isCustomer()
   {
     return (bool) !$this->is_admin;
   }
 
-  public function roles()
-  {
-    return $this->belongsToMany(Role::class, "model_has_roles", "user_id", "role_id");
-    #before assigning new role, delete all ex roles if there are
-  }
-
   public function role()
   {
-    return $this->roles()->first();
-  }
-
-  public function assignRole($role)
-  {
-    $this->roles()->detach();
-    if ($role instanceof Role) {
-      $this->roles()->attach($role);
-    } else {
-      $role = Role::where("name", $role)->first();
-      $this->roles()->attach($role);
-    }
-  }
-
-  public function permissions()
-  {
-    return $this->roles()->first()->permissions();
+    return $this->roles[0]->name;
   }
 }
