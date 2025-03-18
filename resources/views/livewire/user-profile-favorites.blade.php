@@ -62,22 +62,19 @@
                 <!-- Dropdown menu -->
                 <div id="dropdownasdf" wire:ignore.self
                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
-                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                    <ul class="*:cursor-pointer py-2 text-sm text-gray-700 dark:text-gray-200"
                         aria-labelledby="dropdownDefaultButtonasdf">
-                        <li wire:click='lastAdded'>
-                            <div class="flex items-center px-4 py-2 cursor-pointer group hover:bg-gray-100 ">
-                                {{ __('frontend.filters.newest') }}
-                            </div>
+                        <li wire:click="sortByOption('lowestPrice')">
+                            <span
+                                class="block px-4 py-2 hover:bg-gray-100 hover:text-red-500 dark:hover:bg-gray-600 ">{{ __('frontend.filters.lowest-price') }}</span>
                         </li>
-                        <li wire:click='lowestPrice'>
-                            <div class="flex items-center px-4 py-2 cursor-pointer group hover:bg-gray-100 ">
-                                {{ __('frontend.filters.lowest-price') }}
-                            </div>
+                        <li wire:click="sortByOption('highestPrice')">
+                            <span
+                                class="block px-4 py-2 hover:bg-gray-100 hover:text-red-500 dark:hover:bg-gray-600 ">{{ __('frontend.filters.highest-price') }}</span>
                         </li>
-                        <li wire:click='highestPrice'>
-                            <div class="flex items-center px-4 py-2 cursor-pointer group hover:bg-gray-100 ">
-                                {{ __('frontend.filters.highest-price') }}
-                            </div>
+                        <li wire:click="sortByOption('newest')">
+                            <span
+                                class="block px-4 py-2 hover:bg-gray-100 hover:text-red-500 dark:hover:bg-gray-600 ">{{ __('frontend.filters.newest') }}</span>
                         </li>
                     </ul>
                 </div>

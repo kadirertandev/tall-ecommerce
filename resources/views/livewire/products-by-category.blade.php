@@ -36,25 +36,21 @@
                                         class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
                                         <ul class="*:cursor-pointer py-2 text-sm text-gray-700 dark:text-gray-200"
                                             aria-labelledby="dropdownHoverButton2">
-                                            <li @click="$dispatch('orderByLowestPrice')">
+                                            <li wire:click="sortByOption('lowestPrice')">
                                                 <span
                                                     class="block px-4 py-2 hover:bg-gray-100 hover:text-red-500 dark:hover:bg-gray-600 ">{{ __('frontend.filters.lowest-price') }}</span>
                                             </li>
-                                            <li @click="$dispatch('orderByHighestPrice')">
+                                            <li wire:click="sortByOption('highestPrice')">
                                                 <span
                                                     class="block px-4 py-2 hover:bg-gray-100 hover:text-red-500 dark:hover:bg-gray-600 ">{{ __('frontend.filters.highest-price') }}</span>
                                             </li>
-                                            <li @click="$dispatch('orderByMostLiked')">
+                                            <li wire:click="sortByOption('mostLiked')">
                                                 <span
                                                     class="block px-4 py-2 hover:bg-gray-100 hover:text-red-500 dark:hover:bg-gray-600 ">{{ __('frontend.filters.most-liked') }}</span>
                                             </li>
-                                            <li @click="$dispatch('orderByNewest')">
+                                            <li wire:click="sortByOption('newest')">
                                                 <span
                                                     class="block px-4 py-2 hover:bg-gray-100 hover:text-red-500 dark:hover:bg-gray-600 ">{{ __('frontend.filters.newest') }}</span>
-                                            </li>
-                                            <li @click="$dispatch('orderByMostReviewed')">
-                                                <span
-                                                    class="block px-4 py-2 hover:bg-gray-100 text-nowrap hover:text-red-500 dark:hover:bg-gray-600 ">{{ __('frontend.filters.most-reviewed') }}</span>
                                             </li>
                                         </ul>
                                     </div>
@@ -89,7 +85,7 @@
                                     <div class="pt-6" id="accordion-brand-collapse-body"
                                         aria-labelledby="accordion-brand-collapse-heading">
                                         <div class="space-y-4">
-                                            @foreach ($this->categoryBrands as $brand)
+                                            @foreach ($this->category->brands as $brand)
                                                 <div wire:key='brand-{{ $brand->id }}-{{ $brand->name }}'
                                                     class="flex items-center">
                                                     <input wire:model.live='selectedBrands'
@@ -189,7 +185,7 @@
                                             </div>
                                             <div class="flex flex-wrap items-end justify-between ">
                                                 {{-- <h1 class="text-3xl font-thin">
-                                                    {{ App\Helpers::formatPrice($product->price) }} TL</h1> --}}
+                                                  {{ App\Helpers::formatPrice($product->price) }} TL</h1> --}}
                                                 <div>
                                                     <h1 @class([
                                                         'text-3xl font-thin' => !$product->discount_amount,
@@ -232,7 +228,7 @@
         <div class="grid grid-cols-4 mb-4 gap-x-8">
             <div></div>
             {{-- <div class="col-span-3">{{ $this->products->links(data: ['scrollTo' => 'false']) }}
-            </div> --}}
+          </div> --}}
             @if ($this->canLoadMore)
                 <div class="grid col-span-3 place-items-center">
                     <button wire:click='loadMore' type="button"

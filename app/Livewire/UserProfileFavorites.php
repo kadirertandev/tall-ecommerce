@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Traits\SortOptions;
 use Illuminate\Support\Facades\Lang;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -14,20 +15,21 @@ use Livewire\WithPagination;
 class UserProfileFavorites extends Component
 {
   use WithPagination;
-  public $userID;
+  use SortOptions;
+
   #[Url()]
   public $search;
+
   #[Url()]
   public $categoriesFilter = [];
+
   #[Url()]
   public $searchCategory;
+
   #[Url()]
-  public $orderBy = "created_at";
-  #[Url()]
-  public $sortDir = "desc";
   public $perPage = 6;
+
   public $cols = 4;
-  public $orderFrontend = "";
 
   public function mount()
   {
@@ -59,28 +61,6 @@ class UserProfileFavorites extends Component
       })
       ->select(["products.*"])
       ->paginate($this->perPage);
-  }
-
-  public function lowestPrice()
-  {
-    $this->orderBy = "price";
-    $this->sortDir = "asc";
-    $this->orderFrontend = Lang::get("frontend.filters.lowest-price");
-    // $this->resetPage();
-  }
-  public function highestPrice()
-  {
-    $this->orderBy = "price";
-    $this->sortDir = "desc";
-    $this->orderFrontend = Lang::get("frontend.filters.highest-price");
-    // $this->resetPage();
-  }
-  public function lastAdded()
-  {
-    $this->orderBy = "created_at";
-    $this->sortDir = "desc";
-    $this->orderFrontend = Lang::get("frontend.filters.newest");
-    // $this->resetPage();
   }
 
   #[On("removed-from-favorites")]

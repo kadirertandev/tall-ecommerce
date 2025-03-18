@@ -4,8 +4,9 @@ namespace App\Livewire;
 
 use App\Models\Brand;
 use App\Models\Product;
+use App\Traits\SortOptions;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\WithPagination;
 use Livewire\Attributes\Computed;
@@ -14,10 +15,9 @@ use Illuminate\Support\Facades\Lang;
 class ProductsByBrand extends Component
 {
   use WithPagination;
+  use SortOptions;
 
   public $slug = "";
-
-  public $breadcrumbs = [];
 
   #[Url()]
   public $selectedCategories = [];
@@ -28,13 +28,9 @@ class ProductsByBrand extends Component
   #[Url()]
   public $maxPrice;
 
-  #[Url()]
-  public $orderBy = "created_at";
+  public $breadcrumbs = [];
 
-  #[Url()]
-  public $orderDir = "desc";
-
-  public $orderFrontend;
+  public $perPage = 6;
 
   public function mount($slug)
   {
@@ -56,56 +52,12 @@ class ProductsByBrand extends Component
     $this->reset("minPrice", "maxPrice");
   }
 
-  #[On("orderByLowestPrice")]
-  public function orderByLowestPrice()
-  {
-    // dd("lowest price");
-    $this->orderBy = "price";
-    $this->orderDir = "asc";
-    $this->orderFrontend = Lang::get("frontend.filters.lowest-price");
-  }
-  #[On("orderByHighestPrice")]
-  public function orderByHighestPrice()
-  {
-    $this->orderBy = "price";
-    $this->orderDir = "desc";
-    $this->orderFrontend = Lang::get("frontend.filters.highest-price");
-  }
-  #[On("orderByMostLiked")]
-  public function orderByMostLiked()
-  {
-    $this->orderBy = "most_liked";
-    $this->orderDir = "desc";
-    $this->orderFrontend = Lang::get("frontend.filters.most-liked");
-  }
-  #[On("orderByNewest")]
-  public function orderByNewest()
-  {
-    $this->orderBy = "created_at";
-    $this->orderDir = "desc";
-    $this->orderFrontend = Lang::get("frontend.filters.newest");
-  }
-  #[On("orderByMostReviewed")]
-  public function orderByMostReviewed()
-  {
-    $this->orderBy = "review";
-    $this->orderDir = "desc";
-    $this->orderFrontend = Lang::get("frontend.filters.most-reviewed");
-  }
-
-
   #[Computed()]
   public function brand()
   {
-    return Brand::where("slug", $this->slug)->firstOrFail();
-  }
-  #[Computed()]
-  public function brandCategories()
-  {
-    return $this->brand->categories;
+    return Brand::with("categories")->where("slug", $this->slug)->firstOrFail();
   }
 
-  public $perPage = 6;
   #[Computed()]
   public function products()
   {
@@ -122,9 +74,16 @@ class ProductsByBrand extends Component
         $this->resetPage();
         return $query->where("price", "<=", $this->maxPrice);
       })
-      ->when($this->orderBy === "price", function ($query) {
+      ->when($this->orderBy !== "most_liked", function ($query) {
         $this->resetPage();
-        return $query->orderBy($this->orderBy, $this->orderDir);
+        return $query->orderBy($this->orderBy, $this->sortDir);
+      })
+      ->when($this->orderBy === "most_liked", function ($query) {
+        $this->resetPage();
+        return $query->leftJoin("product_reviews", "product_reviews.product_id", "=", "products.id")
+          ->select(["products.*", DB::raw("sum(case when product_reviews.status != 'approved' then 0 else product_reviews.rating end) as rating")])
+          ->groupBy("products.id")
+          ->orderBy("rating", $this->sortDir);
       })
       ->paginate($this->perPage);
   }
