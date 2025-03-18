@@ -6,10 +6,12 @@ use App\Jobs\InsertItemToCategoryLanguageFiles;
 use App\Jobs\RemoveItemFromCategoryLanguageFiles;
 use App\Traits\WithInteractModal;
 use App\Traits\WithRefreshFlowbite;
+use App\Traits\WithRemoveFormImage;
 use App\Traits\WithSweetAlert;
+use App\Traits\WithTableSortAndFilter;
+use App\Traits\WithSoftDeleteFilter;
 use App\Traits\WithTryCatch;
 use App\Models\Product;
-use Livewire\Attributes\Url;
 use Livewire\Component;
 use App\Models\Category;
 use Illuminate\Support\Str;
@@ -21,6 +23,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use App\Livewire\Forms\Admin\CategoryEditForm;
 use App\Livewire\Forms\Admin\CategoryCreateForm;
+use App\Traits\WithUpdateFormSlug;
 use Illuminate\Validation\UnauthorizedException;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
@@ -32,6 +35,10 @@ class Categories extends Component
   use WithRefreshFlowbite;
   use WithSweetAlert;
   use WithInteractModal;
+  use WithSoftDeleteFilter;
+  use WithRemoveFormImage;
+  use WithTableSortAndFilter;
+  use WithUpdateFormSlug;
 
   public CategoryCreateForm $createForm;
   public CategoryEditForm $editForm;
@@ -41,56 +48,12 @@ class Categories extends Component
     $this->refreshFlobwite();
   }
 
-  public $sortDir = "";
-  public $sortBy = "";
-  public $keyword = "";
-  public $perPage = 10;
   public $onlyPopular = false;
   public $columns = [
     "name" => "Category",
     "is_popular" => "Is Popular",
     "updated_at" => "Last Update"
   ];
-
-  #[Url()]
-  public $withTrashed = false;
-  public function updatedWithTrashed()
-  {
-    if ($this->withTrashed == true)
-      $this->onlyTrashed = false;
-  }
-
-  #[Url()]
-  public $onlyTrashed = false;
-  public function updatedOnlyTrashed()
-  {
-    if ($this->onlyTrashed == true)
-      $this->withTrashed = false;
-  }
-
-  public function updatedEditFormName()
-  {
-    $this->editForm->slug = Str::slug($this->editForm->name);
-  }
-
-  public function updatedCreateFormName()
-  {
-    $this->createForm->slug = Str::slug($this->createForm->name);
-  }
-
-  public function removeImage()
-  {
-    $this->editForm->reset("image");
-    $this->editForm->resetErrorBag("image");
-    $this->createForm->reset("image");
-    $this->createForm->resetErrorBag("image");
-  }
-
-  public function setSortBy($column)
-  {
-    $this->sortBy = $column;
-    $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
-  }
 
   #[Computed()]
   public function categories()

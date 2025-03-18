@@ -6,9 +6,12 @@ use App\Livewire\Forms\Admin\AdminCreateForm;
 use App\Livewire\Forms\Admin\AdminEditForm;
 use App\Models\Role;
 use App\Models\User;
+use App\Traits\WithSoftDeleteFilter;
 use App\Traits\WithInteractModal;
 use App\Traits\WithRefreshFlowbite;
+use App\Traits\WithRemoveFormImage;
 use App\Traits\WithSweetAlert;
+use App\Traits\WithTableSortAndFilter;
 use App\Traits\WithTryCatch;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +22,6 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 use Livewire\WithPagination;
@@ -33,6 +35,9 @@ class Admins extends Component
   use WithRefreshFlowbite;
   use WithSweetAlert;
   use WithInteractModal;
+  use WithSoftDeleteFilter;
+  use WithRemoveFormImage;
+  use WithTableSortAndFilter;
 
   public AdminCreateForm $createForm;
   public AdminEditForm $editForm;
@@ -42,33 +47,13 @@ class Admins extends Component
     $this->refreshFlobwite();
   }
 
-  public $sortDir = "";
-  public $sortBy = "";
-  public $keyword = "";
   public $rolesFilter = [];
-  public $perPage = 10;
   public $columns = [
     "full_name" => "Admin",
     "email" => "Email",
     "phone_number" => "Phone Number",
     "role" => "Role"
   ];
-
-  #[Url()]
-  public $withTrashed = false;
-  public function updatedWithTrashed()
-  {
-    if ($this->withTrashed == true)
-      $this->onlyTrashed = false;
-  }
-
-  #[Url()]
-  public $onlyTrashed = false;
-  public function updatedOnlyTrashed()
-  {
-    if ($this->onlyTrashed == true)
-      $this->withTrashed = false;
-  }
 
   #[Computed()]
   public function admins()
@@ -123,20 +108,6 @@ class Admins extends Component
     return $roles;
   }
 
-  public function setSortBy($column)
-  {
-    $this->sortBy = $column;
-    $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
-  }
-
-  public function removeImage()
-  {
-    $this->editForm->reset("profile_image");
-    $this->editForm->resetErrorBag("profile_image");
-    $this->createForm->reset("profile_image");
-    $this->createForm->resetErrorBag("profile_image");
-  }
-
   public $selectedAdmin;
   public function showViewModal($id)
   {
@@ -161,7 +132,6 @@ class Admins extends Component
       $this->editForm->email = $admin->email;
       $this->editForm->phone_number = $admin->phone_number;
       $this->editForm->date_of_birth = $admin->date_of_birth;
-      $this->editForm->profile_image = $admin->profile_image;
       $this->editForm->userId = $admin->id;
       $this->editForm->roleId = $admin->role()->id;
 
@@ -179,8 +149,8 @@ class Admins extends Component
           throw new UnauthorizedException("can not create admin");
         }
 
-        if ($this->createForm->profile_image) {
-          $imageName = $this->createForm->profile_image->store("profile_images", "public");
+        if ($this->createForm->image) {
+          $imageName = $this->createForm->image->store("profile_images", "public");
         }
 
         DB::beginTransaction();
@@ -233,10 +203,10 @@ class Admins extends Component
 
       $admin = User::findOrFail($this->selectedAdmin->id);
 
-      if ($this->editForm->profile_image) {
-        $imageName = $this->editForm->profile_image->store("profile_images", "public");
-        if (Storage::disk("public")->exists($this->selectedAdmin->profile_image)) {
-          Storage::disk("public")->delete($this->selectedAdmin->profile_image);
+      if ($this->editForm->image) {
+        $imageName = $this->editForm->image->store("profile_images", "public");
+        if (Storage::disk("public")->exists($this->selectedAdmin->profile_image ?? "")) {
+          Storage::disk("public")->delete($this->selectedAdmin->profile_image ?? "");
         }
       }
 

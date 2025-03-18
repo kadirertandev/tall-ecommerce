@@ -6,6 +6,7 @@ use App\Enums\OrderStatusType;
 use App\Models\Order;
 use App\Traits\WithInteractModal;
 use App\Traits\WithRefreshFlowbite;
+use App\Traits\WithTableSortAndFilter;
 use App\Traits\WithTryCatch;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -20,17 +21,14 @@ class Orders extends Component
   use WithTryCatch;
   use WithRefreshFlowbite;
   use WithInteractModal;
+  use WithTableSortAndFilter;
 
   public function boot()
   {
     $this->refreshFlobwite();
   }
 
-  public $sortDir = "";
-  public $sortBy = "";
-  public $keyword = "";
   public $statusFilter = [];
-  public $perPage = 10;
   public $columns = [
     "user_id" => "Customer",
     "city" => "City",
@@ -41,12 +39,6 @@ class Orders extends Component
     "status" => "Status",
     "created_at" => "Order Date",
   ];
-
-  public function setSortBy($column)
-  {
-    $this->sortBy = $column;
-    $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
-  }
 
   #[Computed()]
   public function orders()

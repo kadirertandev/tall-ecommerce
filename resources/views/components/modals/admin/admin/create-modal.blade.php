@@ -101,12 +101,12 @@
             </div>
 
             <div class="flex items-end justify-between gap-2 sm:col-span-2">
-                @if ($this->createForm->profile_image)
+                @if ($this->createForm->image)
                     @if (in_array(
-                            $this->createForm->profile_image->getClientOriginalExtension(),
+                            $this->createForm->image->getClientOriginalExtension(),
                             App\Constants\MimeTypes::ALLOWED_PHOTO_MIMES_PREVIEW))
                         <div class="relative">
-                            <img class="w-24 h-auto" src="{{ $this->createForm->profile_image->temporaryUrl() }}">
+                            <img class="w-24 h-auto" src="{{ $this->createForm->image->temporaryUrl() }}">
                             <button wire:click.prevent='removeImage' class="absolute bottom-0 right-0">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24">
                                     <path fill="#ff0606"
@@ -121,13 +121,13 @@
                 <div class="flex-1">
                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Upload
                         file</label>
-                    <input wire:model.live='createForm.profile_image'
+                    <input wire:model.live='createForm.image'
                         class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-hidden dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                         aria-describedby="file_input_help" id="file_input" type="file">
                     <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">
                         {{ implode(', ', App\Constants\MimeTypes::ALLOWED_PHOTO_MIMES_UPLOAD) }}
                     </p>
-                    @error('createForm.profile_image')
+                    @error('createForm.image')
                         <p id="standard_error_help" class="mt-2 text-xs text-red-600 dark:text-red-400">
                             {{ $message }}</p>
                     @enderror

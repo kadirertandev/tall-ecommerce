@@ -23,13 +23,13 @@ class AdminCreateForm extends Form
   public $date_of_birth;
   #[Validate("required|min:8")]
   public $password;
-  public $profile_image;
+  public $image;
   public $roleId;
 
   public function rules(): array
   {
     return [
-      "profile_image" => [
+      "image" => [
         "nullable",
         "image",
         "max:1024",

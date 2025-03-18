@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Traits\WithInteractModal;
 use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithSweetAlert;
+use App\Traits\WithTableSortAndFilter;
 use App\Traits\WithTryCatch;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -22,16 +23,13 @@ class Customers extends Component
   use WithRefreshFlowbite;
   use WithSweetAlert;
   use WithInteractModal;
+  use WithTableSortAndFilter;
 
   public function boot()
   {
     $this->refreshFlobwite();
   }
 
-  public $sortDir = "";
-  public $sortBy = "";
-  public $keyword = "";
-  public $perPage = 10;
   public $columns = [
     "full_name" => "Customer",
     "email" => "Email",
@@ -54,12 +52,6 @@ class Customers extends Component
   {
     if ($this->onlyDeleteRequest == true)
       $this->withDeleteRequest = false;
-  }
-
-  public function setSortBy($column)
-  {
-    $this->sortBy = $column;
-    $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
   }
 
   #[Computed()]

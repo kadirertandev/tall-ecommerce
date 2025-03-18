@@ -7,7 +7,9 @@ use App\Livewire\Forms\Admin\ReviewEditForm;
 use App\Models\ProductReview;
 use App\Traits\WithInteractModal;
 use App\Traits\WithRefreshFlowbite;
+use App\Traits\WithSoftDeleteFilter;
 use App\Traits\WithSweetAlert;
+use App\Traits\WithTableSortAndFilter;
 use App\Traits\WithTryCatch;
 use Exception;
 use Illuminate\Support\Carbon;
@@ -16,7 +18,6 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Throwable;
@@ -28,6 +29,8 @@ class Reviews extends Component
   use WithRefreshFlowbite;
   use WithSweetAlert;
   use WithInteractModal;
+  use WithTableSortAndFilter;
+  use WithSoftDeleteFilter;
 
   public ReviewEditForm $editForm;
 
@@ -44,11 +47,7 @@ class Reviews extends Component
     $this->refreshFlobwite();
   }
 
-  public $sortDir = "";
-  public $sortBy = "";
-  public $keyword = "";
   public $statusFilter = [];
-  public $perPage = 10;
   public $columns = [
     "user_id" => "Customer",
     "product_id" => "Product",
@@ -59,27 +58,6 @@ class Reviews extends Component
     "created_at" => "Review Date",
   ];
 
-  #[Url()]
-  public $withTrashed = false;
-  public function updatedWithTrashed()
-  {
-    if ($this->withTrashed == true)
-      $this->onlyTrashed = false;
-  }
-
-  #[Url()]
-  public $onlyTrashed = false;
-  public function updatedOnlyTrashed()
-  {
-    if ($this->onlyTrashed == true)
-      $this->withTrashed = false;
-  }
-
-  public function setSortBy($column)
-  {
-    $this->sortBy = $column;
-    $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
-  }
 
   #[Computed()]
   public function reviews()

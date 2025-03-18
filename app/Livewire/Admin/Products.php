@@ -13,17 +13,19 @@ use App\Models\Product;
 use App\Models\WeeklyDealProduct;
 use App\Traits\WithInteractModal;
 use App\Traits\WithRefreshFlowbite;
+use App\Traits\WithRemoveFormImage;
+use App\Traits\WithSoftDeleteFilter;
 use App\Traits\WithSweetAlert;
+use App\Traits\WithTableSortAndFilter;
 use App\Traits\WithTryCatch;
+use App\Traits\WithUpdateFormSlug;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 use Livewire\WithPagination;
@@ -36,6 +38,10 @@ class Products extends Component
   use WithRefreshFlowbite;
   use WithSweetAlert;
   use WithInteractModal;
+  use WithTableSortAndFilter;
+  use WithSoftDeleteFilter;
+  use WithUpdateFormSlug;
+  use WithRemoveFormImage;
 
   public ProductCreateForm $createForm;
   public ProductEditForm $editForm;
@@ -45,14 +51,10 @@ class Products extends Component
     $this->refreshFlobwite();
   }
 
-  public $sortDir = "";
-  public $sortBy = "";
-  public $keyword = "";
   public $categoriesFilter = [];
   public $brandsFilter = [];
   public $minPrice;
   public $maxPrice;
-  public $perPage = 10;
   public $columns = [
     "name" => "Product",
     "category" => "Category",
@@ -64,51 +66,12 @@ class Products extends Component
     "updated_at" => "Last Update",
   ];
 
-  #[Url()]
-  public $withTrashed = false;
-  public function updatedWithTrashed()
-  {
-    if ($this->withTrashed == true)
-      $this->onlyTrashed = false;
-  }
-
-  #[Url()]
-  public $onlyTrashed = false;
-  public function updatedOnlyTrashed()
-  {
-    if ($this->onlyTrashed == true)
-      $this->withTrashed = false;
-  }
-
   public function setPrices()
   {
   }
   public function resetPrices()
   {
     $this->reset("minPrice", "maxPrice");
-  }
-
-  public function setSortBy($column)
-  {
-    $this->sortBy = $column;
-    $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
-  }
-
-  public function updatedEditFormName()
-  {
-    $this->editForm->slug = Str::slug($this->editForm->name);
-  }
-  public function updatedCreateFormName()
-  {
-    $this->createForm->slug = Str::slug($this->createForm->name);
-  }
-
-  public function removeImage()
-  {
-    $this->editForm->reset("image");
-    $this->editForm->resetErrorBag("image");
-    $this->createForm->reset("image");
-    $this->createForm->resetErrorBag("image");
   }
 
   #[Computed()]

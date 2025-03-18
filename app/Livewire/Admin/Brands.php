@@ -6,14 +6,17 @@ use App\Livewire\Forms\Admin\BrandCreateForm;
 use App\Livewire\Forms\Admin\BrandEditForm;
 use App\Models\Brand;
 use App\Models\Product;
+use App\Traits\WithRemoveFormImage;
+use App\Traits\WithTableSortAndFilter;
+use App\Traits\WithSoftDeleteFilter;
 use App\Traits\WithInteractModal;
 use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithTryCatch;
+use App\Traits\WithUpdateFormSlug;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Carbon;
@@ -28,6 +31,10 @@ class Brands extends Component
   use WithTryCatch;
   use WithRefreshFlowbite;
   use WithInteractModal;
+  use WithSoftDeleteFilter;
+  use WithRemoveFormImage;
+  use WithTableSortAndFilter;
+  use WithUpdateFormSlug;
 
   public BrandCreateForm $createForm;
   public BrandEditForm $editForm;
@@ -37,41 +44,11 @@ class Brands extends Component
     $this->refreshFlobwite();
   }
 
-  public $sortDir = "";
-  public $sortBy = "";
-  public $keyword = "";
-  public $perPage = 10;
   public $columns = [
     "name" => "Brand",
     "slug" => "Slug",
     "updated_at" => "Last Update"
   ];
-
-  #[Url()]
-  public $withTrashed = false;
-  public function updatedWithTrashed()
-  {
-    if ($this->withTrashed == true)
-      $this->onlyTrashed = false;
-  }
-
-  #[Url()]
-  public $onlyTrashed = false;
-  public function updatedOnlyTrashed()
-  {
-    if ($this->onlyTrashed == true)
-      $this->withTrashed = false;
-  }
-
-  public function updatedCreateFormName()
-  {
-    $this->createForm->slug = Str::slug($this->createForm->name);
-  }
-
-  public function updatedEditFormName()
-  {
-    $this->editForm->slug = Str::slug($this->editForm->name);
-  }
 
   #[Computed()]
   public function brands()
@@ -87,12 +64,6 @@ class Brands extends Component
         $query->onlyTrashed();
       })
       ->paginate(($this->perPage >= 5) ? $this->perPage : 5);
-  }
-
-  public function setSortBy($column)
-  {
-    $this->sortBy = $column;
-    $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
   }
 
   public $selectedBrand;

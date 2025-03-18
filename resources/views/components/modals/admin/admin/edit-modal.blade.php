@@ -105,45 +105,43 @@
 
 
 
-            {{-- <div class="flex items-end justify-between gap-2 sm:col-span-2">
-            @if (!$this->editForm->image)
-                <div>
-                    <img class="w-24 h-auto col-span-2"
-                        src="{{ asset('storage/' . $admin?->image) }}">
-                </div>
-            @else
-                @if (in_array($this->editForm->image->getClientOriginalExtension(), App\Constants\MimeTypes::ALLOWED_PHOTO_MIMES_PREVIEW))
-                    <div class="relative">
-                        <img class="w-24 h-auto"
-                            src="{{ $this->editForm->image->temporaryUrl() }}">
-                        <button wire:click.prevent='removeImage'
-                            class="absolute bottom-0 right-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8"
-                                viewBox="0 0 24 24">
-                                <path fill="#ff0606"
-                                    d="M6 7H5v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7zm4 12H8v-9h2zm6 0h-2v-9h2zm.618-15L15 2H9L7.382 4H3v2h18V4z" />
-                            </svg>
-                        </button>
+            <div class="flex items-end justify-between gap-2 sm:col-span-2">
+                @if (!$this->editForm->image)
+                    <div>
+                        <img class="w-24 h-auto col-span-2" src="{{ asset('storage/' . $admin?->profile_image) }}">
                     </div>
+                @else
+                    @if (in_array(
+                            $this->editForm->image->getClientOriginalExtension(),
+                            App\Constants\MimeTypes::ALLOWED_PHOTO_MIMES_PREVIEW))
+                        <div class="relative">
+                            <img class="w-24 h-auto" src="{{ $this->editForm->image->temporaryUrl() }}">
+                            <button wire:click.prevent='removeImage' class="absolute bottom-0 right-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24">
+                                    <path fill="#ff0606"
+                                        d="M6 7H5v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7zm4 12H8v-9h2zm6 0h-2v-9h2zm.618-15L15 2H9L7.382 4H3v2h18V4z" />
+                                </svg>
+                            </button>
+                        </div>
+                    @endif
                 @endif
-            @endif
 
 
-            <div class="flex-1">
-                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    for="file_input">Upload file</label>
-                <input wire:model.live='editForm.image'
-                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-hidden dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                    aria-describedby="file_input_help" id="file_input" type="file">
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">
-                    {{ implode(', ', App\Constants\MimeTypes::ALLOWED_PHOTO_MIMES_UPLOAD) }}
-                </p>
-                @error('editForm.image')
-                    <p id="standard_error_help" class="mt-2 text-xs text-red-600 dark:text-red-400">
-                        {{ $message }}</p>
-                @enderror
+                <div class="flex-1">
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="file_input">Upload
+                        file</label>
+                    <input wire:model.live='editForm.image'
+                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-hidden dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                        aria-describedby="file_input_help" id="file_input" type="file">
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">
+                        {{ implode(', ', App\Constants\MimeTypes::ALLOWED_PHOTO_MIMES_UPLOAD) }}
+                    </p>
+                    @error('editForm.image')
+                        <p id="standard_error_help" class="mt-2 text-xs text-red-600 dark:text-red-400">
+                            {{ $message }}</p>
+                    @enderror
+                </div>
             </div>
-        </div> --}}
         </div>
         <div class="flex items-center space-x-4">
             <button wire:click.prevent='update' type="submit"

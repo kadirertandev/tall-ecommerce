@@ -18,7 +18,7 @@ class AdminEditForm extends Form
   public $phone_number;
   #[Validate("date|nullable")]
   public $date_of_birth;
-  public $profile_image;
+  public $image;
   public $userId;
   public $roleId;
 
@@ -26,7 +26,7 @@ class AdminEditForm extends Form
   {
     return [
       "email" => ["required", "email", "unique:users,email," . $this->userId],
-      "profile_image" => [
+      "image" => [
         "nullable",
         "image",
         "max:1024",
