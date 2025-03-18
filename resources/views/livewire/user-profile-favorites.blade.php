@@ -1,4 +1,5 @@
-<div class="w-full mb-4 text-gray-500 bg-white rounded-lg text-medium dark:text-gray-400 dark:bg-gray-800">
+<div x-data="{ columns: 4 }"
+    class="w-full mb-4 text-gray-500 bg-white rounded-lg text-medium dark:text-gray-400 dark:bg-gray-800">
     <div class="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div
             class="{{-- col-span-4 --}}w-full sm:w-7/12 lg:w-9/12 flex items-center justify-between bg-gray-50 ring-2 ring-gray-100! px-3 rounded-lg">
@@ -8,46 +9,24 @@
                 </p>
             @endif
         </div>
-        <div
-            class="{{-- col-span-2 --}}w-full sm:w-5/12 lg:w-3/12 flex place-content-end items-center gap-4 px-3 rounded-lg ">
-            <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
-                class="items-center hidden col-span-2 gap-4 px-3 rounded-lg md:flex place-content-end " type="button">
+        <div class="w-full sm:w-5/12 lg:w-3/12 flex place-content-end items-center gap-4 px-3 rounded-lg ">
+            <button @click="columns = 2" class="items-center col-span-2 gap-4 rounded-lg flex place-content-end "
+                type="button">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24">
                     <path fill="black"
                         d="M22 12.999V20a1 1 0 0 1-1 1h-8v-8.001zm-11 0V21H3a1 1 0 0 1-1-1v-7.001zM11 3v7.999H2V4a1 1 0 0 1 1-1zm10 0a1 1 0 0 1 1 1v6.999h-9V3z" />
                 </svg>
             </button>
-            <!-- Dropdown menu -->
-            <div id="dropdown" wire:ignore.self
-                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
-                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                    <li wire:click='$set("cols",2)'>
-                        <a href="#"
-                            class="flex items-center px-4 py-2 group hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 group-hover:text-black"
-                                viewBox="0 0 24 24">
-                                <path fill="none" stroke="currentColor" stroke-linecap="round"
-                                    stroke-linejoin="round" stroke-width="1.5"
-                                    d="M8.75 9.92c0-3.894 5.77-3.894 5.77 0c0 2.94-3.77 5.476-5.77 7.08c0 0 3.75-.625 6.25 0" />
-                            </svg>
-                            <span class="text-lg group-hover:text-black">Columns</span>
-                        </a>
-                    </li>
-                    <li wire:click='$set("cols",4)'>
-                        <a href="#"
-                            class="flex items-center px-4 py-2 group hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 group-hover:text-black"
-                                viewBox="0 0 24 24">
-                                <path fill="none" stroke="currentColor" stroke-linecap="round"
-                                    stroke-linejoin="round" stroke-width="1.5"
-                                    d="M12.917 7c-1.042 3.75-4.167 6.875-4.167 6.875H15M13.438 17v-5" />
-                            </svg>
-                            <span class="text-lg group-hover:text-black">Columns</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <button @click="columns = 4" class="items-center col-span-2 gap-4 rounded-lg flex place-content-end "
+                type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 20 20">
+                    <path fill="black"
+                        d="M12 5.75a.75.75 0 0 0-.75-.75h-2.5a.75.75 0 0 0 0 1.5h2.5a.75.75 0 0 0 .75-.75m5 0a.75.75 0 0 0-.75-.75h-2.5a.75.75 0 0 0 0 1.5h2.5a.75.75 0 0 0 .75-.75m-10 0A.75.75 0 0 0 6.25 5h-2.5a.75.75 0 0 0 0 1.5h2.5A.75.75 0 0 0 7 5.75m5 3a.75.75 0 0 0-.75-.75h-2.5a.75.75 0 0 0 0 1.5h2.5a.75.75 0 0 0 .75-.75m5 0a.75.75 0 0 0-.75-.75h-2.5a.75.75 0 0 0 0 1.5h2.5a.75.75 0 0 0 .75-.75m-10 0A.75.75 0 0 0 6.25 8h-2.5a.75.75 0 0 0 0 1.5h2.5A.75.75 0 0 0 7 8.75m5 3a.75.75 0 0 0-.75-.75h-2.5a.75.75 0 0 0 0 1.5h2.5a.75.75 0 0 0 .75-.75m5 0a.75.75 0 0 0-.75-.75h-2.5a.75.75 0 0 0 0 1.5h2.5a.75.75 0 0 0 .75-.75m-10 0a.75.75 0 0 0-.75-.75h-2.5a.75.75 0 0 0 0 1.5h2.5a.75.75 0 0 0 .75-.75m5 3a.75.75 0 0 0-.75-.75h-2.5a.75.75 0 0 0 0 1.5h2.5a.75.75 0 0 0 .75-.75m5 0a.75.75 0 0 0-.75-.75h-2.5a.75.75 0 0 0 0 1.5h2.5a.75.75 0 0 0 .75-.75m-10 0a.75.75 0 0 0-.75-.75h-2.5a.75.75 0 0 0 0 1.5h2.5a.75.75 0 0 0 .75-.75" />
+                </svg>
+            </button>
+
             <h2 class="text-xl">{{ __('frontend.filters.sort') }}</h2>
+
             <div>
                 <button id="dropdownDefaultButtonasdf" data-dropdown-toggle="dropdownasdf"
                     class="text-black bg-white ring-2 ring-gray-200! font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center "
@@ -154,8 +133,7 @@
     </div>
     {{-- category filter dropdown --}}
 
-    <div wire:poll.10s
-        class="mt-8 grid grid-cols-1 md:grid-cols-{{ $this->cols / 2 }} md:grid-cols-{{ $this->cols }} gap-3">
+    <div :class="columns == 4 ? 'mt-8 grid grid-cols-4 gap-3' : 'mt-8 grid grid-cols-2 gap-3'">
         @forelse ($this->favorites as $favorite)
             <div wire:key='favorite-card-{{ $favorite->name ? $favorite->id : $favorite->user_id }}'
                 class="p-3 shadow-lg ring-2 ring-gray-50!">

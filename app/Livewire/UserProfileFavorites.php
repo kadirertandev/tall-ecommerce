@@ -29,8 +29,6 @@ class UserProfileFavorites extends Component
   #[Url()]
   public $perPage = 6;
 
-  public $cols = 4;
-
   public function mount()
   {
     $this->orderFrontend = Lang::get("frontend.filters.newest");
