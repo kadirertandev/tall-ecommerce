@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Traits\CartData;
 use App\Traits\WithSweetAlert;
+use App\Traits\WithTryCatch;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\UnauthorizedException;
@@ -16,6 +17,7 @@ class CartStepThree extends Component
 {
   use CartData;
   use WithSweetAlert;
+  use WithTryCatch;
 
 
   public function rendering()
