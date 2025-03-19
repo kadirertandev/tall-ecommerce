@@ -135,8 +135,13 @@ class User extends Authenticatable
     return (bool) !$this->is_admin;
   }
 
-  public function role()
+  public function getRoleId()
   {
-    return $this->roles[0]->name;
+    return $this->roles[0]->id ?? null;
+  }
+
+  public function getRoleName()
+  {
+    return $this->roles[0]->name ?? null;
   }
 }

@@ -70,14 +70,14 @@ class Admins extends Component
         });
       })
       ->when($this->sortBy == "role", function ($query) {
-        $query->join("model_has_roles", "users.id", "=", "model_has_roles.user_id")
+        $query->join("model_has_roles", "users.id", "=", "model_has_roles.model_id")
           ->join("roles", "roles.id", "=", "model_has_roles.role_id")
           ->select("users.*", DB::raw("roles.name as role_name"))
           ->orderBy("role_name", $this->sortDir);
       })
       ->when($this->rolesFilter, function ($query) {
         $query->when($this->sortBy != "role", function ($query) {
-          $query->join("model_has_roles", "users.id", "=", "model_has_roles.user_id")
+          $query->join("model_has_roles", "users.id", "=", "model_has_roles.model_id")
             ->join("roles", "roles.id", "=", "model_has_roles.role_id")
             ->select("users.*", DB::raw("roles.id as role_id"));
         })->whereIn("role_id", $this->rolesFilter);
@@ -94,18 +94,11 @@ class Admins extends Component
   #[Computed()]
   public function roles()
   {
-    $roles = Role::all();
-
-    if (auth()->user()->role()->name == "owner") {
-      $ownerRole = Role::where("name", "owner")->first();
-      $roles = $roles->except([$ownerRole->id]);
-    }
-    if (auth()->user()->role()->name == "super_admin") {
-      $ownerRole = Role::where("name", "owner")->first();
-      $superAdminRole = Role::where("name", "super_admin")->first();
-      $roles = $roles->except([$ownerRole->id, $superAdminRole->id]);
-    }
-    return $roles;
+    return Role::when(auth()->user()->getRoleName() !== "owner", function ($query) {
+      return $query->whereNot("name", "=", "super_admin");
+    })
+      ->whereNot("name", "=", "owner")
+      ->get();
   }
 
   public $selectedAdmin;
@@ -133,7 +126,7 @@ class Admins extends Component
       $this->editForm->phone_number = $admin->phone_number;
       $this->editForm->date_of_birth = $admin->date_of_birth;
       $this->editForm->userId = $admin->id;
-      $this->editForm->roleId = $admin->role()->id;
+      $this->editForm->roleId = $admin->getRoleId();
 
       $this->showModal("edit-admin");
     });
@@ -167,7 +160,7 @@ class Admins extends Component
         ]);
 
         $role = Role::findOrFail($this->createForm->roleId);
-        $newAdmin->assignRole(role: $role);
+        $newAdmin->syncRoles(role: $role->name);
 
         DB::commit();
 
@@ -222,7 +215,7 @@ class Admins extends Component
       ]);
 
       $role = Role::findOrFail($this->editForm->roleId);
-      $admin->assignRole($role);
+      $admin->syncRoles($role->name);
 
       DB::commit();
 
@@ -252,13 +245,13 @@ class Admins extends Component
     $this->tryCatch(
       function () use ($adminId, $roleId) {
         $admin = User::findOrFail($adminId);
+        $role = Role::findOrFail($roleId);
 
-        if ($admin->role()->name == "owner") {
-          throw new UnauthorizedException("can not change role of owner");
+        if (!Gate::allows("assignRole", [$admin, $role])) {
+          throw new UnauthorizedException("can not assign role");
         }
 
-        $role = Role::findOrFail($roleId);
-        $admin->assignRole($role);
+        $admin->syncRoles($role->name);
 
         $this->swalToast([
           "titleText" => "Admin updated successfully!"

@@ -4,8 +4,10 @@ namespace App\Livewire\Forms\Admin;
 
 use Livewire\Form;
 use App\Constants\MimeTypes;
+use App\Models\Role;
 use Livewire\Attributes\Validate;
 use Illuminate\Validation\Rules\File;
+use Illuminate\Validation\Rule;
 
 class AdminEditForm extends Form
 {
@@ -31,7 +33,16 @@ class AdminEditForm extends Form
         "image",
         "max:1024",
         File::types(MimeTypes::ALLOWED_PHOTO_MIMES_UPLOAD),
-      ]
+      ],
+      "roleId" => ["required", Rule::in(Role::pluck("id")->toArray())]
+    ];
+  }
+
+  public function messages()
+  {
+    return [
+      'roleId.required' => 'The role field is required.',
+      'roleId.in' => ' The selected role is invalid.'
     ];
   }
 }

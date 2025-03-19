@@ -191,12 +191,7 @@
                             <a href="{{ route('auth.user.addresses') }}"
                                 class="hover:text-main-red hover:underline block py-1.5 px-3">{{ __('frontend.auth.dropdown-on-nav.addresses') }}</a>
                         </li>
-                        @can('admin')
-                            <li>
-                                <a href="{{ route('roles-permissions') }}"
-                                    class="hover:text-main-red hover:underline block py-1.5 px-3">{{ __('frontend.auth.dropdown-on-nav.roles-permissions') }}</a>
-                            </li>
-                        @endcan
+
                         <li>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf

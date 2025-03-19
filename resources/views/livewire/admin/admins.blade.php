@@ -120,7 +120,7 @@
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ $admin->phone_number ?? 'NULL' }}</td>
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ $admin->role()->name ?? 'NULL' }}</td>
+                                        {{ $admin->getRoleName() ?? 'NULL' }}</td>
 
                                     <td class="px-4 py-2">
                                         <button id="dropdownMenuIconButton-{{ $admin->id }}"
@@ -167,7 +167,7 @@
                                                     </li>
                                                 @endcan
                                                 @can('assign role')
-                                                    @if ($admin->isNot(auth()->user()) && $admin->role()->name != 'owner')
+                                                    @if ($admin->getRoleName() != 'owner' && $admin->getRoleName() != auth()->user()->getRoleName())
                                                         <li id="assignRoleDropdownButton-{{ $admin->id }}"
                                                             data-dropdown-placement="left"
                                                             data-dropdown-toggle="assignRoleDropdown-{{ $admin->id }}"
@@ -260,6 +260,6 @@
 
     <x-modals.admin.admin.create-modal />
     <x-modals.admin.admin.view-modal :admin="$selectedAdmin" />
-    <x-modals.admin.admin.edit-modal :admin="$selectedAdmin" :editForm="$this->editForm" :roles="$this->roles()" />
+    <x-modals.admin.admin.edit-modal :admin="$selectedAdmin" :editForm="$this->editForm" :roles="$this->roles" />
 
 </div>

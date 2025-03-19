@@ -37,8 +37,16 @@ class AdminCreateForm extends Form
       ],
       "roleId" => [
         "required",
-        Rule::in(Role::pluck("id", "id")->toArray())
+        Rule::in(Role::pluck("id")->toArray())
       ]
+    ];
+  }
+
+  public function messages()
+  {
+    return [
+      'roleId.required' => 'The role field is required.',
+      'roleId.in' => ' The selected role is invalid.'
     ];
   }
 }

@@ -43,7 +43,7 @@
                     <div>
                         {{-- <h1 class="font-bold text-md">{{ $admin?->full_name() }}</h1> --}}
                         <h2 class="text-gray-400 text-md">Role</h2>
-                        <h2 class="text-md">{{ $admin?->role()->name ?? 'NULL' }}</h2>
+                        <h2 class="text-md">{{ $admin?->getRoleName() ?? 'NULL' }}</h2>
                     </div>
                 </div>
             </div>

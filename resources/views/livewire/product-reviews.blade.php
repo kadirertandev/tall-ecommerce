@@ -104,7 +104,7 @@
                             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-sm shadow-sm w-36 dark:bg-gray-700 dark:divide-gray-600">
                             <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
                                 aria-labelledby="dropdownMenuIconHorizontalButton">
-                                @can('admin')
+                                @can('edit reviews')
                                     <li wire:click='edit({{ $review->id }})' class="cursor-pointer">
                                         <a
                                             class="inline-flex items-center w-full gap-2 px-4 py-2 hover:bg-blue-100 hover:text-black">
