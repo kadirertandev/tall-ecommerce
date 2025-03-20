@@ -9,10 +9,6 @@
                                 <span class="text-gray-500">All Products:</span>
                                 <span class="">{{ $this->products->total() }}</span>
                             </h5>
-                            <h5>
-                                <span class="text-gray-500">Total Revenue:</span>
-                                <span class="">{{ App\Helpers::formatPrice($this->totalRevenue) }} TL</span>
-                            </h5>
                         </div>
 
                         <x-search-bar />
@@ -115,21 +111,25 @@
                                             </svg>
                                         </button>
                                     </h2>
-                                    <div id="accordion-collapse-body-3" class="hidden"
+                                    <div id="accordion-collapse-body-3" class="hidden" x-data=""
                                         aria-labelledby="accordion-collapse-heading-3" wire:ignore.self>
                                         <div class="relative flex flex-col max-w-xs gap-2 mx-auto">
                                             <div class="flex items-center justify-between gap-2 my-1">
-                                                <input wire:model='minPrice' type="text" id="min_price"
-                                                    data-input-counter aria-describedby="helper-text-explanation"
+                                                <input wire:model='minPrice' x-ref="minPrice" type="number"
+                                                    id="min_price" data-input-counter
+                                                    aria-describedby="helper-text-explanation"
                                                     class="rounded-lg bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="Min" required />
-                                                <input wire:model='maxPrice' type="text" id="max_price"
-                                                    data-input-counter aria-describedby="helper-text-explanation"
+                                                <input wire:model='maxPrice' x-ref="maxPrice" type="number"
+                                                    id="max_price" data-input-counter
+                                                    aria-describedby="helper-text-explanation"
                                                     class="rounded-lg bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="Max" required />
                                             </div>
                                             <div class="flex items-center justify-center gap-2">
-                                                <button wire:click='setPrices' type="button" id="btnSortByPrice"
+                                                <button
+                                                    @click="$wire.setPrices($refs.minPrice.value, $refs.maxPrice.value)"
+                                                    type="button" id="btnSortByPrice"
                                                     class="p-2 text-white bg-red-500 rounded-lg hover:bg-red-600">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -204,13 +204,13 @@
                                     </td>
                                     <td class="px-4 py-2">
                                         <span
-                                            class="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded-sm dark:bg-primary-900 dark:text-primary-300">{{ $product->brand->name }}</span>
+                                            class="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded-sm dark:bg-primary-900 dark:text-primary-300">{{ $product->brand?->name ?? 'NULL' }}</span>
                                     </td>
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         <div class="flex items-center">
-                                            <x-stars :stars="$product->ratingAverage()" />
+                                            <x-stars :stars="floor($product->review_rating)" />
                                             <span
-                                                class="ml-1 text-gray-500 dark:text-gray-400">{{ number_format($product->ratingAverage(), 2) }}</span>
+                                                class="ml-1 text-gray-500 dark:text-gray-400">{{ number_format($product->review_rating, 2) }}</span>
                                         </div>
                                     </td>
                                     <td class="px-4 py-2">
@@ -224,10 +224,11 @@
                                                 <path
                                                     d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" />
                                             </svg>
-                                            {{ $product->totalSale() }}
+                                            {{ $product->total_sales ?? 0 }}
                                         </div>
                                     </td>
-                                    <td class="px-4 py-2">{{ App\Helpers::formatPrice($product->revenue()) }} TL</td>
+                                    <td class="px-4 py-2">{{ App\Helpers::formatPrice($product->total_revenue) }} TL
+                                    </td>
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ $product->updated_at }}</td>
                                     <td class="px-4 py-2">
@@ -335,8 +336,8 @@
         </div>
     </section>
 
-    <x-modals.admin.product.create-modal :categories="$this->createForm->categories()" :brands="$this->createForm->brands()" />
+    <x-modals.admin.product.create-modal :brands="$this->createForm->brands()" />
     <x-modals.admin.product.view-modal :product="$selectedProduct" />
-    <x-modals.admin.product.edit-modal :product="$selectedProduct" :categories="$this->editForm->categories()" :brands="$this->editForm->brands()" />
+    <x-modals.admin.product.edit-modal :product="$selectedProduct" :brands="$this->editForm->brands()" />
 
 </div>

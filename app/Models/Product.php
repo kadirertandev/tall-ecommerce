@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ReviewStatusType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -33,11 +34,6 @@ class Product extends Model
     "brand:id,name,slug",
   ];
 
-  public function brand()
-  {
-    return $this->belongsTo(Brand::class);
-  }
-
   public function title()
   {
     $brand = $this->brand->name;
@@ -55,19 +51,9 @@ class Product extends Model
     return $this->hasMany(ProductReview::class)->where("status", "approved");
   }
 
-  public function ratingAverage()
+  public function brand()
   {
-    // $ratingAverage = ProductReview::where("product_id", $this->id)->pluck("rating")->average();
-    $ratingAverage = $this->reviews()->pluck("rating")->average();
-
-    return $ratingAverage ?? 0;
-  }
-
-  public function scopeSearch($query, $value)
-  {
-    $query->where("products.name", "like", "%{$value}%")
-      ->orWhere("products.title", "like", "%{$value}%")
-      ->orWhere("products.description", "like", "%{$value}%");
+    return $this->belongsTo(Brand::class);
   }
 
   public function category()
@@ -75,44 +61,67 @@ class Product extends Model
     return $this->belongsTo(Category::class, "category_id");
   }
 
-  public function totalSale()
+  public function ratingAverage()
   {
-    /* $count = 0;
-    foreach (Order::all() as $order) {
-      foreach ($order->items as $item) {
-        if ($this->id == $item->product->id) {
-          $count += $item->quantity;
-        }
-      }
-    }
-    return $count; */
-
-    $totalSold = DB::table('order_items')
-      ->select(DB::raw('sum(quantity) as total_sold'))
-      ->where('product_id', $this->id)
-      ->groupBy('product_id')
-      ->value('total_sold');
-
-    return $totalSold ?: 0;
-
-    /* return $this->hasMany(OrderItem::class)
-      ->select(DB::raw('sum(quantity) as total_sold'))
-      ->groupBy('product_id')
-      ->first()
-      ->total_sold ?? 0; // Handle cases where no orders exist */
+    return $this->reviews()->avg("rating") ?? 0;
   }
 
-  public function revenue()
+  public function scopeSearch($query, $value)
   {
-    $revenue = 0;
-    foreach (Order::all() as $order) {
-      foreach ($order->items as $item) {
-        if ($this->id == $item->product->id) {
-          $revenue += $item->item_total_price;
-        }
-      }
-    }
-    return $revenue;
+    $query->where("name", "like", "%{$value}%")
+      ->orWhere("title", "like", "%{$value}%")
+      ->orWhere("description", "like", "%{$value}%")
+
+      ->orWhereHas('category', function ($q) use ($value) {
+        $q->where("name", "like", "%{$value}%");
+      })
+
+      ->orWhereHas('brand', function ($q) use ($value) {
+        $q->where("name", "like", "%{$value}%");
+      });
+  }
+
+  public function scopeWithComputedFields($query)
+  {
+    return $query->addSelect([
+      "category_name" => Category::select("name")->whereColumn("id", "products.category_id"),
+      "brand_name" => Brand::select("name")->whereColumn("id", "products.brand_id"),
+      "total_sales" => OrderItem::select(DB::raw("sum(quantity)"))->whereColumn("product_id", "products.id"),
+      "total_revenue" => OrderItem::select(DB::raw("order_items.price * quantity"))->whereColumn("product_id", "products.id"),
+      "review_rating" => ProductReview::select(DB::raw("avg(rating)"))->whereColumn("product_id", "products.id")->where("status", ReviewStatusType::from("approved"))
+    ]);
+  }
+
+  public function scopeFilterByTrashed($query, $withTrashed, $onlyTrashed)
+  {
+    return $query
+      ->when($withTrashed == true, fn($q) => $q->withTrashed())
+      ->when($onlyTrashed == true, fn($q) => $q->onlyTrashed());
+  }
+
+  public function scopeFilterByCategory($query, $categoriesFilter)
+  {
+    return $query
+      ->when($categoriesFilter, fn($q) => $q->whereIn("category_id", $categoriesFilter));
+  }
+
+  public function scopeFilterByBrand($query, $brandsFilter)
+  {
+    return $query
+      ->when($brandsFilter, fn($q) => $q->whereIn("brand_id", $brandsFilter));
+  }
+
+  public function scopeFilterByPrice($query, $minPrice, $maxPrice)
+  {
+    return $query
+      ->when($minPrice, fn($q) => $q->where("price", ">=", $minPrice))
+      ->when($maxPrice, fn($q) => $q->where("price", "<=", $maxPrice));
+  }
+
+  public function scopeSortByColumn($query, $sortBy, $sortDir)
+  {
+    return $query
+      ->when($sortBy && $sortDir, fn($q) => $q->orderBy($sortBy, $sortDir));
   }
 
   public function updatedBy()

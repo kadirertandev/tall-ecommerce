@@ -35,16 +35,10 @@ class ProductEditForm extends Form
   }
 
   #[Computed()]
-  public function categories()
-  {
-    return Category::all();
-  }
-
-  #[Computed()]
   public function brands()
   {
-    return Category::find($this->category)?->brands;
+    if ($this->category) {
+      return Category::find($this->category)?->brands;
+    }
   }
-
-
 }

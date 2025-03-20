@@ -26,7 +26,7 @@
                 <select wire:model.live='createForm.category' id="category"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     <option value="0">Select a category</option>
-                    @foreach ($categories as $key => $category)
+                    @foreach ($this->categories as $key => $category)
                         <option wire:key='category-{{ $category->id }}' value="{{ $category->id }}">
                             {{ $category->name }}</option>
                     @endforeach

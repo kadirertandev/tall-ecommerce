@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
    */
   public function boot(): void
   {
-    $categories = Cache::rememberForever("categories", function () {
+    $categories = Cache::remember("categories", 60 * 5, function () {
       return Category::all();
     });
     $weekly_deal_products = Cache::remember("weeklyDealProducts", 60 * 60 * 24, function () {

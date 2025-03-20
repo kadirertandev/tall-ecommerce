@@ -37,19 +37,11 @@ class ProductCreateForm extends Form
     ];
   }
 
-  public function categories()
-  {
-    return Category::all();
-  }
-
   #[Computed()]
   public function brands()
   {
-    return Category::find($this->category)?->brands;
-  }
-
-  public function boot()
-  {
-    // $this->category = Category::first()->id;
+    if ($this->category) {
+      return Category::find($this->category)?->brands;
+    }
   }
 }

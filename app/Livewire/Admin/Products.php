@@ -8,7 +8,6 @@ use App\Models\Brand;
 use App\Models\CartItem;
 use App\Models\Category;
 use App\Models\DailyDealProduct;
-use App\Models\Order;
 use App\Models\Product;
 use App\Models\WeeklyDealProduct;
 use App\Traits\WithInteractModal;
@@ -20,7 +19,7 @@ use App\Traits\WithTableSortAndFilter;
 use App\Traits\WithTryCatch;
 use App\Traits\WithUpdateFormSlug;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\UnauthorizedException;
@@ -57,17 +56,19 @@ class Products extends Component
   public $maxPrice;
   public $columns = [
     "name" => "Product",
-    "category" => "Category",
-    "brand" => "Brand",
-    "rating" => "Rating",
+    "category_name" => "Category",
+    "brand_name" => "Brand",
+    "review_rating" => "Rating",
     "price" => "Price",
-    "sales" => "Sales",
-    "revenue" => "Revenue",
+    "total_sales" => "Sales",
+    "total_revenue" => "Revenue",
     "updated_at" => "Last Update",
   ];
 
-  public function setPrices()
+  public function setPrices($minPrice, $maxPrice)
   {
+    $this->minPrice = $minPrice;
+    $this->maxPrice = $maxPrice;
   }
   public function resetPrices()
   {
@@ -77,88 +78,38 @@ class Products extends Component
   #[Computed()]
   public function products()
   {
-    return Product::search($this->keyword)
-      ->when(
-        $this->sortBy != "category" && $this->sortBy != "brand" && $this->sortBy != "rating" && $this->sortBy != "sales" && $this->sortBy != "revenue",
-        function ($query) {
-          // $query->orderBy($this->sortBy, $this->sortDir);
-          $query->when($this->sortBy && $this->sortDir, function ($query) {
-            return $query->orderBy($this->sortBy, $this->sortDir);
-          });
-        }
-      )
-      ->when($this->sortBy == "category", function ($query) {
-        $query->join("categories", "products.category_id", "=", "categories.id")
-          ->orderBy("categories.name", $this->sortDir)
-          ->select("products.*");
-      })
-      ->when($this->sortBy == "brand", function ($query) {
-        $query->join("brands", "products.brand_id", "=", "brands.id")
-          ->orderBy("brands.name", $this->sortDir)
-          ->select("products.*");
-      })
-      ->when($this->sortBy == "rating", function ($query) {
-        $query->leftjoin("product_reviews", "products.id", "=", "product_reviews.product_id")
-          ->select("products.*", DB::raw("avg(product_reviews.rating) as rating_average"))
-          ->groupBy("products.id")
-          ->orderBy("rating_average", $this->sortDir);
-      })
-      ->when($this->sortBy == "sales", function ($query) {
-        $query->leftjoin("order_items", "products.id", "=", "order_items.product_id")
-          ->select("products.*", DB::raw("sum(order_items.quantity) as total_sales"))
-          ->groupBy("products.id")
-          ->orderBy("total_sales", $this->sortDir);
-      })
-      ->when($this->sortBy == "revenue", function ($query) {
-        $query->leftjoin("order_items", "products.id", "=", "order_items.product_id")
-          ->select("products.*", DB::raw("sum(order_items.item_total_price) as revenue"))
-          ->groupBy("products.id")
-          ->orderBy("revenue", $this->sortDir);
-      })
-      ->when($this->withTrashed == true, function ($query) {
-        $query->withTrashed();
-      })
-      ->when($this->onlyTrashed == true, function ($query) {
-        $query->onlyTrashed();
-      })
-      ->when($this->categoriesFilter, function ($query) {
-        $query->whereIn("category_id", $this->categoriesFilter);
-      })
-      ->when($this->brandsFilter, function ($query) {
-        $query->whereIn("brand_id", $this->brandsFilter);
-      })
-      ->when($this->minPrice, function ($query) {
-        $query->where("products.price", ">=", $this->minPrice);
-      })
-      ->when($this->maxPrice, function ($query) {
-        $query->where("products.price", "<=", $this->maxPrice);
-      })
+    return Product::with(["category", "brand"])
+      ->search($this->keyword)
+      ->withComputedFields()
+      ->filterByTrashed($this->withTrashed, $this->onlyTrashed)
+      ->filterByCategory($this->categoriesFilter)
+      ->filterByBrand($this->brandsFilter)
+      ->filterByPrice($this->minPrice, $this->maxPrice)
+      ->sortByColumn($this->sortBy, $this->sortDir)
       ->paginate(($this->perPage >= 5) ? $this->perPage : 5);
   }
 
   #[Computed()]
   public function categories()
   {
-    return Category::all();
+    return Cache::remember("admin-products-categories", 60 * 5, function () {
+      return Category::select(["id", "name"])->get();
+    });
   }
 
   #[Computed()]
   public function brands()
   {
-    return Brand::all();
-  }
-
-  #[Computed()]
-  public function totalRevenue()
-  {
-    return Order::all()->sum("total_price");
+    return Cache::remember("admin-products-brands", 60 * 5, function () {
+      return Brand::select(["id", "name"])->get();
+    });
   }
 
   public $selectedProduct;
   public function showViewModal($id)
   {
     $this->tryCatch(function () use ($id) {
-      $this->selectedProduct = Product::withTrashed()->findOrFail($id);
+      $this->selectedProduct = Product::withTrashed()->withComputedFields()->findOrFail($id);
 
       $this->showModal("view-product");
     });
@@ -167,8 +118,8 @@ class Products extends Component
   public function showEditModal($id)
   {
     $this->tryCatch(function () use ($id) {
-      if (!Gate::allows("edit categories")) {
-        throw new UnauthorizedException("can not edit category");
+      if (!Gate::allows("edit products")) {
+        throw new UnauthorizedException("can not edit product");
       }
 
       $product = Product::findOrFail($id);
