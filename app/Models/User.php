@@ -3,12 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -54,8 +55,42 @@ class User extends Authenticatable
   {
     return $query->where("first_name", "like", "%{$value}%")
       ->orWhere("last_name", "like", "%{$value}%")
+      ->orWhere(DB::raw("CONCAT(first_name, ' ', last_name)"), "like", "%{$value}%")
       ->orWhere("email", "like", "%{$value}%")
       ->orWhere("phone_number", "like", "%{$value}%");
+  }
+
+  public function scopeWithComputedFields($query)
+  {
+    return $query->addSelect([
+      "role_id" => Role::select('id')->whereColumn("roles.id", "model_has_roles.role_id"),
+      "role_name" => Role::select('name')->whereColumn("roles.id", "model_has_roles.role_id")
+    ]);
+  }
+
+  public function scopeFilterByTrashed($query, $withTrashed, $onlyTrashed)
+  {
+    return $query
+      ->when($withTrashed == true, fn($q) => $q->withTrashed())
+      ->when($onlyTrashed == true, fn($q) => $q->onlyTrashed());
+  }
+
+  public function scopeFilterByRole($query, $roleFilter)
+  {
+    return $query
+      ->when($roleFilter, fn($q) => $q->whereIn("role_id", $roleFilter));
+  }
+
+  public function scopeSortByColumn($query, $sortBy, $sortDir)
+  {
+    return $query
+      ->when(
+        $sortBy && $sortDir,
+        function ($q) use ($sortBy, $sortDir) {
+          $q->when($sortBy == "full_name", fn($q) => $q->orderBy(DB::raw("CONCAT(first_name, ' ', last_name)"), $sortDir))
+            ->when($sortBy != "full_name", fn($q) => $q->orderBy($sortBy, $sortDir));
+        }
+      );
   }
 
   public function favorites()
@@ -137,11 +172,11 @@ class User extends Authenticatable
 
   public function getRoleId()
   {
-    return $this->roles[0]->id ?? null;
+    return $this->roles()->first()->id ?? null;
   }
 
   public function getRoleName()
   {
-    return $this->roles[0]->name ?? null;
+    return $this->roles()->first()->name ?? null;
   }
 }

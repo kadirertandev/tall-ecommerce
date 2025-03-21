@@ -45,6 +45,7 @@ class Admins extends Component
   public function boot()
   {
     $this->refreshFlobwite();
+
   }
 
   public $rolesFilter = [];
@@ -52,49 +53,32 @@ class Admins extends Component
     "full_name" => "Admin",
     "email" => "Email",
     "phone_number" => "Phone Number",
-    "role" => "Role"
+    "role_name" => "Role"
   ];
+
+  #[Computed()]
+  public function authRole()
+  {
+    return auth()->user()->getRoleName();
+  }
 
   #[Computed()]
   public function admins()
   {
-    return User::where("is_admin", true)->search($this->keyword)
-      ->when($this->sortBy != "full_name" && $this->sortBy != "role", function ($query) {
-        $query->when($this->sortBy && $this->sortDir, function ($query) {
-          return $query->orderBy($this->sortBy, $this->sortDir);
-        });
-      })
-      ->when($this->sortBy == "full_name", function ($query) {
-        $query->when($this->sortBy && $this->sortDir, function ($query) {
-          return $query->orderBy(DB::raw("CONCAT(first_name, ' ', last_name)"), $this->sortDir);
-        });
-      })
-      ->when($this->sortBy == "role", function ($query) {
-        $query->join("model_has_roles", "users.id", "=", "model_has_roles.model_id")
-          ->join("roles", "roles.id", "=", "model_has_roles.role_id")
-          ->select("users.*", DB::raw("roles.name as role_name"))
-          ->orderBy("role_name", $this->sortDir);
-      })
-      ->when($this->rolesFilter, function ($query) {
-        $query->when($this->sortBy != "role", function ($query) {
-          $query->join("model_has_roles", "users.id", "=", "model_has_roles.model_id")
-            ->join("roles", "roles.id", "=", "model_has_roles.role_id")
-            ->select("users.*", DB::raw("roles.id as role_id"));
-        })->whereIn("role_id", $this->rolesFilter);
-      })
-      ->when($this->withTrashed == true, function ($query) {
-        $query->withTrashed();
-      })
-      ->when($this->onlyTrashed == true, function ($query) {
-        $query->onlyTrashed();
-      })
+    return User::where("is_admin", true)
+      ->search($this->keyword)
+      ->withComputedFields()
+      ->join("model_has_roles", "users.id", "model_has_roles.model_id")
+      ->filterByTrashed($this->withTrashed, $this->onlyTrashed)
+      ->filterByRole($this->rolesFilter)
+      ->sortByColumn($this->sortBy, $this->sortDir)
       ->paginate(($this->perPage >= 5) ? $this->perPage : 5);
   }
 
   #[Computed()]
   public function roles()
   {
-    return Role::when(auth()->user()->getRoleName() !== "owner", function ($query) {
+    return Role::when($this->authRole !== "owner", function ($query) {
       return $query->whereNot("name", "=", "super_admin");
     })
       ->whereNot("name", "=", "owner")

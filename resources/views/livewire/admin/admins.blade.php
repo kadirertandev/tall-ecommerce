@@ -120,7 +120,7 @@
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ $admin->phone_number ?? 'NULL' }}</td>
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ $admin->getRoleName() ?? 'NULL' }}</td>
+                                        {{ $admin->role_name ?? 'NULL' }}</td>
 
                                     <td class="px-4 py-2">
                                         <button id="dropdownMenuIconButton-{{ $admin->id }}"
@@ -167,7 +167,7 @@
                                                     </li>
                                                 @endcan
                                                 @can('assign role')
-                                                    @if ($admin->getRoleName() != 'owner' && $admin->getRoleName() != auth()->user()->getRoleName())
+                                                    @if ($admin->role_name != 'owner' && $admin->role_name != $this->authRole)
                                                         <li id="assignRoleDropdownButton-{{ $admin->id }}"
                                                             data-dropdown-placement="left"
                                                             data-dropdown-toggle="assignRoleDropdown-{{ $admin->id }}"
