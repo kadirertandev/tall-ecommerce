@@ -15,7 +15,6 @@ class Order extends Model
     "district",
     "neighborhood",
     "address_line",
-    "total_price",
     "status"
   ];
 
@@ -41,7 +40,7 @@ class Order extends Model
 
   public function subtotal()
   {
-    return $this->items->sum('item_total_price');
+    return $this->items()->sum(DB::raw('price * quantity'));
   }
 
   public function scopeSearch($query, $value)
@@ -55,5 +54,31 @@ class Order extends Model
           ->orWhere('last_name', 'like', "%{$value}%")
           ->orWhere(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', "%{$value}%");
       });
+  }
+
+  public function scopeSortByColumn($query, $sortBy, $sortDir)
+  {
+    return $query
+      ->when($sortBy && $sortDir, fn($q) => $q->orderBy($sortBy, $sortDir));
+  }
+
+  public function scopeFilterByStatus($query, $statusFilter)
+  {
+    return $query
+      ->when($statusFilter, fn($q) => $q->whereIn("status", $statusFilter));
+  }
+
+  public function scopeWithCustomerName($query)
+  {
+    return $query->addSelect([
+      "customer_name" => User::select(DB::raw("CONCAT(users.first_name, ' ', users.last_name)"))->whereColumn("users.id", "user_id")
+    ]);
+  }
+
+  public function scopeWithSubTotal($query)
+  {
+    return $query->addSelect([
+      "subtotal" => OrderItem::select(DB::raw("SUM(price * quantity)"))->whereColumn("order_id", "orders.id")
+    ]);
   }
 }

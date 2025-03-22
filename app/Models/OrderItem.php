@@ -22,4 +22,9 @@ class OrderItem extends Model
   {
     return $this->belongsTo(Product::class)->withTrashed();
   }
+
+  public function subtotal()
+  {
+    return $this->price * $this->quantity;
+  }
 }

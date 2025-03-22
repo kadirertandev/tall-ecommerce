@@ -96,7 +96,7 @@
                                             <img src="{{ asset('storage/profile-customer.png') }}"
                                                 class="w-10 h-auto rounded-md">
                                         @endif
-                                        {{ $order->user->full_name() }}
+                                        {{ $order->customer_name }}
                                     </th>
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ $order->city }}</td>
@@ -107,7 +107,7 @@
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ $order->address_line }}</td>
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ App\Helpers::formatPrice($order->total_price) }} TL</td>
+                                        {{ App\Helpers::formatPrice($order->subtotal) }} TL</td>
                                     @can('edit orders')
                                         <td class="px-4 py-2 font-medium text-gray-900 cursor-pointer whitespace-nowrap dark:text-white"
                                             id="orderStatusDropdownButton-{{ $order->id }}"
@@ -175,34 +175,6 @@
 
                                                     <span>View</span>
                                                 </li>
-                                                @can('edit customers')
-                                                    <li wire:click='showEditModal({{ $order->id }})'
-                                                        class="flex items-center gap-1 px-4 py-2 hover:bg-cyan-500 group hover:text-white">
-                                                        <svg class="w-4 h-4 text-gray-800 dark:text-white group-hover:text-white"
-                                                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-linecap="round"
-                                                                stroke-linejoin="round" stroke-width="2"
-                                                                d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28" />
-                                                        </svg>
-                                                        <span>Edit</span>
-                                                    </li>
-                                                @endcan
-                                                @if ($order->delete_request)
-                                                    @can('force delete customers')
-                                                        <li wire:click="delete({{ $order->id }})"
-                                                            class="flex items-center gap-1 px-4 py-2 hover:bg-red-800 group hover:text-white">
-                                                            <svg class="w-4 h-4 text-gray-800 dark:text-white group-hover:text-white"
-                                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                                fill="none" viewBox="0 0 24 24">
-                                                                <path stroke="currentColor" stroke-linecap="round"
-                                                                    stroke-linejoin="round" stroke-width="2"
-                                                                    d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-                                                            </svg>
-                                                            <span>Delete</span>
-                                                        </li>
-                                                    @endcan
-                                                @endif
                                             </ul>
                                         </div>
                                     </td>

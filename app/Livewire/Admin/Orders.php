@@ -8,7 +8,6 @@ use App\Traits\WithInteractModal;
 use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithTableSortAndFilter;
 use App\Traits\WithTryCatch;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
@@ -30,12 +29,12 @@ class Orders extends Component
 
   public $statusFilter = [];
   public $columns = [
-    "user_id" => "Customer",
+    "customer_name" => "Customer",
     "city" => "City",
     "district" => "District",
     "neighborhood" => "Neighborhood",
     "address_line" => "Address Line",
-    "total_price" => "Total Price",
+    "subtotal" => "Total Price",
     "status" => "Status",
     "created_at" => "Order Date",
   ];
@@ -43,20 +42,12 @@ class Orders extends Component
   #[Computed()]
   public function orders()
   {
-    return Order::search($this->keyword)
-      ->when($this->sortBy != "user_id", function ($query) {
-        $query->when($this->sortBy && $this->sortDir, function ($query) {
-          return $query->orderBy($this->sortBy, $this->sortDir);
-        });
-      })
-      ->when($this->sortBy == "user_id", function ($query) {
-        $query->join("users", "orders.user_id", "=", "users.id")
-          ->select("orders.*", DB::raw("CONCAT(users.first_name, users.last_name) as user_full_name"))
-          ->orderBy("user_full_name", $this->sortDir);
-      })
-      ->when($this->statusFilter, function ($query) {
-        $query->whereIn("status", $this->statusFilter);
-      })
+    return Order::with("user")
+      ->search($this->keyword)
+      ->withCustomerName()
+      ->withSubTotal()
+      ->sortByColumn($this->sortBy, $this->sortDir)
+      ->filterByStatus($this->statusFilter)
       ->paginate(($this->perPage >= 5) ? $this->perPage : 5);
   }
 
@@ -64,7 +55,7 @@ class Orders extends Component
   public function showViewModal($id)
   {
     $this->tryCatch(function () use ($id) {
-      $this->selectedOrder = Order::findOrFail($id);
+      $this->selectedOrder = Order::with(["items.product"])->findOrFail($id);
 
       $this->showModal("view-order");
     });
