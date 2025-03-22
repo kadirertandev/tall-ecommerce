@@ -67,7 +67,7 @@ class Admins extends Component
   {
     return User::where("is_admin", true)
       ->search($this->keyword)
-      ->withComputedFields()
+      ->withRoleIdAndRoleName()
       ->join("model_has_roles", "users.id", "model_has_roles.model_id")
       ->filterByTrashed($this->withTrashed, $this->onlyTrashed)
       ->filterByRole($this->rolesFilter)

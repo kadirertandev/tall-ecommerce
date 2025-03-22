@@ -60,10 +60,10 @@ class User extends Authenticatable
       ->orWhere("phone_number", "like", "%{$value}%");
   }
 
-  public function scopeWithComputedFields($query)
+  public function scopeWithRoleIdAndRoleName($query)
   {
-    return $query->addSelect([
-      "role_id" => Role::select('id')->whereColumn("roles.id", "model_has_roles.role_id"),
+    return $query->select("users.*")->addSelect([
+      'model_has_roles.role_id',
       "role_name" => Role::select('name')->whereColumn("roles.id", "model_has_roles.role_id")
     ]);
   }
