@@ -60,9 +60,23 @@ class User extends Authenticatable
       ->orWhere("phone_number", "like", "%{$value}%");
   }
 
+  public function scopeWithOnlyNecesssaryColumns($query)
+  {
+    return $query->select([
+      "id",
+      "first_name",
+      "last_name",
+      "email",
+      "phone_number",
+      "date_of_birth",
+      "profile_image",
+      "deleted_at",
+    ]);
+  }
+
   public function scopeWithRoleIdAndRoleName($query)
   {
-    return $query->select("users.*")->addSelect([
+    return $query->addSelect([
       'model_has_roles.role_id',
       "role_name" => Role::select('name')->whereColumn("roles.id", "model_has_roles.role_id")
     ]);

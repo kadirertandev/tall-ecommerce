@@ -45,7 +45,6 @@ class Admins extends Component
   public function boot()
   {
     $this->refreshFlobwite();
-
   }
 
   public $rolesFilter = [];
@@ -67,6 +66,7 @@ class Admins extends Component
   {
     return User::where("is_admin", true)
       ->search($this->keyword)
+      ->withOnlyNecesssaryColumns()
       ->withRoleIdAndRoleName()
       ->join("model_has_roles", "users.id", "model_has_roles.model_id")
       ->filterByTrashed($this->withTrashed, $this->onlyTrashed)
@@ -82,7 +82,7 @@ class Admins extends Component
       return $query->whereNot("name", "=", "super_admin");
     })
       ->whereNot("name", "=", "owner")
-      ->get();
+      ->get(["id", "name"]);
   }
 
   public $selectedAdmin;
