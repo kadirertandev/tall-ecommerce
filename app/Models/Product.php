@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ReviewStatusType;
+use App\Traits\ScopeWithoutColumns;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,7 +12,7 @@ use Illuminate\Support\Str;
 
 class Product extends Model
 {
-  use HasFactory, SoftDeletes;
+  use HasFactory, SoftDeletes, ScopeWithoutColumns;
 
   protected $fillable = [
     "name",
@@ -81,7 +82,7 @@ class Product extends Model
       });
   }
 
-  public function scopeWithComputedFields($query)
+  public function scopeWithSubQueryFields($query)
   {
     return $query->addSelect([
       "category_name" => Category::select("name")->whereColumn("id", "products.category_id"),

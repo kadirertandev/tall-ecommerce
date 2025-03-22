@@ -80,7 +80,8 @@ class Products extends Component
   {
     return Product::with(["category", "brand"])
       ->search($this->keyword)
-      ->withComputedFields()
+      ->withoutColumns(["slug", "title", "deleted_by", "created_by", "created_at", "deleted_by", "updated_by"])
+      ->withSubQueryFields()
       ->filterByTrashed($this->withTrashed, $this->onlyTrashed)
       ->filterByCategory($this->categoriesFilter)
       ->filterByBrand($this->brandsFilter)
