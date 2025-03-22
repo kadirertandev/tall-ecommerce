@@ -110,7 +110,7 @@ class Products extends Component
   public function showViewModal($id)
   {
     $this->tryCatch(function () use ($id) {
-      $this->selectedProduct = Product::withTrashed()->withComputedFields()->findOrFail($id);
+      $this->selectedProduct = Product::withTrashed()->withSubQueryFields()->findOrFail($id);
 
       $this->showModal("view-product");
     });

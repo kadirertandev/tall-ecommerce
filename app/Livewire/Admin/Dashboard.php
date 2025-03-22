@@ -8,6 +8,7 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class Dashboard extends Component
@@ -30,7 +31,7 @@ class Dashboard extends Component
   public function mount()
   {
     $this->totalSales = OrderItem::sum("quantity");
-    $this->totalRevenue = OrderItem::sum("item_total_price");
+    $this->totalRevenue = OrderItem::sum(DB::raw("price * quantity"));
     $this->totalOrders = Order::where("status", OrderStatusType::ORDER_PLACED)->count();
     $this->totalProducts = Product::count();
     $this->totalCustomers = User::where("is_admin", false)->count();
@@ -54,7 +55,7 @@ class Dashboard extends Component
         $endOfDay = $currentDate->copy()->{$isYesterday ? 'yesterday' : 'today'}()->endOfDay();
 
         $salesData = OrderItem::whereBetween("created_at", [$startOfDay, $endOfDay])->sum("quantity");
-        $revenueData = OrderItem::whereBetween("created_at", [$startOfDay, $endOfDay])->sum("item_total_price");
+        $revenueData = OrderItem::whereBetween("created_at", [$startOfDay, $endOfDay])->sum(DB::raw("price * quantity"));
 
         $this->salesData['data'][] = [
           "label" => Carbon::parse($startOfDay)->toDateString(),
@@ -84,7 +85,7 @@ class Dashboard extends Component
           $endOfDay = $currentDate->copy()->subDays($i)->endOfDay();
 
           $salesData = OrderItem::whereBetween("created_at", [$startOfDay, $endOfDay])->sum("quantity");
-          $revenueData = OrderItem::whereBetween("created_at", [$startOfDay, $endOfDay])->sum("item_total_price");
+          $revenueData = OrderItem::whereBetween("created_at", [$startOfDay, $endOfDay])->sum(DB::raw("price * quantity"));
 
           $this->salesData['data'][] = [
             "label" => Carbon::parse($startOfDay)->toDateString(),
@@ -111,7 +112,7 @@ class Dashboard extends Component
           $endOfMonth = $currentDate->copy()->subMonths($i)->endOfMonth();
 
           $monthlySalesData = OrderItem::whereBetween("created_at", [$startOfMonth, $endOfMonth])->sum("quantity");
-          $monthlyRevenueData = OrderItem::whereBetween("created_at", [$startOfMonth, $endOfMonth])->sum("item_total_price");
+          $monthlyRevenueData = OrderItem::whereBetween("created_at", [$startOfMonth, $endOfMonth])->sum(DB::raw("price * quantity"));
 
           $this->salesData['data'][] = [
             "label" => Carbon::parse($startOfMonth)->monthName,

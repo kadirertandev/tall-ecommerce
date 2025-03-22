@@ -89,7 +89,7 @@ class Product extends Model
       "category_name" => Category::select("name")->whereColumn("id", "products.category_id"),
       "brand_name" => Brand::select("name")->whereColumn("id", "products.brand_id"),
       "total_sales" => OrderItem::select(DB::raw("sum(quantity)"))->whereColumn("product_id", "products.id"),
-      "total_revenue" => OrderItem::select(DB::raw("order_items.price * quantity"))->whereColumn("product_id", "products.id"),
+      "total_revenue" => OrderItem::select(DB::raw("sum(order_items.price * quantity)"))->whereColumn("product_id", "products.id"),
       "review_rating" => ProductReview::select(DB::raw("avg(rating)"))->whereColumn("product_id", "products.id")->where("status", ReviewStatusType::from("approved"))
     ]);
   }

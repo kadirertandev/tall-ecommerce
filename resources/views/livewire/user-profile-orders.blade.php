@@ -59,7 +59,7 @@
                                         href="{{ route('products.show', ['category_slug' => $item->product->category->slug, 'product_slug' => $item->product->slug]) }}">{{ $item->product->name }}</a>
                                 </p>
                             </div>
-                            <p class="">{{ App\Helpers::formatPrice($item->item_total_price) }} TL</p>
+                            <p class="">{{ App\Helpers::formatPrice($item->subtotal()) }} TL</p>
                         </div>
                         <div class="w-3/12 flex flex-col items-start {{-- justify-center --}}">
                             {{-- <div class="flex items-center justify-between">
