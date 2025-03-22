@@ -59,15 +59,9 @@ class Categories extends Component
   public function categories()
   {
     return Category::search($this->keyword)
-      ->when($this->sortBy && $this->sortDir, function ($query) {
-        return $query->orderBy($this->sortBy, $this->sortDir);
-      })
-      ->when($this->withTrashed == true, function ($query) {
-        $query->withTrashed();
-      })
-      ->when($this->onlyTrashed == true, function ($query) {
-        $query->onlyTrashed();
-      })
+      ->withoutColumns(["slug", "created_by", "updated_by", "created_at", "deleted_by"])
+      ->sortByColumn($this->sortBy, $this->sortDir)
+      ->filterByTrashed($this->withTrashed, $this->onlyTrashed)
       ->when($this->onlyPopular == true, function ($query) {
         $query->where("is_popular", true);
       })

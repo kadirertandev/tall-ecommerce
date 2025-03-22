@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\ScopeFilterByTrashed;
+use App\Traits\ScopeWithoutColumns;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Category extends Model
 {
-  use HasFactory, SoftDeletes;
+  use HasFactory, SoftDeletes, ScopeFilterByTrashed, ScopeWithoutColumns;
 
   protected $with = [
     "brands:id,name,slug"
@@ -33,6 +35,17 @@ class Category extends Model
   {
     return $query->where("name", "like", "%{$value}%")
       ->orWhere("slug", "like", "%{$value}%");
+  }
+
+  public function scopeSortByColumn($query, $sortBy, $sortDir)
+  {
+    return $query
+      ->when(
+        $sortBy && $sortDir,
+        function ($query) use ($sortBy, $sortDir) {
+          return $query->orderBy($sortBy, $sortDir);
+        }
+      );
   }
 
   public function createdBy()

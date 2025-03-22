@@ -35,19 +35,19 @@
 
 
             <div>
-                <button id="dropdownSearchButton" data-dropdown-toggle="dropdownSearch" data-dropdown-placement="top"
+                <button id="dropdownSearchButton" data-dropdown-toggle="dropdownSearch" data-dropdown-placement="left"
                     class="inline-flex items-center w-full px-4 py-2 text-sm font-medium text-center text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-2 focus:outline-hidden"
                     type="button">
-                    <span>Brands</span>
-                    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 10 6">
+                    <svg class="w-2.5 h-2.5 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 6 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 5 5 1 1 5" />
+                            d="M5 1 1 5l4 4" />
                     </svg>
+                    <span>Brands</span>
                 </button>
 
                 <!-- Dropdown menu -->
-                <div id="dropdownSearch" class="z-50 hidden bg-white rounded-lg shadow-2xl w-60 dark:bg-gray-700"
+                <div id="dropdownSearch" class="z-50 hidden bg-white rounded-lg shadow-2xl! w-60 dark:bg-gray-700"
                     wire:ignore.self>
                     <div class="p-3">
                         <label for="input-group-search" class="sr-only">Search</label>
