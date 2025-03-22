@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ReviewStatusType;
+use App\Traits\ScopeFilterByTrashed;
 use App\Traits\ScopeWithoutColumns;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Support\Str;
 
 class Product extends Model
 {
-  use HasFactory, SoftDeletes, ScopeWithoutColumns;
+  use HasFactory, SoftDeletes, ScopeWithoutColumns, ScopeFilterByTrashed;
 
   protected $fillable = [
     "name",
@@ -91,13 +92,6 @@ class Product extends Model
       "total_revenue" => OrderItem::select(DB::raw("order_items.price * quantity"))->whereColumn("product_id", "products.id"),
       "review_rating" => ProductReview::select(DB::raw("avg(rating)"))->whereColumn("product_id", "products.id")->where("status", ReviewStatusType::from("approved"))
     ]);
-  }
-
-  public function scopeFilterByTrashed($query, $withTrashed, $onlyTrashed)
-  {
-    return $query
-      ->when($withTrashed == true, fn($q) => $q->withTrashed())
-      ->when($onlyTrashed == true, fn($q) => $q->onlyTrashed());
   }
 
   public function scopeFilterByCategory($query, $categoriesFilter)

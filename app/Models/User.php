@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Traits\ScopeFilterByTrashed;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Traits\HasRoles;
@@ -13,7 +15,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-  use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasRoles;
+  use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasRoles, ScopeFilterByTrashed;
 
   /**
    * The attributes that are mass assignable.
@@ -80,13 +82,6 @@ class User extends Authenticatable
       'model_has_roles.role_id',
       "role_name" => Role::select('name')->whereColumn("roles.id", "model_has_roles.role_id")
     ]);
-  }
-
-  public function scopeFilterByTrashed($query, $withTrashed, $onlyTrashed)
-  {
-    return $query
-      ->when($withTrashed == true, fn($q) => $q->withTrashed())
-      ->when($onlyTrashed == true, fn($q) => $q->onlyTrashed());
   }
 
   public function scopeFilterByRole($query, $roleFilter)
