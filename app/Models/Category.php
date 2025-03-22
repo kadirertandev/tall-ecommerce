@@ -33,8 +33,7 @@ class Category extends Model
 
   public function scopeSearch($query, $value)
   {
-    return $query->where("name", "like", "%{$value}%")
-      ->orWhere("slug", "like", "%{$value}%");
+    return $query->where("name", "like", "%{$value}%");
   }
 
   public function scopeSortByColumn($query, $sortBy, $sortDir)

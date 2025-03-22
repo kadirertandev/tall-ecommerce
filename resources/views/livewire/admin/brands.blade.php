@@ -71,7 +71,7 @@
                                         {{ $brand->name }}
                                     </th>
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ $brand->slug }}</td>
+                                        {{ $brand->is_popular }}</td>
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ $brand->updated_at ?? 'NULL' }}</td>
                                     <td class="px-4 py-2">
