@@ -8,7 +8,6 @@ use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTableSortAndFilter;
 use App\Traits\WithTryCatch;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
@@ -36,15 +35,8 @@ class Customers extends Component
     "email_verified_at" => "Email Verified At",
     "phone_number" => "Phone Number",
     "created_at" => "Joined At",
+    "delete_request" => "Delete Request",
   ];
-
-  #[Url()]
-  public $withDeleteRequest = false;
-  public function updatedWithDeleteRequest()
-  {
-    if ($this->withDeleteRequest == true)
-      $this->onlyDeleteRequest = false;
-  }
 
   #[Url()]
   public $onlyDeleteRequest = false;
@@ -57,24 +49,11 @@ class Customers extends Component
   #[Computed()]
   public function customers()
   {
-    return User::search($this->keyword)
-      ->when($this->sortBy != "full_name", function ($query) {
-        $query->when($this->sortBy && $this->sortDir, function ($query) {
-          return $query->orderBy($this->sortBy, $this->sortDir);
-        });
-      })
-      ->when($this->sortBy == "full_name", function ($query) {
-        $query->when($this->sortBy && $this->sortDir, function ($query) {
-          return $query->orderBy(DB::raw("CONCAT(first_name, ' ', last_name)"), $this->sortDir);
-        });
-      })
-      ->when($this->withDeleteRequest == true, function ($query) {
-        $query->where("delete_request", true)->orWhere("delete_request", false);
-      })
-      ->when($this->onlyDeleteRequest == true, function ($query) {
-        $query->where("delete_request", true);
-      })
-      ->where("is_admin", false)
+    return User::where("is_admin", false)
+      ->search($this->keyword)
+      ->withoutColumns(["is_admin", "password", "deleted_by", "remember_token", "updated_at"])
+      ->sortByColumn($this->sortBy, $this->sortDir)
+      ->filterByDeleteRequest($this->onlyDeleteRequest)
       ->paginate(($this->perPage >= 5) ? $this->perPage : 5);
   }
 

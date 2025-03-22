@@ -22,7 +22,6 @@
                             <x-dropdown-filter>
                                 @can('force delete customers')
                                     <x-slot:toggles>
-                                        <x-toggle toggle="withDeleteRequest" text="With Delete Request" />
                                         <x-toggle toggle="onlyDeleteRequest" text="Only Delete Request" />
                                     </x-slot:toggles>
                                 @endcan
@@ -74,6 +73,29 @@
                                         {{ $customer->phone_number ?? 'NULL' }}</td>
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ $customer->created_at ?? 'NULL' }}</td>
+                                    <td class="px-4 py-2  font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        <div class="flex items-center justify-center">
+                                            @if ($customer->delete_request)
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
+                                                    viewBox="0 0 32 32">
+                                                    <g fill="none">
+                                                        <path fill="#00d26a"
+                                                            d="M2 6a4 4 0 0 1 4-4h20a4 4 0 0 1 4 4v20a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4z" />
+                                                        <path fill="#f4f4f4"
+                                                            d="M13.242 23c-.383 0-.766-.143-1.059-.43l-5.744-5.642a1.453 1.453 0 0 1 0-2.08a1.517 1.517 0 0 1 2.118 0l4.685 4.601L23.443 9.431a1.517 1.517 0 0 1 2.118 0a1.45 1.45 0 0 1 0 2.08l-11.26 11.058a1.5 1.5 0 0 1-1.059.431" />
+                                                    </g>
+                                                </svg>
+                                            @else
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4"
+                                                    viewBox="0 0 128 128">
+                                                    <path fill="#fff"
+                                                        d="M109.54 93.9a3.573 3.573 0 0 1 0 5.03l-10.6 10.61a3.573 3.573 0 0 1-5.03 0L64 79.64l-29.9 29.9a3.573 3.573 0 0 1-5.03 0L18.46 98.93a3.573 3.573 0 0 1 0-5.03L48.36 64l-29.9-29.9a3.585 3.585 0 0 1 0-5.04l10.61-10.6a3.555 3.555 0 0 1 5.03 0L64 48.36l29.9-29.9a3.555 3.555 0 0 1 5.03 0l10.61 10.6a3.585 3.585 0 0 1 0 5.04L79.64 64z" />
+                                                    <path fill="#ff370e"
+                                                        d="M123.83.47H4.17a3.71 3.71 0 0 0-3.7 3.7v119.66c0 2.04 1.66 3.7 3.7 3.7h119.66c2.03 0 3.69-1.66 3.69-3.7V4.17a3.69 3.69 0 0 0-3.69-3.7M109.54 93.9a3.573 3.573 0 0 1 0 5.03l-10.6 10.61a3.573 3.573 0 0 1-5.03 0L64 79.64l-29.9 29.9a3.573 3.573 0 0 1-5.03 0L18.46 98.93a3.573 3.573 0 0 1 0-5.03L48.36 64l-29.9-29.9a3.585 3.585 0 0 1 0-5.04l10.61-10.6a3.555 3.555 0 0 1 5.03 0L64 48.36l29.9-29.9a3.555 3.555 0 0 1 5.03 0l10.61 10.6a3.585 3.585 0 0 1 0 5.04L79.64 64z" />
+                                                </svg>
+                                            @endif
+                                        </div>
+                                    </td>
 
                                     <td class="px-4 py-2">
                                         <button id="dropdownMenuIconButton-{{ $customer->id }}"

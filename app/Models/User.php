@@ -4,7 +4,9 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Traits\ScopeFilterByDeleteRequest;
 use App\Traits\ScopeFilterByTrashed;
+use App\Traits\ScopeWithoutColumns;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Traits\HasRoles;
@@ -15,7 +17,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-  use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasRoles, ScopeFilterByTrashed;
+  use HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasRoles,
+    ScopeFilterByTrashed, ScopeFilterByDeleteRequest, ScopeWithoutColumns;
 
   /**
    * The attributes that are mass assignable.
@@ -62,9 +65,9 @@ class User extends Authenticatable
       ->orWhere("phone_number", "like", "%{$value}%");
   }
 
-  public function scopeWithOnlyNecesssaryColumns($query)
+  public function scopeWithOnlyNecesssaryColumns($query, array $additionalColumns = [])
   {
-    return $query->select([
+    $defaultColumns = [
       "id",
       "first_name",
       "last_name",
@@ -73,7 +76,11 @@ class User extends Authenticatable
       "date_of_birth",
       "profile_image",
       "deleted_at",
-    ]);
+    ];
+
+    $finalColumns = array_merge($defaultColumns, $additionalColumns);
+
+    return $query->select($finalColumns);
   }
 
   public function scopeWithRoleIdAndRoleName($query)
