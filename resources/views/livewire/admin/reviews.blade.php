@@ -97,14 +97,17 @@
                                             <img src="{{ asset('storage/profile-admin.png') }}"
                                                 class="w-10 h-auto rounded-md">
                                         @endif
-                                        {{ $review->user->full_name() }}
+                                        {{ $review->customer_name }}
                                     </th>
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        <img src="{{ asset('storage/' . $review->product->image) }}"
-                                            class="w-10 h-auto rounded-md">
+                                        <div class="flex items-center gap-2">
+                                            <img src="{{ asset('storage/' . $review->product->image) }}"
+                                                class="w-10 h-auto rounded-md">
+                                            <span>{{ Str::limit($review->product->name, 10) }}</span>
+                                        </div>
                                     </td>
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ $review->title }}</td>
+                                        {{ Str::limit($review->title, 10) }}</td>
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ Str::limit($review->comment, 30) }}</td>
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">

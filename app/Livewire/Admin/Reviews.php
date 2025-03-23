@@ -13,7 +13,6 @@ use App\Traits\WithTableSortAndFilter;
 use App\Traits\WithTryCatch;
 use Exception;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
@@ -49,8 +48,8 @@ class Reviews extends Component
 
   public $statusFilter = [];
   public $columns = [
-    "user_id" => "Customer",
-    "product_id" => "Product",
+    "customer_name" => "Customer",
+    "product_name" => "Product",
     "title" => "Title",
     "comment" => "Comment",
     "rating" => "rating",
@@ -62,31 +61,16 @@ class Reviews extends Component
   #[Computed()]
   public function reviews()
   {
-    return ProductReview::search($this->keyword)
-      ->when($this->sortBy != "user_id" && $this->sortBy != "product_id", function ($query) {
-        $query->when($this->sortBy && $this->sortDir, function ($query) {
-          return $query->orderBy($this->sortBy, $this->sortDir);
-        });
-      })
-      ->when($this->sortBy == "user_id", function ($query) {
-        $query->join("users", "product_reviews.user_id", "=", "users.id")
-          ->select("product_reviews.*", DB::raw("CONCAT(users.first_name, users.last_name) as user_full_name"))
-          ->orderBy("user_full_name", $this->sortDir);
-      })
-      ->when($this->sortBy == "product_id", function ($query) {
-        $query->join("products", "product_reviews.product_id", "=", "products.id")
-          ->select("product_reviews.*", DB::raw("CONCAT(products.name, products.description, products.title) as product_full_text"))
-          ->orderBy("product_full_text", $this->sortDir);
-      })
-      ->when($this->statusFilter, function ($query) {
-        $query->whereIn("status", $this->statusFilter);
-      })
-      ->when($this->withTrashed, function ($query) {
-        $query->withTrashed();
-      })
-      ->when($this->onlyTrashed, function ($query) {
-        $query->onlyTrashed();
-      })
+    return ProductReview::with([
+      "user",
+      "product" => fn($q) => $q->without(["category", "brand"])
+    ])
+      ->search($this->keyword)
+      ->withoutColumns(["updated_by", "updated_at", "deleted_by"])
+      ->withSubQueryFields()
+      ->sortByColumn($this->sortBy, $this->sortDir)
+      ->filterByStatus($this->statusFilter)
+      ->filterByTrashed($this->withTrashed, $this->onlyTrashed)
       ->paginate(($this->perPage >= 5) ? $this->perPage : 5);
   }
 
@@ -94,7 +78,9 @@ class Reviews extends Component
   public function showViewModal($id)
   {
     $this->tryCatch(function () use ($id) {
-      $this->selectedReview = ProductReview::withTrashed()->findOrFail($id);
+      $this->selectedReview = ProductReview::with([
+        "product" => fn($q) => $q->without(["category", "brand"])
+      ])->withTrashed()->findOrFail($id);
 
       $this->showModal("view-review");
     });

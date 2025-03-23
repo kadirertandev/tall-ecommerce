@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\ScopeFilterByStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class Order extends Model
 {
-  use HasFactory;
+  use HasFactory, ScopeFilterByStatus;
   protected $fillable = [
     "user_id",
     "city",
@@ -60,12 +61,6 @@ class Order extends Model
   {
     return $query
       ->when($sortBy && $sortDir, fn($q) => $q->orderBy($sortBy, $sortDir));
-  }
-
-  public function scopeFilterByStatus($query, $statusFilter)
-  {
-    return $query
-      ->when($statusFilter, fn($q) => $q->whereIn("status", $statusFilter));
   }
 
   public function scopeWithCustomerName($query)
