@@ -39,7 +39,7 @@
                                             </a>
                                         </div>
                                         <p class="text-base font-bold text-gray-900 dark:text-white">
-                                            {{ App\Helpers::formatPrice($item->item_total_price) }} TL</p>
+                                            {{ App\Helpers::formatPrice($item->totalPrice()) }} TL</p>
                                     </div>
                                 </div>
                             </div>

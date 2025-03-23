@@ -62,16 +62,17 @@ class CartStepThree extends Component
         "district" => $this->finalAddress->district,
         "neighborhood" => $this->finalAddress->neighborhood,
         "address_line" => $this->finalAddress->address_line,
-        "total_price" => $this->cart->subtotal()
       ]);
 
       foreach ($this->cartItems as $cartItem) {
         OrderItem::create([
           "order_id" => $order->id,
           "product_id" => $cartItem->product->id,
-          "price" => $cartItem->price,
+          "product_name" => $cartItem->product->name,
+          "product_image" => $cartItem->product->image,
+          "price" => $cartItem->totalPrice() / $cartItem->quantity,
+          "original_product_price" => $cartItem->product->price,
           "quantity" => $cartItem->quantity,
-          "item_total_price" => $cartItem->item_total_price,
         ]);
       }
 

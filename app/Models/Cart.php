@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Cart extends Model
 {
@@ -25,18 +26,10 @@ class Cart extends Model
 
   public function subtotal()
   {
-    return $this->items->sum('item_total_price');
-    $subtotal = 0;
-    $items = $this->items;
-    $totalPrices = function () use ($items) {
-      foreach ($items as $item) {
-        yield $item->item_total_price;
-      }
-    };
-    foreach ($totalPrices() as $price) {
-      $subtotal += $price;
-    }
-
-    return $subtotal;
+    return DB::table('cart_items')
+      ->join('products', 'cart_items.product_id', '=', 'products.id')
+      ->where('cart_items.cart_id', $this->id)
+      ->selectRaw('SUM((products.price - products.discount_amount) * cart_items.quantity) as subtotal')
+      ->value('subtotal');
   }
 }

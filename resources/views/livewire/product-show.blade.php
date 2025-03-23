@@ -29,7 +29,7 @@
                                 </p>
                                 @if ($this->product->discount_amount)
                                     <p @class(['text-3xl font-extrabold text-green-500'])>
-                                        {{ App\Helpers::formatPrice($this->product->price - $this->product->discount_amount) }}
+                                        {{ App\Helpers::formatPrice($this->product->finalPrice()) }}
                                         TL
                                     </p>
                                 @endif

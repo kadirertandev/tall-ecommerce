@@ -12,7 +12,10 @@ class OrderItem extends Model
   protected $fillable = [
     "order_id",
     "product_id",
+    "product_name",
+    "product_image",
     "price",
+    "original_product_price",
     "quantity",
     "created_at"
   ];
@@ -20,6 +23,11 @@ class OrderItem extends Model
   public function product()
   {
     return $this->belongsTo(Product::class)->withTrashed();
+  }
+
+  public function subTotalWithoutDiscount()
+  {
+    return $this->original_product_price * $this->quantity;
   }
 
   public function subtotal()

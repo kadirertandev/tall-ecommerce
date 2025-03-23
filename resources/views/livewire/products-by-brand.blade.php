@@ -189,7 +189,7 @@
                                                     </h1>
                                                     @if ($product->discount_amount)
                                                         <h1 @class(['text-3xl font-medium text-green-500'])>
-                                                            {{ App\Helpers::formatPrice($product->price - $product->discount_amount) }}
+                                                            {{ App\Helpers::formatPrice($product->finaLPrice()) }}
                                                             TL
                                                         </h1>
                                                     @endif

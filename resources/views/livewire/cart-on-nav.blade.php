@@ -67,11 +67,11 @@
                                                             @if ($item->product->discount_amount)
                                                                 <p
                                                                     class="text-[#9B9B9B] font-thin line-through decoration-2">
-                                                                    {{ App\Helpers::formatPrice($item->price * $item->quantity) }}
+                                                                    {{ App\Helpers::formatPrice($item->totalPriceWithoutDiscount()) }}
                                                                     TL</p>
                                                             @endif
                                                             <p class="text-xl">
-                                                                {{ App\Helpers::formatPrice($item->item_total_price) }} TL
+                                                                {{ App\Helpers::formatPrice($item->totalPrice()) }} TL
                                                             </p>
                                                         </div>
                                                     </div>

@@ -48,6 +48,11 @@ class Product extends Model
       '<span class="font-thin">' . $name . ' ' . $description . '</span>';
   }
 
+  public function finalPrice()
+  {
+    return $this->price - $this->discount_amount;
+  }
+
   public function reviews()
   {
     return $this->hasMany(ProductReview::class)->where("status", "approved");

@@ -41,18 +41,11 @@ trait CartActions
       if ($cart->products()->contains($product["id"])) {
         $item = CartItem::where("product_id", $product["id"])->firstOrFail();
         $item->increment("quantity", 1);
-        $item->update([
-          "discount_amount" => $item->discount_amount + $product["discount_amount"],
-          "item_total_price" => $item->quantity * ($product["price"] - (float) $product["discount_amount"])
-        ]);
       } else {
         CartItem::create([
           "cart_id" => $cart->id,
           "product_id" => $product["id"],
-          "quantity" => 1,
-          "price" => $product["price"],
-          "discount_amount" => $product["discount_amount"],
-          "item_total_price" => $product["price"] - (float) $product["discount_amount"],
+          "quantity" => 1
         ]);
       }
 
@@ -158,9 +151,6 @@ trait CartActions
 
       if ($cartItem->quantity > 1) {
         $cartItem->decrement("quantity", 1);
-        $cartItem->update([
-          "item_total_price" => $cartItem->quantity * ($cartItem->product->price - (float) $cartItem->product->discount_amount)
-        ]);
       } else {
         $this->askRemoveFromCart($cartItem->id);
       }
@@ -183,9 +173,6 @@ trait CartActions
       $cartItem = CartItem::findOrFail($id);
 
       $cartItem->increment("quantity", 1);
-      $cartItem->update([
-        "item_total_price" => $cartItem->quantity * ($cartItem->product->price - (float) $cartItem->product->discount_amount)
-      ]);
 
       $this->dispatch("refresh-cart");
     }, [
