@@ -8,7 +8,6 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use Livewire\Attributes\On;
 use Throwable;
 
 trait CartActions
@@ -17,15 +16,13 @@ trait CartActions
   use CartData;
   use WithSweetAlert;
 
-  #[On("add-to-cart")]
-  public function addToCart($productID)
+  public function addToCart($productID, $quantity = 1)
   {
-    $this->tryCatch(function () use ($productID) {
+    $this->tryCatch(function () use ($productID, $quantity) {
       $product = Product::findOrFail($productID);
 
       if (!auth()->user()) {
-        session()->put("guest_cart_product", $product->id);
-        return to_route("login");
+        return $this->addToGuestCart($productID);
       }
 
       if (Gate::denies("customer")) {
@@ -38,14 +35,14 @@ trait CartActions
         "user_id" => auth()->user()->id
       ]);
 
-      if ($cart->products()->contains($product["id"])) {
-        $item = CartItem::where("product_id", $product["id"])->firstOrFail();
-        $item->increment("quantity", 1);
+      if ($cart->products()->contains($product->id)) {
+        $item = CartItem::where("product_id", $product->id)->firstOrFail();
+        $item->increment("quantity", $quantity);
       } else {
         CartItem::create([
           "cart_id" => $cart->id,
-          "product_id" => $product["id"],
-          "quantity" => 1
+          "product_id" => $product->id,
+          "quantity" => $quantity
         ]);
       }
 
@@ -59,6 +56,8 @@ trait CartActions
           "icon" => "border-0!"
         ]
       ]);
+
+      $this->dispatch("added-to-cart");
     }, [
       ModelNotFoundException::class => function ($e) {
         DB::rollBack();
@@ -72,6 +71,31 @@ trait CartActions
         $this->swalTemplateSomethingWentWrong();
       }
     ]);
+  }
+
+  public function addToGuestCart($productID)
+  {
+    $guestCart = session()->get("guest_cart_products", []);
+
+    if (!key_exists($productID, $guestCart)) {
+      $guestCart[$productID] = [
+        "product_id" => $productID,
+        "quantity" => 1
+      ];
+    } else {
+      $guestCart[$productID]["quantity"] += 1;
+    }
+
+    session()->put("guest_cart_products", $guestCart);
+
+    return to_route("login");
+  }
+
+  public function syncCart($guestCartProducts)
+  {
+    foreach ($guestCartProducts as $productId => $data) {
+      $this->addToCart($productId, $data["quantity"]);
+    }
   }
 
   public function askRemoveFromCart($cartItemId)
@@ -93,8 +117,6 @@ trait CartActions
     ]);
   }
 
-  #[On("remove-product-from-cart-confirmed")]
-  #[On("remove-product-from-cart-denied")]
   public function removeFromCart($cartItemId, $addToFavorites)
   {
     $this->tryCatch(

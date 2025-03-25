@@ -10,10 +10,6 @@ use Livewire\Component;
 
 class LoginForm extends Component
 {
-  use CartActions {
-    CartActions::addToCart as traitAddToCart;
-  }
-
   public FormsLoginForm $form;
 
   private $svgEmail = '<svg xmlns="http://www.w3.org/2000/svg" class="w-24 h-24" viewBox="0 0 16 16">

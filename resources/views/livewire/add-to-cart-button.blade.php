@@ -1,5 +1,5 @@
 <div>
-    <button @click='$dispatch("add-to-cart",{productID: {{ $productId }} })' type="button" class="{{ $class }}">
+    <button wire:click="addToCart" type="button" class="{{ $class }}">
         @if ($svg)
             <svg class="w-5 h-5 -ms-2 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                 height="24" fill="none" viewBox="0 0 24 24">

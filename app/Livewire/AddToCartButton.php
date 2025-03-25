@@ -2,10 +2,15 @@
 
 namespace App\Livewire;
 
+use App\Traits\CartActions;
 use Livewire\Component;
 
 class AddToCartButton extends Component
 {
+  use CartActions {
+    CartActions::addToCart as traitAddToCart;
+  }
+
   public $productId;
   public $class;
   public $svg;
@@ -15,6 +20,11 @@ class AddToCartButton extends Component
     $this->productId = $productId;
     $this->class = $class;
     $this->svg = $svg;
+  }
+
+  public function addToCart()
+  {
+    $this->traitAddToCart($this->productId);
   }
 
   public function render()

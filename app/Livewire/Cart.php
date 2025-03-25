@@ -15,6 +15,7 @@ class Cart extends Component
     CartActions::increaseQuantity as traitIncreaseQuantity;
     CartActions::decreaseQuantity as traitDecreaseQuantity;
     CartActions::askRemoveFromCart as traitAskRemoveFromCart;
+    CartActions::removeFromCart as traitRemoveFromCart;
   }
 
   public $step = 1;
@@ -31,6 +32,13 @@ class Cart extends Component
     $lastViewedProductIDs = Session::get("last_viewed_products", []);
 
     return Product::whereIn("id", array_keys($lastViewedProductIDs))->get();
+  }
+
+  #[On("remove-product-from-cart-confirmed")]
+  #[On("remove-product-from-cart-denied")]
+  public function removeFromCart($cartItemId, $addToFavorites)
+  {
+    $this->traitRemoveFromCart($cartItemId, $addToFavorites);
   }
 
   public function render()

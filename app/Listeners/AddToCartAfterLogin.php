@@ -10,7 +10,7 @@ use Livewire\Component;
 class AddToCartAfterLogin extends Component
 {
   use CartActions {
-    CartActions::addToCart as traitAddToCart;
+    CartActions::syncCart as traitSyncCart;
   }
   /**
    * Create the event listener.
@@ -25,9 +25,10 @@ class AddToCartAfterLogin extends Component
    */
   public function handle(object $event): void
   {
-    if (session()->has("guest_cart_product")) {
-      $this->traitAddToCart(session()->get("guest_cart_product"));
-      session()->remove("guest_cart_product");
+    if (session()->has("guest_cart_products")) {
+      $this->traitSyncCart(session()->get("guest_cart_products"));
+
+      session()->remove("guest_cart_products");
     }
   }
 }
