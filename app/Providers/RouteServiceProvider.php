@@ -29,9 +29,6 @@ class RouteServiceProvider extends ServiceProvider
     });
 
     $this->routes(function () {
-      Route::domain("blog.localhost")
-        ->group(base_path('routes/web_subdomain_blog.php'));
-
       Route::middleware('api')
         ->prefix('api')
         ->group(base_path('routes/api.php'));

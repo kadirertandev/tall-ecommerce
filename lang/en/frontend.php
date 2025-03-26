@@ -46,7 +46,6 @@ return [
       "orders" => "Orders",
       "reviews" => "Reviews",
       "addresses" => "Addresses",
-      "roles-permissions" => "Roles and Permissions"
     ],
   ],
   "cart" => [

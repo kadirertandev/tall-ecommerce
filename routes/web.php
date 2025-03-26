@@ -19,25 +19,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix("/")->group(function () {
-  Route::get('/', function () {
-    return view("home");
-  })->name("home");
+  Route::view("/", "home")->name("home");
 
-  Route::get('/aboutus', function () {
-    return view('static.aboutus');
-  })->name("aboutus");
+  Route::view("/aboutus", "static.aboutus")->name("aboutus");
 
-  Route::get('/help-support', function () {
-    return view('static.help-support');
-  })->name("help-support");
+  Route::view("/help-support", "static.help-support")->name("help-support");
 
-  Route::get('/contact', function () {
-    return view('static.contact');
-  })->name("contact");
-
-  Route::get("/deals-of-the-week", function () {
-    return view("deals-of-the-week");
-  })->name("deals-of-the-week");
+  Route::view("/contact", "static.contact")->name("contact");
 });
 
 Route::get("/category/{slug}", ProductsByCategory::class)->name("category-slug");

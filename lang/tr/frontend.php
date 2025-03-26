@@ -46,7 +46,6 @@ return [
       "orders" => "Siparişler",
       "reviews" => "İncelemeler",
       "addresses" => "Adresler",
-      "roles-permissions" => "Roller ve İzinler"
     ],
   ],
   "cart" => [

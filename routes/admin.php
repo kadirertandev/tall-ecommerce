@@ -29,14 +29,6 @@ Route::prefix("admin")->name("admin.")->middleware("admin")->group(function () {
     Route::get("/", Admins::class)->name("index")->middleware("can:view admins");
   });
 
-  /* Route::prefix("/roles")->name("roles.")->group(function () {
-    Route::get("/", Roles::class)->name("index")->middleware("can:view roles");
-  });
-
-  Route::prefix("/permissions")->name("permissions.")->group(function () {
-    Route::get("/", Permissions::class)->name("index")->middleware("can:view permissions");
-  }); */
-
   Route::prefix("/products")->name("products.")->group(function () {
     Route::get("/", Products::class)->name("index")->middleware("can:view products");
   });
