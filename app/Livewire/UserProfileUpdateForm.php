@@ -46,6 +46,8 @@ class UserProfileUpdateForm extends Component
 
   public function render()
   {
-    return view('livewire.user-profile-update-form');
+    return view('livewire.user-profile-update-form')
+      ->layout("components.profile-layout", ["title" => "Profile"])
+      ->section("content");
   }
 }

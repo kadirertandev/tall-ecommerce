@@ -34,6 +34,8 @@ class UserProfileChangePasswordForm extends Component
   }
   public function render()
   {
-    return view('livewire.user-profile-change-password-form');
+    return view('livewire.user-profile-change-password-form')
+      ->layout("components.profile-layout", ["title" => "Change Password"])
+      ->section("content");
   }
 }

@@ -1,4 +1,5 @@
-<x-header-meta />
+@props(['title' => ''])
+<x-header-meta :$title />
 <div class="min-h-screen">
     <x-header :nav1=true :nav2=true :nav3=true :nav2OnlyLogo=false />
     <div class="main-container">

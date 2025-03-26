@@ -64,6 +64,8 @@ class UserProfileFavorites extends Component
   #[On("removed-from-favorites")]
   public function render()
   {
-    return view('livewire.user-profile-favorites');
+    return view('livewire.user-profile-favorites')
+      ->layout("components.profile-layout", ["title" => "Favorites"])
+      ->section("content");
   }
 }

@@ -4,12 +4,14 @@ namespace App\Livewire\Auth;
 
 use App\Events\Login;
 use App\Livewire\Forms\LoginForm as FormsLoginForm;
-use App\Traits\CartActions;
+use App\Traits\WithSweetAlert;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class LoginForm extends Component
 {
+  use WithSweetAlert;
+
   public FormsLoginForm $form;
 
   private $svgEmail = '<svg xmlns="http://www.w3.org/2000/svg" class="w-24 h-24" viewBox="0 0 16 16">
@@ -64,6 +66,8 @@ class LoginForm extends Component
 
   public function render()
   {
-    return view('livewire.auth.login-form');
+    return view('livewire.auth.login-form')
+      ->layout("components.guest-layout", ["title" => "Login"])
+      ->section("content");
   }
 }

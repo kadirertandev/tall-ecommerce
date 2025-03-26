@@ -1,6 +1,16 @@
 <?php
 
+use App\Livewire\Auth\ForgotPassword;
+use App\Livewire\Auth\LoginForm;
+use App\Livewire\Auth\RegisterForm;
+use App\Livewire\Auth\ResetPassword;
 use App\Livewire\Cart;
+use App\Livewire\UserProfileAddresses;
+use App\Livewire\UserProfileChangePasswordForm;
+use App\Livewire\UserProfileFavorites;
+use App\Livewire\UserProfileOrders;
+use App\Livewire\UserProfileReviews;
+use App\Livewire\UserProfileUpdateForm;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,21 +25,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware("guest")->group(function () {
-  Route::get("/login", function () {
-    return view("auth.login");
-  })->name("login");
+  Route::get("/login", LoginForm::class)->name("login");
 
-  Route::get("/register", function () {
-    return view("auth.register");
-  })->name("register");
+  Route::get("/register", RegisterForm::class)->name("register");
 
-  Route::get("/forgot-password", function () {
-    return view("auth.forgot-password");
-  })->name("forgot-password");
+  Route::get("/forgot-password", ForgotPassword::class)->name("forgot-password");
 
-  Route::get("/reset-password/{token}", function ($token) {
-    return view("auth.reset-password", compact("token"));
-  })->name("reset-password");
+  Route::get("/reset-password/{token}", ResetPassword::class)->name("reset-password");
 });
 
 Route::middleware("auth")->group(function () {
@@ -43,33 +45,19 @@ Route::middleware("auth")->group(function () {
   })->name("logout");
 
   Route::prefix("user")->name("auth.user.")->middleware("customer")->group(function () {
-    Route::get("/", function () {
-      return to_route("auth.user.profile");
-    });
+    Route::redirect("/", "/user/profile");
 
-    Route::get("/profile", function () {
-      return view("auth.user.profile");
-    })->name("profile");
+    Route::get("/profile", UserProfileUpdateForm::class)->name("profile");
 
-    Route::get("/favorites", function () {
-      return view("auth.user.favorites");
-    })->name("favorites");
+    Route::get("/favorites", UserProfileFavorites::class)->name("favorites");
 
-    Route::get("/orders", function () {
-      return view("auth.user.orders");
-    })->name("orders");
+    Route::get("/orders", UserProfileOrders::class)->name("orders");
 
-    Route::get("/reviews", function () {
-      return view("auth.user.reviews");
-    })->name("reviews");
+    Route::get("/reviews", UserProfileReviews::class)->name("reviews");
 
-    Route::get("/addresses", function () {
-      return view("auth.user.addresses");
-    })->name("addresses");
+    Route::get("/addresses", UserProfileAddresses::class)->name("addresses");
 
-    Route::get("/change-password", function () {
-      return view("auth.user.change-password");
-    })->name("change-password");
+    Route::get("/change-password", UserProfileChangePasswordForm::class)->name("change-password");
 
     Route::get("/cart", Cart::class)->name("cart");
   });

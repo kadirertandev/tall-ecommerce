@@ -77,6 +77,8 @@ class UserProfileOrders extends Component
 
   public function render()
   {
-    return view('livewire.user-profile-orders');
+    return view('livewire.user-profile-orders')
+      ->layout("components.profile-layout", ["title" => "Orders"])
+      ->section("content");
   }
 }

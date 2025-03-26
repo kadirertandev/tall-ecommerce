@@ -130,6 +130,8 @@ class UserProfileAddresses extends Component
   #[On("address-deleted")]
   public function render()
   {
-    return view('livewire.user-profile-addresses');
+    return view('livewire.user-profile-addresses')
+      ->layout("components.profile-layout", ["title" => "Addresses"])
+      ->section("content");
   }
 }
