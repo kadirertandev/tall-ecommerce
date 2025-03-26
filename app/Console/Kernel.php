@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
 
     $schedule->command("app:update-popular-brands-and-categories")->sundays()->at("00.00");
 
+    $schedule->command("app:delete-expired-mails")->everySecond();
   }
 
   /**
