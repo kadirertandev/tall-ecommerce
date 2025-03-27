@@ -5,7 +5,6 @@ namespace App\Livewire\Auth;
 use App\Events\Login;
 use App\Livewire\Forms\LoginForm as FormsLoginForm;
 use App\Traits\WithSweetAlert;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class LoginForm extends Component
@@ -32,6 +31,7 @@ class LoginForm extends Component
         ]
       ]);
 
+      session()->put("password-reset-token-can-be-deleted", true);
       session()->remove("reset-password-mail-sent");
     }
 
@@ -55,12 +55,15 @@ class LoginForm extends Component
   public function login()
   {
     $validated = $this->form->validate();
+
     if (auth()->attempt($validated, (bool) $this->form->remember_me)) {
       session()->regenerate();
-      Login::dispatch();
-      DB::table("password_reset_tokens")->where("email", $this->form->email)->delete();
+
+      Login::dispatch($this->form->email);
+
       auth()->user()->isAdmin() ? $this->redirectRoute("admin.dashboard") : $this->redirectRoute("home");
     }
+
     $this->addError('form.email', 'Invalid Credentials');
   }
 

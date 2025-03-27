@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Events\Login;
 use App\Listeners\AddToCartAfterLogin;
+use App\Listeners\DeletePasswordResetToken;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -21,7 +22,8 @@ class EventServiceProvider extends ServiceProvider
       SendEmailVerificationNotification::class,
     ],
     Login::class => [
-      AddToCartAfterLogin::class
+      AddToCartAfterLogin::class,
+      DeletePasswordResetToken::class
     ]
   ];
 
