@@ -2,9 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Enums\ReviewStatusType;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductReview;
 use App\Traits\SortOptions;
+use App\Traits\WithRefreshFlowbite;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
@@ -16,6 +19,7 @@ use Livewire\WithPagination;
 class ProductsByCategory extends Component
 {
   use WithPagination;
+  use WithRefreshFlowbite;
   use SortOptions;
 
   public $slug;
@@ -32,23 +36,31 @@ class ProductsByCategory extends Component
 
   public $perPage = 6;
 
+  public function boot()
+  {
+    $this->refreshFlobwite();
+  }
+
   public function mount($slug)
   {
     $this->slug = $slug;
     $this->orderFrontend = Lang::get("frontend.filters.newest");
     $this->breadcrumbs = [
       [
-        "name" => !Str::startsWith(__('categories.' . $this->category->slug . '.name'), 'categories.')
-          ? __('categories.' . $this->category->slug . '.name')
-          : __('categories.' . __('categories.dictionary.' . $this->category->slug) . '.name'),
+        "name" => !Str::startsWith(__('categories.' . $this->slug . '.name'), 'categories.')
+          ? __('categories.' . $this->slug . '.name')
+          : __('categories.' . __('categories.dictionary.' . $this->slug) . '.name'),
         "url" => route("category-slug", ["slug" => $this->slug])
       ]
     ];
   }
 
-  public function setPrices()
+  public function setPrices($minPrice, $maxPrice)
   {
+    $this->minPrice = $minPrice;
+    $this->maxPrice = $maxPrice;
   }
+
   public function resetPrices()
   {
     $this->reset("minPrice", "maxPrice");
@@ -65,46 +77,39 @@ class ProductsByCategory extends Component
   #[Computed()]
   public function products()
   {
-    return Product::where("category_id", $this->category->id)
-      ->when(count($this->selectedBrands) > 0, function ($query) {
-        $this->resetPage();
-        return $query->whereIn("brand_id", $this->selectedBrands);
-      })
-      ->when($this->minPrice, function ($query) {
-        $this->resetPage();
-        return $query->where("price", ">=", $this->minPrice);
-      })
-      ->when($this->maxPrice, function ($query) {
-        $this->resetPage();
-        return $query->where("price", "<=", $this->maxPrice);
-      })
-      ->when($this->orderBy !== "most_liked", function ($query) {
-        $this->resetPage();
-        return $query->orderBy($this->orderBy, $this->sortDir);
-      })
-      ->when($this->orderBy === "most_liked", function ($query) {
-        $this->resetPage();
-        return $query->leftJoin("product_reviews", "product_reviews.product_id", "=", "products.id")
-          ->select(["products.*", DB::raw("sum(case when product_reviews.status != 'approved' then 0 else product_reviews.rating end) as rating")])
-          ->groupBy("products.id")
-          ->orderBy("rating", $this->sortDir);
-      })
-      ->paginate($this->perPage);
-  }
+    $products = Product::where("category_id", $this->category->id)
+      ->withoutColumns(["created_by", "updated_by", "updated_at", "deleted_at", "deleted_by"])
+      ->addSelect([
+        "rating" => ProductReview::select(DB::raw("avg(rating)"))
+          ->whereColumn("product_id", "products.id")
+          ->where("status", ReviewStatusType::from("approved")),
 
-  public function loadMore()
-  {
-    $this->perPage += 6;
-  }
+        "review_count" => ProductReview::select(DB::raw("count(id)"))
+          ->whereColumn("product_id", "products.id")
+          ->where("status", ReviewStatusType::from("approved"))
+      ])
+      ->filterByBrand($this->selectedBrands)
+      ->filterByprice($this->minPrice, $this->maxPrice)
+      ->when($this->orderBy === "most_liked", fn($query) => $query->sortByColumn("rating", $this->sortDir))
+      ->when($this->orderBy !== "most_liked", fn($query) => $query->sortByColumn($this->orderBy, $this->sortDir));
 
-  #[Computed()]
-  public function canLoadMore()
-  {
-    return $this->products()->currentPage() != $this->products()->lastPage();
+    $total = $products->count();
+
+    if ($total <= $this->perPage) {
+      $this->setPage(1);
+    }
+
+    $paginatedProducts = $products->simplePaginate($this->perPage);
+
+    return [
+      "products" => $paginatedProducts,
+      "total" => $total
+    ];
   }
 
   public function render()
   {
-    return view('livewire.products-by-category')->layout("components.layout", ["title" => $this->category->name]);
+    return view('livewire.products-by-category')
+      ->layout("components.layout", ["title" => $this->category->name]);
   }
 }
