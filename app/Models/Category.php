@@ -23,6 +23,7 @@ class Category extends Model
     "is_popular",
     "created_by",
     "updated_by",
+    "updated_at",
     "deleted_by",
   ];
 

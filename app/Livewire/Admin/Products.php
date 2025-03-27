@@ -287,7 +287,11 @@ class Products extends Component
         throw new UnauthorizedException("you cant restore product");
       }
 
-      Product::withTrashed()->findOrFail($productId)->restore();
+      $product = Product::withTrashed()->findOrFail($productId);
+      $product->restore();
+      $product->update([
+        "deleted_by" => null
+      ]);
 
       $this->swalToast([
         "titleText" => "Product restored successfully!"

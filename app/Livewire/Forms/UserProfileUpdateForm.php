@@ -14,15 +14,15 @@ class UserProfileUpdateForm extends Form
 
   #[Validate("required|min:3|max:20")]
   public $last_name;
+
   #[Validate("date|nullable")]
   public $date_of_birth;
+
   #[Validate("min:10|max:10|nullable")]
   public $phone_number;
-  public function updatedDateOfBirth()
-  {
-    dd($this->date_of_birth);
-  }
+
   public $email;
+
   #[Validate("nullable|sometimes|image|max:1024")]
   public $profile_image;
 

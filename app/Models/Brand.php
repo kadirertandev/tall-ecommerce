@@ -18,6 +18,7 @@ class Brand extends Model
     "image",
     "created_by",
     "updated_by",
+    "updated_at",
     "deleted_by",
   ];
 

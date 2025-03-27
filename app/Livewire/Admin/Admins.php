@@ -195,7 +195,8 @@ class Admins extends Component
         "email" => $this->editForm->email,
         "phone_number" => $this->editForm->phone_number,
         "date_of_birth" => $this->editForm->date_of_birth,
-        "profile_image" => $imageName ?? $admin->profile_image
+        "profile_image" => $imageName ?? $admin->profile_image,
+        "updated_at" => now()
       ]);
 
       $role = Role::findOrFail($this->editForm->roleId);
@@ -307,7 +308,11 @@ class Admins extends Component
         throw new UnauthorizedException("you cant restore admin");
       }
 
-      User::withTrashed()->findOrFail($adminId)->restore();
+      $admin = User::withTrashed()->findOrFail($adminId);
+      $admin->restore();
+      $admin->update([
+        "deleted_by" => null
+      ]);
 
       $this->swalToast([
         "titleText" => "Admin restored successfully!"

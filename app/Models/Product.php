@@ -124,6 +124,10 @@ class Product extends Model
       ->when($sortBy && $sortDir, fn($q) => $q->orderBy($sortBy, $sortDir));
   }
 
+  public function createdBy()
+  {
+    return $this->hasOne(User::class, "id", "created_by");
+  }
   public function updatedBy()
   {
     return $this->hasOne(User::class, "id", "updated_by");

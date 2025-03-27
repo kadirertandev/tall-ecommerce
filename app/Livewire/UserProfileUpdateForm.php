@@ -37,6 +37,8 @@ class UserProfileUpdateForm extends Component
       $validated["profile_image"] = auth()->user()->profile_image;
     }
 
+    $validated["updated_at"] = now();
+
     auth()->user()->update($validated);
 
     $this->swalSuccess([

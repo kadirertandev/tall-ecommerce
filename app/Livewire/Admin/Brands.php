@@ -222,7 +222,11 @@ class Brands extends Component
         throw new UnauthorizedException("you cant restore brand");
       }
 
-      Brand::withTrashed()->findOrFail($brandId)->restore();
+      $brand = Brand::withTrashed()->findOrFail($brandId);
+      $brand->restore();
+      $brand->update([
+        "deleted_by" => null
+      ]);
 
       $this->swalToast([
         "titleText" => "Brand restored successfully!"

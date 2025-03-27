@@ -36,6 +36,18 @@
         </div>
         <div class="flex items-center gap-4 mb-5">
             <div>
+                <h1 class="mb-2 font-semibold leading-none text-gray-900">Created At</h1>
+                <p class="mb-4 font-light text-gray-500 sm:mb-5">
+                    {{ $product?->created_at->toDateTimeString() }}</p>
+            </div>
+            <div>
+                <h1 class="mb-2 font-semibold leading-none text-gray-900">Created By</h1>
+                <p class="mb-4 font-light text-gray-500 sm:mb-5">
+                    {{ $product?->createdBy?->full_name() ?? 'DATABASE SEEDER' }}</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-4 mb-5">
+            <div>
                 <h1 class="mb-2 font-semibold leading-none text-gray-900">Last Updated At</h1>
                 <p class="mb-4 font-light text-gray-500 sm:mb-5">
                     {{ $product?->updated_at->toDateTimeString() }}</p>

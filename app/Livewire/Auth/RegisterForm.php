@@ -61,10 +61,7 @@ class RegisterForm extends Component
     }
 
     $this->tryCatch(function () use ($validated) {
-      $validated = array_merge(
-        $validated,
-        ["email_verified_at" => Carbon::now()]
-      );
+      $validated["email_verified_at"] = now();
 
       $user = User::create($validated);
 

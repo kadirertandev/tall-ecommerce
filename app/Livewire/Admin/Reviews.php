@@ -238,7 +238,11 @@ class Reviews extends Component
         throw new UnauthorizedException("you cant restore review");
       }
 
-      ProductReview::withTrashed()->findOrFail($reviewId)->restore();
+      $review = ProductReview::withTrashed()->findOrFail($reviewId);
+      $review->restore();
+      $review->update([
+        "deleted_by" => null
+      ]);
 
       $this->swalToast([
         "titleText" => "Review restored successfully!"

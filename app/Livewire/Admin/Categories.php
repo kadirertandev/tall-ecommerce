@@ -259,7 +259,11 @@ class Categories extends Component
         throw new UnauthorizedException("you cant restore category");
       }
 
-      Category::withTrashed()->findOrFail($categoryId)->restore();
+      $category = Category::withTrashed()->findOrFail($categoryId);
+      $category->restore();
+      $category->update([
+        "deleted_by" => null
+      ]);
 
       $this->swalToast([
         "titleText" => "Category restored successfully!"

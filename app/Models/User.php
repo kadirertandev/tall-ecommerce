@@ -35,6 +35,8 @@ class User extends Authenticatable
     'is_admin',
     'password',
     'email_verified_at',
+    'deleted_by',
+    'updated_at'
   ];
 
   protected $hidden = [
@@ -195,5 +197,10 @@ class User extends Authenticatable
   public function getRoleName()
   {
     return $this->roles()->first()->name ?? null;
+  }
+
+  public function deletedBy()
+  {
+    return $this->hasOne(User::class, "id", "deleted_by");
   }
 }
