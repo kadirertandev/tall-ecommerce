@@ -7,6 +7,7 @@ use App\Traits\WithTryCatch;
 use Livewire\Component;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\UnauthorizedException;
+use Livewire\Attributes\On;
 
 class AddToFavoritesButton extends Component
 {
@@ -76,6 +77,7 @@ class AddToFavoritesButton extends Component
     ]);
   }
 
+  #[On("added-to-favorites")]
   public function render()
   {
     return view('livewire.add-to-favorites-button');

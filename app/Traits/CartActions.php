@@ -138,6 +138,8 @@ trait CartActions
             auth()->user()->favorites()->attach($cartItem->product->id);
           }
 
+          $this->dispatch("added-to-favorites");
+
           $this->swalToast([
             "titleText" => $cartItem->product->name,
             "text" => __('frontend.cart.removed-from-cart-and-added-to-favorites'),
