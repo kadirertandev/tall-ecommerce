@@ -64,7 +64,12 @@ trait CartActions
         return to_route("home");
       },
       AuthorizationException::class => function ($e) {
-        return to_route("admin.products.index");
+        if (Gate::allows("view products")) {
+          return to_route("admin.products.index");
+        }
+        return $this->swalError([
+          "titleText" => "THIS ACTION IS UNAUTHORIZED!"
+        ]);
       },
       Throwable::class => function ($e) {
         DB::rollBack();
