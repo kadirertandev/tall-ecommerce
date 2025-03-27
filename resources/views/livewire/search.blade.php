@@ -34,14 +34,15 @@
                     @endforeach
                 </ul>
             </div>
-            <div class="relative w-full" @click.outside="$dispatch('hide-search-results')">
+            <div class="relative w-full">
                 <input wire:model.live.debounce.400ms="search" type="search" id="search-dropdown"
                     @keydown.escape.window="$wire.set('search','')"
                     class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-s-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
                     placeholder="Search products, categories or brands" required />
                 @if ($thereAreResults)
 
-                    <div class="absolute w-full bg-white border-2 shadow-2xl border-gray-50 z-9999">
+                    <div @click.outside="$dispatch('hide-search-results')"
+                        class="absolute w-full bg-white border-2 shadow-2xl border-gray-50 z-9999">
                         <div class="grid grid-cols-10 gap-2 p-2">
                             <div @class([
                                 'col-span-2' =>
