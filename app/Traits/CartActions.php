@@ -36,7 +36,9 @@ trait CartActions
       ]);
 
       if ($cart->products()->contains($product->id)) {
-        $item = CartItem::where("product_id", $product->id)->firstOrFail();
+        $item = CartItem::where("product_id", $product->id)
+          ->where("cart_id", $cart->id)
+          ->firstOrFail();
         $item->increment("quantity", $quantity);
       } else {
         CartItem::create([
