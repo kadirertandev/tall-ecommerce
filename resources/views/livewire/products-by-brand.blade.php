@@ -11,8 +11,8 @@
                             <h1 class="text-3xl font-thin font-roboto">
                                 {{ Str::of($slug)->headline() }}</h1>
                             <div class="flex items-center justify-between col-span-3">
-                                @if ($this->products->total() > 0)
-                                    <p>{{ Lang::get('frontend.product.x-product-found', ['x' => $this->products->total()]) }}
+                                @if ($this->products['total'] > 0)
+                                    <p>{{ Lang::get('frontend.product.x-product-found', ['x' => $this->products['total']]) }}
                                 @endif
                                 </p>
                                 <div>
@@ -121,16 +121,21 @@
                                     <div class="pt-6" id="accordion-price-collapse-body"
                                         aria-labelledby="accordion-price-collapse-heading">
                                         <div class="space-y-4">
-                                            <div class="relative flex items-center max-w-xs gap-2 mx-auto">
-                                                <input wire:model='minPrice' type="text" id="min_price"
-                                                    data-input-counter aria-describedby="helper-text-explanation"
+                                            <div x-data=""
+                                                class="relative flex items-center max-w-xs gap-2 mx-auto">
+                                                <input wire:model='minPrice' x-ref="minPrice" type="number"
+                                                    id="min_price" data-input-counter
+                                                    aria-describedby="helper-text-explanation"
                                                     class="rounded-lg bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="Min" required />
-                                                <input wire:model="maxPrice" type="text" id="max_price"
-                                                    data-input-counter aria-describedby="helper-text-explanation"
+                                                <input wire:model="maxPrice" x-ref="maxPrice" type="number"
+                                                    id="max_price" data-input-counter
+                                                    aria-describedby="helper-text-explanation"
                                                     class="rounded-lg bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     placeholder="Max" required />
-                                                <button wire:click='setPrices' type="button" id="btnSortByPrice"
+                                                <button
+                                                    @click="$wire.setPrices($refs.minPrice.value, $refs.maxPrice.value)"
+                                                    type="button" id="btnSortByPrice"
                                                     class="p-2 text-white bg-red-500 rounded-lg hover:bg-red-600!">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -158,7 +163,7 @@
 
                             <!-- Product grid -->
                             <div class="grid grid-cols-3 gap-2 lg:col-span-3 h-max">
-                                @forelse ($this->products as $product)
+                                @forelse ($this->products["products"] as $product)
                                     <div wire:key='product-container-{{ $product->id }}'
                                         class="flex flex-col justify-between gap-4 p-2 border-2 border-gray-100 shadow-xl">
                                         <div class="flex items-center justify-center flex-1 w-full">
@@ -172,10 +177,10 @@
                                             <h1>{!! $product->title() !!}</h1>
                                             <div class="flex gap-2">
                                                 <div class="flex items-center">
-                                                    <x-stars :stars="$product->ratingAverage()" />
+                                                    <x-stars :stars="floor($product->rating)" />
                                                 </div>
-                                                @if ($product->reviews()->count() >= 1)
-                                                    <h3 class="font-thin">({{ $product->ratingAverage() }})</h3>
+                                                @if ($product->review_count >= 1)
+                                                    <h3 class="font-thin">({{ $product->rating }})</h3>
                                                 @endif
                                             </div>
                                             <div class="flex flex-wrap items-end justify-between">
@@ -220,13 +225,9 @@
         </div>
         <div class="grid grid-cols-4 mb-4 gap-x-8">
             <div></div>
-            {{-- <div class="col-span-3">{{ $this->products->links(data: ['scrollTo' => 'false']) }}
-          </div> --}}
-            @if ($this->canLoadMore)
-                <div class="col-span-3">
-                    <button wire:click='loadMore'>load more</button>
-                </div>
-            @endif
+            <div class="col-span-3">
+                {{ $this->products['products']->links(data: ['scrollTo' => 'false']) }}
+            </div>
         </div>
     </div>
 </div>

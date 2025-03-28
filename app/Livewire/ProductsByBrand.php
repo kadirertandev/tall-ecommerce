@@ -2,9 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Enums\ReviewStatusType;
 use App\Models\Brand;
 use App\Models\Product;
+use App\Models\ProductReview;
 use App\Traits\SortOptions;
+use App\Traits\WithRefreshFlowbite;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\Attributes\Url;
@@ -15,6 +18,7 @@ use Illuminate\Support\Facades\Lang;
 class ProductsByBrand extends Component
 {
   use WithPagination;
+  use WithRefreshFlowbite;
   use SortOptions;
 
   public $slug = "";
@@ -32,6 +36,11 @@ class ProductsByBrand extends Component
 
   public $perPage = 6;
 
+  public function boot()
+  {
+    $this->refreshFlobwite();
+  }
+
   public function mount($slug)
   {
     $this->slug = $slug;
@@ -44,9 +53,12 @@ class ProductsByBrand extends Component
     ];
   }
 
-  public function setPrices()
+  public function setPrices($minPrice, $maxPrice)
   {
+    $this->minPrice = $minPrice;
+    $this->maxPrice = $maxPrice;
   }
+
   public function resetPrices()
   {
     $this->reset("minPrice", "maxPrice");
@@ -55,52 +67,50 @@ class ProductsByBrand extends Component
   #[Computed()]
   public function brand()
   {
-    return Brand::with("categories")->where("slug", $this->slug)->firstOrFail();
+    return Brand::with([
+      "categories" => fn($q) => $q->without(["brands"])
+    ])
+      ->where("slug", $this->slug)
+      ->firstOrFail();
   }
 
   #[Computed()]
   public function products()
   {
-    return Product::where("brand_id", $this->brand->id)
-      ->when(count($this->selectedCategories) > 0, function ($query) {
-        $this->resetPage();
-        return $query->whereIn("category_id", $this->selectedCategories);
-      })
-      ->when($this->minPrice, function ($query) {
-        $this->resetPage();
-        return $query->where("price", ">=", $this->minPrice);
-      })
-      ->when($this->maxPrice, function ($query) {
-        $this->resetPage();
-        return $query->where("price", "<=", $this->maxPrice);
-      })
-      ->when($this->orderBy !== "most_liked", function ($query) {
-        $this->resetPage();
-        return $query->orderBy($this->orderBy, $this->sortDir);
-      })
-      ->when($this->orderBy === "most_liked", function ($query) {
-        $this->resetPage();
-        return $query->leftJoin("product_reviews", "product_reviews.product_id", "=", "products.id")
-          ->select(["products.*", DB::raw("sum(case when product_reviews.status != 'approved' then 0 else product_reviews.rating end) as rating")])
-          ->groupBy("products.id")
-          ->orderBy("rating", $this->sortDir);
-      })
-      ->paginate($this->perPage);
-  }
+    $products = Product::with(["category" => fn($q) => $q->without("brands")])
+      ->where("brand_id", $this->brand->id)
+      ->withoutColumns(["created_by", "updated_by", "updated_at", "deleted_at", "deleted_by"])
+      ->addSelect([
+        "rating" => ProductReview::select(DB::raw("avg(rating)"))
+          ->whereColumn("product_id", "products.id")
+          ->where("status", ReviewStatusType::from("approved")),
 
-  public function loadMore()
-  {
-    $this->perPage += 6;
-  }
+        "review_count" => ProductReview::select(DB::raw("count(id)"))
+          ->whereColumn("product_id", "products.id")
+          ->where("status", ReviewStatusType::from("approved"))
+      ])
+      ->filterByCategory($this->selectedCategories)
+      ->filterByprice($this->minPrice, $this->maxPrice)
+      ->when($this->orderBy === "most_liked", fn($query) => $query->sortByColumn("rating", $this->sortDir))
+      ->when($this->orderBy !== "most_liked", fn($query) => $query->sortByColumn($this->orderBy, $this->sortDir));
 
-  #[Computed()]
-  public function canLoadMore()
-  {
-    return $this->products()->currentPage() != $this->products()->lastPage();
+    $total = $products->count();
+
+    if ($total <= $this->perPage) {
+      $this->setPage(1);
+    }
+
+    $paginatedProducts = $products->simplePaginate($this->perPage);
+
+    return [
+      "products" => $paginatedProducts,
+      "total" => $total
+    ];
   }
 
   public function render()
   {
-    return view('livewire.products-by-brand')->layout("components.layout", ["title" => $this->brand->name]);
+    return view('livewire.products-by-brand')
+      ->layout("components.layout", ["title" => $this->brand->name]);
   }
 }
