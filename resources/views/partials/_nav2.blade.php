@@ -157,40 +157,39 @@
                     <ul class="pb-3 text-sm text-gray-700 " aria-labelledby="dropdownDefaultButton">
                         <li>
                             <span
-                                class="text-md font-bold font-roboto block py-1.5 px-3">{{ __('frontend.auth.dropdown-on-nav.my-shopping-lists') }}
-                                </sp>
-                        </li>
-                        <li>
-                            <a href="{{ route('login') }}"
-                                class="hover:text-main-red hover:underline block py-1.5 px-3">{{ __('frontend.auth.dropdown-on-nav.create-shopping-list') }}</a>
-                        </li>
-                    </ul>
-                    <ul class="pb-3 text-sm text-gray-700 " aria-labelledby="dropdownDefaultButton">
-                        <li>
-                            <span
                                 class="text-md font-bold font-roboto block py-1.5 px-3">{{ __('frontend.auth.dropdown-on-nav.my-account') }}
                             </span>
                         </li>
-                        <li>
-                            <a href="{{ route('auth.user.profile') }}"
-                                class="hover:text-main-red hover:underline block py-1.5 px-3">{{ __('frontend.auth.dropdown-on-nav.profile') }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('auth.user.favorites') }}"
-                                class="hover:text-main-red hover:underline block py-1.5 px-3">{{ __('frontend.auth.dropdown-on-nav.favorites') }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('auth.user.orders') }}"
-                                class="hover:text-main-red hover:underline block py-1.5 px-3">{{ __('frontend.auth.dropdown-on-nav.orders') }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('auth.user.reviews') }}"
-                                class="hover:text-main-red hover:underline block py-1.5 px-3">{{ __('frontend.auth.dropdown-on-nav.reviews') }}</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('auth.user.addresses') }}"
-                                class="hover:text-main-red hover:underline block py-1.5 px-3">{{ __('frontend.auth.dropdown-on-nav.addresses') }}</a>
-                        </li>
+
+                        @if (auth()->user()->isCustomer())
+                            <li>
+                                <a href="{{ route('auth.user.profile') }}"
+                                    class="hover:text-main-red hover:underline block py-1.5 px-3">{{ __('frontend.auth.dropdown-on-nav.profile') }}</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('auth.user.favorites') }}"
+                                    class="hover:text-main-red hover:underline block py-1.5 px-3">{{ __('frontend.auth.dropdown-on-nav.favorites') }}</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('auth.user.orders') }}"
+                                    class="hover:text-main-red hover:underline block py-1.5 px-3">{{ __('frontend.auth.dropdown-on-nav.orders') }}</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('auth.user.reviews') }}"
+                                    class="hover:text-main-red hover:underline block py-1.5 px-3">{{ __('frontend.auth.dropdown-on-nav.reviews') }}</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('auth.user.addresses') }}"
+                                    class="hover:text-main-red hover:underline block py-1.5 px-3">{{ __('frontend.auth.dropdown-on-nav.addresses') }}</a>
+                            </li>
+                        @endif
+
+                        @if (auth()->user()->isAdmin())
+                            <li>
+                                <a href="{{ route('admin.dashboard') }}"
+                                    class="hover:text-main-red hover:underline block py-1.5 px-3">Admin Dashboard</a>
+                            </li>
+                        @endif
 
                         <li>
                             <form action="{{ route('logout') }}" method="POST">
