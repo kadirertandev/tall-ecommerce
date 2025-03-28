@@ -50,8 +50,6 @@ class RolesPermissionsSeeder extends Seeder
     $permissionForceDeleteBrands = Permission::firstOrCreate(["name" => "force delete brands"]);
 
     $permissionViewCustomers = Permission::firstOrCreate(["name" => "view customers"]);
-    $permissionDeleteCustomers = Permission::firstOrCreate(["name" => "delete customers"]);
-    $permissionForceDeleteCustomers = Permission::firstOrCreate(["name" => "force delete customers"]);
 
     $permissionViewOrders = Permission::firstOrCreate(["name" => "view orders"]);
     $permissionEditOrders = Permission::firstOrCreate(["name" => "edit orders"]);
@@ -78,8 +76,7 @@ class RolesPermissionsSeeder extends Seeder
       $permissionAssignRole->id,
       $permissionForceDeleteProducts->id,
       $permissionForceDeleteCategories->id,
-      $permissionForceDeleteBrands->id,
-      $permissionForceDeleteCustomers->id,
+      $permissionForceDeleteBrands->id
     ]));
 
     $roleProductEditor->syncPermissions([

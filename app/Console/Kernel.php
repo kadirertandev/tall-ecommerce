@@ -17,15 +17,17 @@ class Kernel extends ConsoleKernel
   {
     // $schedule->command('inspire')->hourly();
 
-    $schedule->command("app:update-daily-deal-products")->everyFiveSeconds(); // for test purposes
+    // $schedule->command("app:update-daily-deal-products")->everyFiveSeconds(); // for test purposes
     // $schedule->command("app:update-daily-deal-products")->daily();
 
-    $schedule->command("app:update-weekly-deal-products")->everyFiveSeconds(); // for test purposes
+    // $schedule->command("app:update-weekly-deal-products")->everyFiveSeconds(); // for test purposes
     // $schedule->command("app:update-weekly-deal-products")->sundays()->at("00.00");
 
-    $schedule->command("app:update-popular-brands-and-categories")->sundays()->at("00.00");
+    // $schedule->command("app:update-popular-brands-and-categories")->sundays()->at("00.00");
 
-    $schedule->command("app:delete-expired-mails")->everySecond();
+    // $schedule->command("app:delete-expired-mails")->everySecond();
+
+    $schedule->command("app:delete-customers-with-delete-request")->everyThirtyMinutes();
   }
 
   /**

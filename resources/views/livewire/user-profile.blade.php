@@ -164,6 +164,14 @@
             </div>
         </div>
     </form>
+
+    <div class="mt-4 flex justify-end italic text-sm">
+        @if (auth()->user()->delete_request)
+            <button wire:click='revertDeleteAccount'>Revert account delete request</button>
+        @else
+            <button wire:click='askDeleteAccount'>Delete my account</button>
+        @endif
+    </div>
 </div>
 
 @assets

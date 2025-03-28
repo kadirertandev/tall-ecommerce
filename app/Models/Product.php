@@ -76,7 +76,6 @@ class Product extends Model
   public function scopeSearch($query, $value)
   {
     $query->where("name", "like", "%{$value}%")
-      ->orWhere("title", "like", "%{$value}%")
       ->orWhere("description", "like", "%{$value}%")
 
       ->orWhereHas('category', function ($q) use ($value) {

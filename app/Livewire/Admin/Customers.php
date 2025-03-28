@@ -8,8 +8,6 @@ use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTableSortAndFilter;
 use App\Traits\WithTryCatch;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -65,29 +63,6 @@ class Customers extends Component
 
       $this->showModal("view-customer");
     });
-  }
-
-  public function delete($customerId)
-  {
-    $this->tryCatch(
-      function () use ($customerId) {
-        if (!Gate::allows("delete customers")) {
-          throw new UnauthorizedException("can not delete customer");
-        }
-
-        $customer = User::findOrFail($customerId);
-
-        if ($customer->delete_request) {
-          $customer->forceDelete();
-
-          $this->swalToast([
-            "titleText" => "Customer deleted permanently successfully!"
-          ]);
-        } else {
-          $this->swalTemplateSomethingWentWrong();
-        }
-      }
-    );
   }
 
   public function render()

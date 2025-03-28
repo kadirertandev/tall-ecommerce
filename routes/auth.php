@@ -10,7 +10,7 @@ use App\Livewire\UserProfileChangePasswordForm;
 use App\Livewire\UserProfileFavorites;
 use App\Livewire\UserProfileOrders;
 use App\Livewire\UserProfileReviews;
-use App\Livewire\UserProfileUpdateForm;
+use App\Livewire\UserProfile;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,7 +47,7 @@ Route::middleware("auth")->group(function () {
   Route::prefix("user")->name("auth.user.")->middleware("customer")->group(function () {
     Route::redirect("/", "/user/profile");
 
-    Route::get("/profile", UserProfileUpdateForm::class)->name("profile");
+    Route::get("/profile", UserProfile::class)->name("profile");
 
     Route::get("/favorites", UserProfileFavorites::class)->name("favorites");
 

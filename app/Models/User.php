@@ -36,7 +36,9 @@ class User extends Authenticatable
     'password',
     'email_verified_at',
     'deleted_by',
-    'updated_at'
+    'updated_at',
+    'delete_request',
+    'delete_request_at'
   ];
 
   protected $hidden = [
