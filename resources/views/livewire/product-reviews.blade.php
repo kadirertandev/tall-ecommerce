@@ -2,7 +2,7 @@
     <div class="px-4 main-container">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-lg font-bold text-gray-900 lg:text-2xl dark:text-white">{{ __('frontend.reviews') }}
-                ({{ $this->reviews->total() }})</h2>
+                ({{ $this->reviewCount }})</h2>
         </div>
         <div class="flex items-center gap-2 mb-5">
             <div id="" class="flex items-center">
@@ -48,7 +48,10 @@
             </button>
         </form>
 
-        <div id="reviews-pagination">{{ $this->reviews()->links(data: ['scrollTo' => '#reviews-pagination']) }}</div>
+        <div id="reviews-pagination">
+            {{ $this->reviews()->links(data: ['scrollTo' => '#reviews-pagination']) }}
+        </div>
+
         @foreach ($this->reviews() as $review)
             <article wire:key='review-{{ $review->id }}' id="review-{{ $review->id }}"
                 class="py-4 my-4 border-b-2 border-red-200 shadow-xs border-s-2 ps-4 shadow-red-300">

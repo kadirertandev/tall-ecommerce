@@ -73,6 +73,6 @@
             </div>
         </section>
 
-        <livewire:product-reviews :productId="$this->product->id" />
+        <livewire:product-reviews :productId="$this->product->id" :reviewCount="$this->product->review_count" />
     </div>
 </div>
