@@ -2,8 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Enums\ReviewStatusType;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductReview;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -33,20 +36,38 @@ class ProductShow extends Component
   }
 
   #[Computed()]
-  public function category()
+  public function categoryId()
   {
-    return Category::where("slug", $this->category_slug)
+    $category = Category::without("brands")
+      ->where("slug", $this->category_slug)
       ->orWhere("slug", __("categories.dictionary." . $this->category_slug))
       ->firstOrFail();
+
+    return $category->id;
   }
 
   #[Computed()]
   public function product()
   {
-    return Product::where([
-      "slug" => $this->product_slug,
-      "category_id" => $this->category->id
-    ])->firstOrFail();
+    return Product::with([
+      "category" => fn($q) => $q->without("brands"),
+      "brand"
+    ])
+      ->where([
+        "slug" => $this->product_slug,
+        "category_id" => $this->categoryId
+      ])
+      ->withoutColumns(["created_by", "updated_by", "created_at", "updated_at", "deleted_at", "deleted_by"])
+      ->addSelect([
+        "rating_average" => ProductReview::select(DB::raw("avg(rating)"))
+          ->whereColumn("product_id", "products.id")
+          ->where("status", ReviewStatusType::from("approved")),
+
+        "review_count" => ProductReview::select(DB::raw("count(id)"))
+          ->whereColumn("product_id", "products.id")
+          ->where("status", ReviewStatusType::from("approved"))
+      ])
+      ->firstOrFail();
   }
 
   public function render()

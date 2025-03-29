@@ -37,14 +37,14 @@
 
                             <div class="flex items-center gap-2 mt-2 sm:mt-0">
                                 <div class="flex items-center gap-1">
-                                    <x-stars :stars="$this->product->ratingAverage()" />
+                                    <x-stars :stars="floor($this->product->rating_average)" />
                                 </div>
                                 <p class="text-sm font-medium leading-none text-gray-500 dark:text-gray-400">
-                                    ({{ number_format($this->product->ratingAverage(), 1) }})
+                                    ({{ number_format($this->product->rating_average, 1) }})
                                 </p>
                                 <a href="#reviews"
                                     class="text-sm font-medium leading-none text-gray-900 underline hover:no-underline dark:text-white">
-                                    {{ $this->product->reviews()->count() }} {{ __('frontend.reviews') }}
+                                    {{ $this->product->review_count }} {{ __('frontend.reviews') }}
                                 </a>
                             </div>
                         </div>
