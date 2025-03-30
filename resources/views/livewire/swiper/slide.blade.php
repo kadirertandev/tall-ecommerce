@@ -13,10 +13,10 @@
         <h1 class="text-left line-clamp-2">{!! $product->title() !!}</h1>
         <div class="flex items-center gap-2">
             <div class="flex items-center">
-                <x-stars :stars="$product->ratingAverage()" />
+                <x-stars :stars="floor($product->review_rating)" />
             </div>
-            @if ($product->reviews()->count() >= 1)
-                <h3 class="text-xs font-thin">({{ $product->ratingAverage() }})</h3>
+            @if ($product->review_count >= 1)
+                <h3 class="text-xs font-thin">({{ number_format($product->review_rating, 1) }})</h3>
             @endif
         </div>
         <div class="flex flex-wrap items-end justify-between">

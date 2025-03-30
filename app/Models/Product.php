@@ -38,13 +38,15 @@ class Product extends Model
 
   public function title()
   {
-    $brand = $this->brand->name;
+    $brand = $this->brand;
     $name = $this->name;
     $description = $this->description;
-    if (Str::startsWith($name, $brand)) {
-      $name = Str::remove($brand, $name);
+
+    if (Str::startsWith($name, $brand->name)) {
+      $name = Str::remove($brand->name, $name);
     }
-    return '<a href="' . route('brand-slug', ['slug' => $this->brand->slug]) . '" class="font-bold">' . $brand . '</a> ' .
+
+    return '<a href="' . route('brand-slug', ['slug' => $brand->slug]) . '" class="font-bold">' . $brand->name . '</a> ' .
       '<span class="font-thin">' . $name . ' ' . $description . '</span>';
   }
 
@@ -95,6 +97,17 @@ class Product extends Model
       "total_sales" => OrderItem::select(DB::raw("sum(quantity)"))->whereColumn("product_id", "products.id"),
       "total_revenue" => OrderItem::select(DB::raw("sum(order_items.price * quantity)"))->whereColumn("product_id", "products.id"),
       "review_rating" => ProductReview::select(DB::raw("avg(rating)"))->whereColumn("product_id", "products.id")->where("status", ReviewStatusType::from("approved"))
+    ]);
+  }
+
+  public function scopeWithReviewRatingAndReviewCount($query)
+  {
+    return $query->addSelect([
+      "review_rating" => ProductReview::select(DB::raw("avg(rating)"))->whereColumn("product_id", "products.id")->where("status", ReviewStatusType::from("approved")),
+
+      "review_count" => ProductReview::select(DB::raw("count(id)"))
+        ->whereColumn("product_id", "products.id")
+        ->where("status", ReviewStatusType::from("approved"))
     ]);
   }
 

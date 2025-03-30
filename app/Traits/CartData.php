@@ -35,19 +35,13 @@ trait CartData
   #[Computed()]
   public function cartItems()
   {
-    return $this->cart->items ?? [];
+    return $this->cart?->items()->with("product")->get() ?? [];
   }
 
   #[Computed()]
   public function cartItemsCount()
   {
     return count($this->cartItems);
-  }
-
-  #[Computed()]
-  public function cartProducts()
-  {
-    return $this->cart->products() ?? [];
   }
 
   #[Computed()]

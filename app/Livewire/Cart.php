@@ -31,7 +31,8 @@ class Cart extends Component
   {
     $lastViewedProductIDs = Session::get("last_viewed_products", []);
 
-    return Product::whereIn("id", array_keys($lastViewedProductIDs))->get();
+    return Product::whereIn("id", array_keys($lastViewedProductIDs))
+      ->with(["category" => fn($q) => $q->with("brands"), "brand"])->get();
   }
 
   #[On("remove-product-from-cart-confirmed")]

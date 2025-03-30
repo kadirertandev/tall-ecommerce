@@ -141,17 +141,13 @@
             <h2 class="mb-2 text-2xl font-thin text-gray-900">Featured Products</h2>
             <swiper-container wire:ignore class="mySwiper" navigation="true" space-between="30" slides-per-view="3"
                 loop="true" autoplay-delay="2500" autoplay-disable-on-interaction="false">
-                @if (Cache::has('weeklyDealProducts'))
-                    @foreach ($weekly_deal_products as $product)
-                        <livewire:swiper.slide :key="'weekly-' . $product->product_id" :$product prefix="weekly" />
-                    @endforeach
-                @endif
+                @foreach ($weekly_deal_products ?? [] as $product)
+                    <livewire:swiper.slide :key="'weekly-' . $product->product_id" :$product prefix="weekly" />
+                @endforeach
 
-                @if (Cache::has('dailyDealProducts'))
-                    @foreach ($daily_deal_products as $product)
-                        <livewire:swiper.slide :key="'daily-' . $product->product_id" :$product prefix="daily" />
-                    @endforeach
-                @endif
+                @foreach ($daily_deal_products ?? [] as $product)
+                    <livewire:swiper.slide :key="'daily-' . $product->product_id" :$product prefix="daily" />
+                @endforeach
             </swiper-container>
         @endif
     </div>
