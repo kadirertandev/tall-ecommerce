@@ -20,10 +20,16 @@ class Cart extends Component
 
   public $step = 1;
 
+  public function boot()
+  {
+    $this->step = session()->get("cart_step", $this->step);
+  }
+
   #[On("set-cart-step")]
   public function setStep($step)
   {
     $this->step = $step;
+    session(["cart_step" => $this->step]);
   }
 
   #[Computed()]
