@@ -28,7 +28,7 @@ class UserProfileOrders extends Component
   #[Computed()]
   public function orders()
   {
-    return auth()->user()->orders;
+    return auth()->user()->orders()->latest()->get();
   }
 
   public $rating = 0;

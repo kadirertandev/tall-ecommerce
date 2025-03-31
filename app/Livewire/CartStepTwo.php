@@ -12,25 +12,20 @@ class CartStepTwo extends Component
   use CartData;
   use Addresses;
 
-  public function rendering()
-  {
-    if ($this->cartItemsCount == 0) {
-      $this->dispatch('set-cart-step', step: 1);
-    }
-  }
   public function mount()
   {
-    if (session()->has("selected-address-for-cart")) {
-      $this->selectedAddress = session()->get("selected-address-for-cart");
-    } else {
-      $this->selectedAddress = $this->defaultAddress?->id;
+    if (session()->has("selected-address-id")) {
+      $this->selectedAddressId = session()->get("selected-address-id");
+    }
+
+    if ($this->cartItemsCount == 0) {
+      $this->dispatch('set-cart-step', step: 1);
     }
   }
 
   public function next()
   {
-    session()->put("selected-address-for-cart", $this->selectedAddress);
-    if ($this->finalAddress) {
+    if ($this->selectedAddress) {
       $this->dispatch('set-cart-step', step: 3);
     } else {
       $this->addError("address-required", "Address Required");

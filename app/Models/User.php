@@ -123,10 +123,6 @@ class User extends Authenticatable
   {
     return $this->hasOne(Cart::class);
   }
-  public function cartItems()
-  {
-    return "";
-  }
 
   public function orders()
   {
@@ -166,12 +162,9 @@ class User extends Authenticatable
 
   public function defaultAddress()
   {
-    return UserAddress::where("user_id", $this->id)->where("is_default", 1)->first();
-    return $this->addresses->map(function ($address) {
-      if ($address->is_default) {
-        return $address;
-      }
-    });
+    return UserAddress::where("user_id", $this->id)
+      ->where("is_default", 1)
+      ->first();
   }
 
 

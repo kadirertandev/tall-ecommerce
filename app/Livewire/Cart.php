@@ -26,10 +26,27 @@ class Cart extends Component
   }
 
   #[On("set-cart-step")]
-  public function setStep($step)
+  public function setStep($step, $source = "continue")
   {
+    if ($source === "step-button" && $this->step <= $step)
+      return;
+
     $this->step = $step;
-    session(["cart_step" => $this->step]);
+
+    session(["cart_step" => $step]);
+  }
+
+  #[On("added-to-cart")]
+  public function resetStep()
+  {
+    $this->setStep(1);
+  }
+
+  #[On("remove-product-from-cart-confirmed")]
+  #[On("remove-product-from-cart-denied")]
+  public function removeFromCart($cartItemId, $addToFavorites)
+  {
+    $this->traitRemoveFromCart($cartItemId, $addToFavorites);
   }
 
   #[Computed()]
@@ -41,13 +58,6 @@ class Cart extends Component
       ->with(["category" => fn($q) => $q->with("brands"), "brand"])
       ->withReviewRatingAndReviewCount()
       ->get();
-  }
-
-  #[On("remove-product-from-cart-confirmed")]
-  #[On("remove-product-from-cart-denied")]
-  public function removeFromCart($cartItemId, $addToFavorites)
-  {
-    $this->traitRemoveFromCart($cartItemId, $addToFavorites);
   }
 
   public function render()

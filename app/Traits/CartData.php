@@ -56,28 +56,16 @@ trait CartData
     return auth()->user()->defaultAddress();
   }
 
-  #[Computed()]
-  public function nonDefaultAddresses()
-  {
-    return $this->addresses->where("is_default", 0)->all();
-  }
+  public $selectedAddressId;
 
-  public $selectedAddress;
-
-  public function updatedSelectedAddress()
+  public function updatedSelectedAddressId()
   {
-    // dd("selected address updated");
-    session()->put("selected-address-for-cart", $this->selectedAddress);
-  }
-
-  public function showSelectedAddress()
-  {
-    dd($this->selectedAddress);
+    session()->put("selected-address-id", $this->selectedAddressId);
   }
 
   #[Computed()]
-  public function finalAddress()
+  public function selectedAddress()
   {
-    return UserAddress::find($this->selectedAddress);
+    return UserAddress::find($this->selectedAddressId);
   }
 }

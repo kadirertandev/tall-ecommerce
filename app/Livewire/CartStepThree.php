@@ -19,18 +19,14 @@ class CartStepThree extends Component
   use WithSweetAlert;
   use WithTryCatch;
 
-
-  public function rendering()
-  {
-    if ($this->cartItemsCount == 0) {
-      $this->dispatch('set-cart-step', step: 1);
-    }
-  }
-
   public function mount()
   {
-    if (session()->has("selected-address-for-cart")) {
-      $this->selectedAddress = session()->get("selected-address-for-cart");
+    if (session()->has("selected-address-id")) {
+      $this->selectedAddressId = session()->get("selected-address-id");
+    }
+
+    if ($this->cartItemsCount == 0) {
+      $this->dispatch('set-cart-step', step: 1);
     }
   }
 
@@ -47,9 +43,7 @@ class CartStepThree extends Component
     }
 
     if ($this->cartItemsCount == 0) {
-      session()->remove("selected-address-for-cart");
-      $this->dispatch('set-cart-step', step: 1);
-      return;
+      return $this->dispatch('set-cart-step', step: 1);
     }
 
 
@@ -58,10 +52,10 @@ class CartStepThree extends Component
 
       $order = Order::create([
         "user_id" => auth()->user()->id,
-        "city" => $this->finalAddress->city,
-        "district" => $this->finalAddress->district,
-        "neighborhood" => $this->finalAddress->neighborhood,
-        "address_line" => $this->finalAddress->address_line,
+        "city" => $this->selectedAddress->city,
+        "district" => $this->selectedAddress->district,
+        "neighborhood" => $this->selectedAddress->neighborhood,
+        "address_line" => $this->selectedAddress->address_line,
       ]);
 
       foreach ($this->cartItems as $cartItem) {
