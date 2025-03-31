@@ -80,6 +80,8 @@ class CartStepThree extends Component
 
       DB::commit();
 
+      session()->remove("cart_step");
+
       return to_route("auth.user.orders");
     }, [
       Throwable::class => function ($e) {
