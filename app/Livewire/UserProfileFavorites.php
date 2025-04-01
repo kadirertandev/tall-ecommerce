@@ -45,19 +45,20 @@ class UserProfileFavorites extends Component
   #[Computed()]
   public function favorites()
   {
-    return Product::search($this->search)
-      ->leftJoin("user_product_favorites", "user_product_favorites.product_id", "=", "products.id")
+    return Product::with([
+      "category" => fn($q) => $q->select(["id", "name", "slug"])->without("brands"),
+      "brand" => fn($q) => $q->select(["id", "name", "slug"])
+    ])
+      ->search($this->search)
+      ->join("user_product_favorites", "user_product_favorites.product_id", "=", "products.id")
       ->where("user_product_favorites.user_id", auth()->user()->id)
       ->when($this->orderBy === "created_at", function ($query) {
         return $query->orderBy("user_product_favorites.created_at", "desc");
-      })
-      ->when($this->orderBy !== "created_at", function ($query) {
-        return $query->orderBy($this->orderBy, $this->sortDir);
-      })
-      ->when($this->categoriesFilter, function ($query) {
-        return $query->whereIn("products.category_id", $this->categoriesFilter);
+      }, function ($query) {
+        return $query->sortByColumn($this->orderBy, $this->sortDir);
       })
       ->select(["products.*"])
+      ->filterByCategory($this->categoriesFilter)
       ->paginate($this->perPage);
   }
 

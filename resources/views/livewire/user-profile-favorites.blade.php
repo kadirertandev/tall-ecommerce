@@ -2,9 +2,9 @@
     class="w-full mb-4 text-gray-500 bg-white rounded-lg text-medium dark:text-gray-400 dark:bg-gray-800">
     <div class="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div
-            class="{{-- col-span-4 --}}w-full sm:w-7/12 lg:w-9/12 flex items-center justify-between bg-gray-50 ring-2 ring-gray-100! px-3 rounded-lg">
+            class="w-full sm:w-7/12 lg:w-9/12 flex items-center justify-between bg-gray-50 ring-2 ring-gray-100! px-3 rounded-lg">
             <h1 class="text-3xl">{{ __('frontend.favorites.favorites') }}</h1>
-            @if ($this->favorites->count() > 0)
+            @if ($this->favorites->total() > 0)
                 <p>{{ $this->favorites->total() . ' ' . Str::lower(__('frontend.product.product')) }}
                 </p>
             @endif
@@ -82,7 +82,7 @@
     {{-- category filter dropdown --}}
     <div class="flex items-center mt-2">
         <div class="relative">
-            <button id="dropdownBgHoverButton" data-dropdown-toggle="dropdownBgHover" {{-- wire:click='$toggle("opened")' --}}
+            <button id="dropdownBgHoverButton" data-dropdown-toggle="dropdownBgHover"
                 class="text-black bg-white ring-2 ring-gray-200! font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center "
                 type="button">{{ __('frontend.categories') }}<svg class="w-2.5 h-2.5 ms-3" aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
@@ -115,7 +115,7 @@
                 <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200"
                     aria-labelledby="dropdownBgHoverButton">
                     @foreach ($this->categories as $id => $name)
-                        <li wire:key='category-{{ md5($name) }}-{{ $id }}' {{-- wire:click='$set("opened",false)' --}}>
+                        <li wire:key='category-{{ md5($name) }}-{{ $id }}'>
                             <div class="flex items-center p-2 rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600">
                                 <input wire:key='category-check-{{ $name }}-{{ $id }}'
                                     wire:model.live='categoriesFilter' id="category-check-{{ md5($name) }}"
@@ -135,18 +135,17 @@
 
     <div :class="columns == 4 ? 'mt-8 grid grid-cols-4 gap-3' : 'mt-8 grid grid-cols-2 gap-3'">
         @forelse ($this->favorites as $favorite)
-            <div wire:key='favorite-card-{{ $favorite->name ? $favorite->id : $favorite->user_id }}'
-                class="p-3 shadow-lg ring-2 ring-gray-50!">
+            <div wire:key='favorite-card-{{ $favorite->id }}' class="p-3 shadow-lg ring-2 ring-gray-50!">
                 <div class="relative flex items-center gap-2 md:flex-col md:gap-2">
-                    <div class="w-full min-w-24 h-48 max-h-48 flex items-center justify-center {{-- bg-red-500 --}}">
-                        <img src="{{ asset('/storage/' . ($favorite->name ? $favorite->image : $favorite->product->image)) }}"
-                            class="w-auto max-h-48 aspect-auto" alt="">
+                    <div class="w-full min-w-24 h-48 max-h-48 flex items-center justify-center">
+                        <img src="{{ asset('/storage/' . $favorite->image) }}" class="w-auto max-h-48 aspect-auto"
+                            alt="">
                     </div>
                     <div class="h-20 overflow-y-hidden">
                         <a
-                            href="{{ route('products.show', ['category_slug' => $favorite->name ? $favorite->category->slug : $favorite->product->category->slug, 'product_slug' => $favorite->name ? $favorite->slug : $favorite->product->slug]) }}">{!! $favorite->name ? $favorite->title() : $favorite->product->title() !!}</a>
+                            href="{{ route('products.show', ['category_slug' => $favorite->category->slug, 'product_slug' => $favorite->slug]) }}">{!! $favorite->title() !!}</a>
                     </div>
-                    <livewire:add-to-favorites-button :key="$favorite->name ? $favorite->id : $favorite->product->id" :productId="$favorite->name ? $favorite->id : $favorite->product->id" type="profile"
+                    <livewire:add-to-favorites-button :key="$favorite->id" :productId="$favorite->id" type="profile"
                         :showLabel="false" />
                 </div>
             </div>
