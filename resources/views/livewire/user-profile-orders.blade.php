@@ -1,6 +1,7 @@
 <div class="w-full mb-4 text-gray-500 bg-white rounded-lg text-medium dark:text-gray-400 dark:bg-gray-800">
-    <div class="flex items-center justify-between gap-12">
-        <div class="flex-1 flex items-center justify-between bg-gray-50 ring-2 ring-gray-100! px-3 rounded-lg">
+    <div class="flex items-center justify-between gap-12 mb-2">
+        <div id="orders-heading"
+            class="flex-1 flex items-center justify-between bg-gray-50 ring-2 ring-gray-100! px-3 rounded-lg">
             <h1 class="text-3xl">{{ __('frontend.auth.dropdown-on-nav.orders') }}</h1>
         </div>
     </div>
@@ -26,7 +27,7 @@
                 <div>
                     <div class="grid grid-cols-2">
                         <h1 class="font-medium">Alıcı</h1>
-                        <h1 class="font-thin">{{ $order->user->full_name() }}</h1>
+                        <h1 class="font-thin">{{ $order->customer_name }}</h1>
                     </div>
                     <div class="grid grid-cols-2">
                         <h1 class="font-medium">Adres</h1>
@@ -34,7 +35,7 @@
                     </div>
                     <div class="grid grid-cols-2">
                         <h1 class="font-medium">Toplam</h1>
-                        <h1 class="font-thin">{{ App\Helpers::formatPrice($order->subtotal()) }} TL</h1>
+                        <h1 class="font-thin">{{ App\Helpers::formatPrice($order->subtotal) }} TL</h1>
                     </div>
                 </div>
             </div>
@@ -101,6 +102,10 @@
             <h1 class="my-2 text-xl">No orders found.</h1>
         </div>
     @endforelse
+
+    <div class="my-4">
+        {{ $this->orders->links(data: ['scrollTo' => '#orders-heading']) }}
+    </div>
 
     <x-modals.user-profile-order-product-comment-modal :product="$productToComment" :rating="$rating" />
 </div>

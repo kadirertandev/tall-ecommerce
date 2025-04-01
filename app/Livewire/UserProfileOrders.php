@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Livewire\Forms\ProductReviewForm;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductReview;
 use App\Traits\WithInteractModal;
@@ -10,11 +11,12 @@ use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
 use Illuminate\Auth\Access\AuthorizationException;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class UserProfileOrders extends Component
 {
+  use WithPagination;
   use WithTryCatch;
   use WithSweetAlert;
   use WithInteractModal;
@@ -25,10 +27,25 @@ class UserProfileOrders extends Component
 	<path fill="currentColor" d="M6 14h3.075L15.1 7.95l-3-3.075l-6.1 6.05zm6.05-5.1l-.95-.925l.975-.975l.925.95zM11.2 14H18v-2h-4.8zM2 22V2h20v16H6z" />
 </svg>';
 
+  public $perPage = 6;
+
   #[Computed()]
   public function orders()
   {
-    return auth()->user()->orders()->latest()->get();
+    return Order::with([
+      "user",
+      "items" => fn($q) => $q->with([
+        "product" => fn($q) => $q->with([
+          "category" => fn($q) => $q->select(["id", "name", "slug"])->without("brands"),
+          "brand" => fn($q) => $q->select(["id", "name", "slug"])
+        ])->select(["id", "name", "slug", "image", "category_id", "brand_id"])
+      ])
+    ])
+      ->where("user_id", auth()->user()->id)
+      ->withSubTotal()
+      ->withCustomerName()
+      ->latest()
+      ->simplePaginate($this->perPage);
   }
 
   public $rating = 0;
