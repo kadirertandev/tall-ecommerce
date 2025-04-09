@@ -1,9 +1,9 @@
 <div class="w-full mb-4 text-gray-500 bg-white rounded-lg text-medium dark:text-gray-400 dark:bg-gray-800">
-    <div class="bg-gray-50 ring-2 ring-gray-100! px-3 rounded-lg">
+    <div id="reviews-heading" class="bg-gray-50 ring-2 ring-gray-100! px-3 rounded-lg">
         <h1 class="text-3xl">Reviews</h1>
     </div>
 
-    @forelse (auth()->user()->reviews as $review)
+    @forelse ($this->reviews as $review)
         <div class="p-3 my-4 bg-gray-100 rounded-lg">
             <div class="flex items-start justify-between">
                 <div class="flex gap-2 mb-4">
@@ -95,4 +95,7 @@
         </div>
     @endforelse
 
+    <div class="my-4">
+        {{ $this->reviews->links(data: ['scrollTo' => '#reviews-heading']) }}
+    </div>
 </div>
