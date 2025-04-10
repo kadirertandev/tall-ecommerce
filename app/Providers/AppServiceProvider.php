@@ -2,16 +2,13 @@
 
 namespace App\Providers;
 
-use App\Enums\ReviewStatusType;
 use App\Models\Brand;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\Category;
 use App\Models\DailyDealProduct;
-use App\Models\ProductReview;
 use App\Models\WeeklyDealProduct;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -53,15 +50,21 @@ class AppServiceProvider extends ServiceProvider
     View::composer(["home", "livewire.cart"], function ($view) {
       $view->with("weekly_deal_products", Cache::remember("weeklyDealProducts", 60 * 60 * 24, function () {
         return WeeklyDealProduct::with([
-          "product" => fn($query) => $query->withReviewRatingAndReviewCount()
-            ->with(["category" => fn($q) => $q->without("brands")])
+          "product" => fn($query) => $query->withReviewRatingAverageAndReviewCount()
+            ->with([
+              "category" => fn($q) => $q->without("brands"),
+              "brand"
+            ])
         ])->get();
       }));
 
       $view->with("daily_deal_products", Cache::remember("dailyDealProducts", 60 * 60 * 24, function () {
         return DailyDealProduct::with([
-          "product" => fn($query) => $query->withReviewRatingAndReviewCount()
-            ->with(["category" => fn($q) => $q->without("brands")])
+          "product" => fn($query) => $query->withReviewRatingAverageAndReviewCount()
+            ->with([
+              "category" => fn($q) => $q->without("brands"),
+              "brand"
+            ])
         ])->get();
       }));
     });

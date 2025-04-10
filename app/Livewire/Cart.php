@@ -55,8 +55,11 @@ class Cart extends Component
     $lastViewedProductIDs = Session::get("last_viewed_products", []);
 
     return Product::whereIn("id", array_keys($lastViewedProductIDs))
-      ->with(["category" => fn($q) => $q->with("brands"), "brand"])
-      ->withReviewRatingAndReviewCount()
+      ->with([
+        "category" => fn($q) => $q->select(["id", "name", "slug"])->without("brands"),
+        "brand" => fn($q) => $q->select(["id", "name", "slug"])
+      ])
+      ->withReviewRatingAverageAndReviewCount()
       ->get();
   }
 

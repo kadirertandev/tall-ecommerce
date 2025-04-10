@@ -177,10 +177,10 @@
                                             <h1>{!! $product->title() !!}</h1>
                                             <div class="flex gap-2">
                                                 <div class="flex items-center">
-                                                    <x-stars :stars="floor($product->rating)" />
+                                                    <x-stars :stars="floor($product->review_rating_average)" />
                                                 </div>
                                                 @if ($product->review_count >= 1)
-                                                    <h3 class="font-thin">({{ $product->rating }})</h3>
+                                                    <h3 class="font-thin">({{ $product->review_rating_average }})</h3>
                                                 @endif
                                             </div>
                                             <div class="flex flex-wrap items-end justify-between">

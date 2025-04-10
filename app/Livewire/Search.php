@@ -70,7 +70,10 @@ class Search extends Component
   public function productResults()
   {
     if (strlen($this->search) > 2) {
-      $productResults = Product::where("name", "like", "%{$this->search}%")
+      $productResults = Product::with([
+        "category" => fn($q) => $q->without("brands")
+      ])
+        ->where("name", "like", "%{$this->search}%")
         ->when($this->selectedCategoryId !== 0, function ($query) {
           return $query->where("category_id", $this->selectedCategoryId);
         })

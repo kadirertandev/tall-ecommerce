@@ -6,8 +6,8 @@
                 <div class="flex items-center justify-between w-8/12 ">
                     <h2 class="text-3xl font-thin text-gray-900">{{ $title }}</h2>
                     @if ($step == 1)
-                        @if (count($this->cartItems) > 0)
-                            <p>{{ __('frontend.cart.cart-total-items-message', ['x' => count($this->cartItems)]) }}</p>
+                        @if ($this->cartItemsCount > 0)
+                            <p>{{ __('frontend.cart.cart-total-items-message', ['x' => $this->cartItemsCount]) }}</p>
                         @endif
                     @endif
                 </div>
@@ -45,7 +45,7 @@
                                         Original price
                                     </dt>
                                     <dd class="text-base font-medium text-gray-900 dark:text-white">
-                                        {{ App\Helpers::formatPrice($this->cart?->subtotal()) }} TL</dd>
+                                        {{ App\Helpers::formatPrice($this->cartSubtotal) }} TL</dd>
                                 </dl>
                             </div>
 
@@ -53,7 +53,7 @@
                                 class="flex items-center justify-between gap-4 pt-2 border-t border-gray-200 dark:border-gray-700">
                                 <dt class="text-base font-bold text-gray-900 dark:text-white">Total</dt>
                                 <dd class="text-base font-bold text-gray-900 dark:text-white">
-                                    {{ App\Helpers::formatPrice($this->cart?->subtotal()) }} TL</dd>
+                                    {{ App\Helpers::formatPrice($this->cartSubtotal) }} TL</dd>
                             </dl>
                         </div>
 

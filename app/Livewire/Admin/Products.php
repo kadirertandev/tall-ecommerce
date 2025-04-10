@@ -58,7 +58,7 @@ class Products extends Component
     "name" => "Product",
     "category_name" => "Category",
     "brand_name" => "Brand",
-    "review_rating" => "Rating",
+    "review_rating_average" => "Rating",
     "price" => "Price",
     "total_sales" => "Sales",
     "total_revenue" => "Revenue",
@@ -78,7 +78,10 @@ class Products extends Component
   #[Computed()]
   public function products()
   {
-    return Product::with(["category", "brand"])
+    return Product::with([
+      "category" => fn($q) => $q->select(["id", "name", "slug"])->without("brands"),
+      "brand" => fn($q) => $q->select(["id", "name", "slug"])
+    ])
       ->search($this->keyword)
       ->withoutColumns(["slug", "title", "deleted_by", "created_by", "created_at", "deleted_by", "updated_by"])
       ->withSubQueryFields()
@@ -110,7 +113,11 @@ class Products extends Component
   public function showViewModal($id)
   {
     $this->tryCatch(function () use ($id) {
-      $this->selectedProduct = Product::withTrashed()->withSubQueryFields()->findOrFail($id);
+      $this->selectedProduct = Product::with([
+        "category" => fn($q) => $q->select(["id", "name", "slug"])->without("brands"),
+        "brand" => fn($q) => $q->select(["id", "name", "slug"])
+      ])
+        ->withTrashed()->withSubQueryFields()->findOrFail($id);
 
       $this->showModal("view-product");
     });

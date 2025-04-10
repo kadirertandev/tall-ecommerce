@@ -2,13 +2,11 @@
 
 namespace App\Livewire;
 
-use App\Enums\ReviewStatusType;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\ProductReview;
 use App\Traits\SortOptions;
 use App\Traits\WithRefreshFlowbite;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
@@ -69,28 +67,26 @@ class ProductsByCategory extends Component
   #[Computed()]
   public function category()
   {
-    return Category::with("brands")->where("slug", $this->slug)
-      ->orWhere("slug", __("categories.dictionary." . $this->slug))
-      ->firstOrFail();
+    return Cache::remember("category_with_slug_{$this->slug}", 60 * 5, function () {
+      return Category::with("brands")->where("slug", $this->slug)
+        ->orWhere("slug", __("categories.dictionary." . $this->slug))
+        ->firstOrFail();
+    });
   }
 
   #[Computed()]
   public function products()
   {
-    $products = Product::where("category_id", $this->category->id)
+    $products = Product::with([
+      "category" => fn($q) => $q->select(["id", "name", "slug"])->without("brands"),
+      "brand" => fn($q) => $q->select(["id", "name", "slug"])
+    ])
+      ->where("category_id", $this->category->id)
       ->withoutColumns(["created_by", "updated_by", "updated_at", "deleted_at", "deleted_by"])
-      ->addSelect([
-        "rating" => ProductReview::select(DB::raw("avg(rating)"))
-          ->whereColumn("product_id", "products.id")
-          ->where("status", ReviewStatusType::from("approved")),
-
-        "review_count" => ProductReview::select(DB::raw("count(id)"))
-          ->whereColumn("product_id", "products.id")
-          ->where("status", ReviewStatusType::from("approved"))
-      ])
+      ->withReviewRatingAverageAndReviewCount()
       ->filterByBrand($this->selectedBrands)
       ->filterByprice($this->minPrice, $this->maxPrice)
-      ->when($this->orderBy === "most_liked", fn($query) => $query->sortByColumn("rating", $this->sortDir))
+      ->when($this->orderBy === "most_liked", fn($query) => $query->sortByColumn("review_rating_average", $this->sortDir))
       ->when($this->orderBy !== "most_liked", fn($query) => $query->sortByColumn($this->orderBy, $this->sortDir));
 
     $total = $products->count();

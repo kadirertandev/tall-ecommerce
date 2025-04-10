@@ -78,7 +78,7 @@
 
     <x-slot:rightSideContent>
         <div class="flex items-center justify-center gap-2">
-            @if (count($this->cartItems) > 0)
+            @if ($this->cartItemsCount > 0)
                 <button type="button" wire:click="$parent.setStep(2)"
                     class="inline-flex items-center gap-2 text-white bg-linear-to-r! from-teal-400! via-teal-500! to-teal-600! hover:bg-linear-to-br! focus:ring-2 focus:outline-hidden focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-md px-5 py-2.5 text-center me-2 mb-2">
                     <span>{{ __('frontend.cart.continue') }}</span>

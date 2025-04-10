@@ -35,7 +35,19 @@ trait CartData
   #[Computed()]
   public function cartItems()
   {
-    return $this->cart?->items()->with("product")->get() ?? [];
+    return $this->cart?->items()
+      ->with([
+        "product" => fn($q) => $q->with([
+          "category" => fn($q) => $q->without("brands")
+        ])
+      ])
+      ->get() ?? [];
+  }
+
+  #[Computed()]
+  public function cartSubtotal()
+  {
+    return $this->cart?->subtotal();
   }
 
   #[Computed()]

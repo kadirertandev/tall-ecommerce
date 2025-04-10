@@ -119,7 +119,7 @@
                     <div class="px-4 py-6 border-t border-gray-200 sm:px-6">
                         <div class="flex justify-between text-base font-medium text-gray-900">
                             <p>{{ __('frontend.cart.subtotal') }}</p>
-                            <p>{{ App\Helpers::formatPrice($this->cart->subtotal()) }} TL</p>
+                            <p>{{ App\Helpers::formatPrice($this->cartSubtotal) }} TL</p>
                         </div>
                         <div class="mt-6">
                             <a href="{{ route('auth.user.cart') }}"

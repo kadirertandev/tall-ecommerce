@@ -55,7 +55,15 @@ class Orders extends Component
   public function showViewModal($id)
   {
     $this->tryCatch(function () use ($id) {
-      $this->selectedOrder = Order::with(["items.product"])->findOrFail($id);
+      $this->selectedOrder = Order::with([
+        "user",
+        "items" => fn($q) => $q->with([
+          "product" => fn($q) => $q->with([
+            "category" => fn($q) => $q->select(["id", "name", "slug"])->without("brands"),
+            "brand" => fn($q) => $q->select(["id", "name", "slug"])
+          ])->select(["id", "name", "slug", "image", "category_id", "brand_id"])
+        ])
+      ])->findOrFail($id);
 
       $this->showModal("view-order");
     });

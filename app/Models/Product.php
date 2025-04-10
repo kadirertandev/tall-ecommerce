@@ -31,11 +31,6 @@ class Product extends Model
     "deleted_by",
   ];
 
-  protected $with = [
-    "category:id,name,slug",
-    "brand:id,name,slug",
-  ];
-
   public function title()
   {
     $brand = $this->brand;
@@ -89,26 +84,34 @@ class Product extends Model
       });
   }
 
+  public function scopeWithReviewRatingAverage($query)
+  {
+    return $query->addSelect([
+      "review_rating_average" => ProductReview::select(DB::raw("avg(rating)"))
+        ->whereColumn("product_id", "products.id")
+        ->where("status", ReviewStatusType::from("approved"))
+    ]);
+  }
+
   public function scopeWithSubQueryFields($query)
   {
     return $query->addSelect([
       "category_name" => Category::select("name")->whereColumn("id", "products.category_id"),
       "brand_name" => Brand::select("name")->whereColumn("id", "products.brand_id"),
       "total_sales" => OrderItem::select(DB::raw("sum(quantity)"))->whereColumn("product_id", "products.id"),
-      "total_revenue" => OrderItem::select(DB::raw("sum(order_items.price * quantity)"))->whereColumn("product_id", "products.id"),
-      "review_rating" => ProductReview::select(DB::raw("avg(rating)"))->whereColumn("product_id", "products.id")->where("status", ReviewStatusType::from("approved"))
-    ]);
+      "total_revenue" => OrderItem::select(DB::raw("sum(order_items.price * quantity)"))->whereColumn("product_id", "products.id")
+    ])
+      ->withReviewRatingAverage();
   }
 
-  public function scopeWithReviewRatingAndReviewCount($query)
+  public function scopeWithReviewRatingAverageAndReviewCount($query)
   {
-    return $query->addSelect([
-      "review_rating" => ProductReview::select(DB::raw("avg(rating)"))->whereColumn("product_id", "products.id")->where("status", ReviewStatusType::from("approved")),
-
-      "review_count" => ProductReview::select(DB::raw("count(id)"))
-        ->whereColumn("product_id", "products.id")
-        ->where("status", ReviewStatusType::from("approved"))
-    ]);
+    return $query->withReviewRatingAverage()
+      ->addSelect([
+        "review_count" => ProductReview::select(DB::raw("count(id)"))
+          ->whereColumn("product_id", "products.id")
+          ->where("status", ReviewStatusType::from("approved"))
+      ]);
   }
 
   public function scopeFilterByCategory($query, $categoriesFilter)

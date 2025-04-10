@@ -28,9 +28,9 @@
             <div>
                 <h1 class="mb-2 font-semibold leading-none text-gray-900">Rating</h1>
                 <div class="flex items-center">
-                    <x-stars :stars="floor($product?->review_rating)" />
+                    <x-stars :stars="floor($product?->review_rating_average)" />
                     <span
-                        class="ml-1 text-gray-500 dark:text-gray-400">{{ number_format($product?->review_rating, 2) }}</span>
+                        class="ml-1 text-gray-500 dark:text-gray-400">{{ number_format($product?->review_rating_average, 2) }}</span>
                 </div>
             </div>
         </div>

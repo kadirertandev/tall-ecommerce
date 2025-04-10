@@ -208,9 +208,9 @@
                                     </td>
                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         <div class="flex items-center">
-                                            <x-stars :stars="floor($product->review_rating)" />
+                                            <x-stars :stars="floor($product->review_rating_average)" />
                                             <span
-                                                class="ml-1 text-gray-500 dark:text-gray-400">{{ number_format($product->review_rating, 2) }}</span>
+                                                class="ml-1 text-gray-500 dark:text-gray-400">{{ number_format($product->review_rating_average, 2) }}</span>
                                         </div>
                                     </td>
                                     <td class="px-4 py-2">

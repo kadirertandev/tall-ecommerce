@@ -22,11 +22,6 @@ class Brand extends Model
     "deleted_by",
   ];
 
-  public function productCount($categoryId)
-  {
-    return Product::where("category_id", $categoryId)->where("brand_id", $this->id)->count();
-  }
-
   public function categories()
   {
     return $this->belongsToMany(Category::class, "category_brands");
