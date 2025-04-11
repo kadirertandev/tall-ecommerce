@@ -52,6 +52,7 @@ class Orders extends Component
   }
 
   public $selectedOrder;
+
   public function showViewModal($id)
   {
     $this->tryCatch(function () use ($id) {
@@ -67,6 +68,11 @@ class Orders extends Component
 
       $this->showModal("view-order");
     });
+  }
+
+  public function afterModalClosed($modalName)
+  {
+    $this->reset("selectedOrder");
   }
 
   public function changeStatus($orderId, $statusValue)

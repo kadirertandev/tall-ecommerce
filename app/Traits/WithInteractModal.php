@@ -26,6 +26,10 @@ trait WithInteractModal
     $this->resetFormInputsAndErrors(
       ["form", "createForm", "editForm", "reviewForm"]
     );
+
+    if (method_exists($this, "afterModalClosed")) {
+      $this->afterModalClosed($modalName);
+    }
   }
 
   public function resetFormInputsAndErrors($properties)

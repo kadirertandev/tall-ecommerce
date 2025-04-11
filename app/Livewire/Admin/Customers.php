@@ -56,6 +56,7 @@ class Customers extends Component
   }
 
   public $selectedCustomer;
+
   public function showViewModal($id)
   {
     $this->tryCatch(function () use ($id) {
@@ -63,6 +64,11 @@ class Customers extends Component
 
       $this->showModal("view-customer");
     });
+  }
+
+  public function afterModalClosed($modalName)
+  {
+    $this->reset("selectedCustomer");
   }
 
   public function render()

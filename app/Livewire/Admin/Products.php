@@ -110,6 +110,7 @@ class Products extends Component
   }
 
   public $selectedProduct;
+
   public function showViewModal($id)
   {
     $this->tryCatch(function () use ($id) {
@@ -144,6 +145,13 @@ class Products extends Component
 
       $this->showModal("edit-product");
     });
+  }
+
+  public function afterModalClosed($modalName)
+  {
+    if ($modalName == "view-product") {
+      $this->reset("selectedProduct");
+    }
   }
 
   public function create()

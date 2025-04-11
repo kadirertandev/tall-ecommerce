@@ -61,6 +61,7 @@ class Brands extends Component
   }
 
   public $selectedBrand;
+
   public function showViewModal($id)
   {
     $this->tryCatch(function () use ($id) {
@@ -86,6 +87,13 @@ class Brands extends Component
 
       $this->showModal("edit-brand");
     });
+  }
+
+  public function afterModalClosed($modalName)
+  {
+    if ($modalName == "view-brand") {
+      $this->reset("selectedBrand");
+    }
   }
 
   public function create()

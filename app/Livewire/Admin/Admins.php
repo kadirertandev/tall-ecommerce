@@ -86,6 +86,7 @@ class Admins extends Component
   }
 
   public $selectedAdmin;
+
   public function showViewModal($id)
   {
     $this->tryCatch(function () use ($id) {
@@ -114,6 +115,13 @@ class Admins extends Component
 
       $this->showModal("edit-admin");
     });
+  }
+
+  public function afterModalClosed($modalName)
+  {
+    if ($modalName == "view-admin") {
+      $this->reset("selectedAdmin");
+    }
   }
 
   public function create()

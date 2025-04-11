@@ -75,6 +75,7 @@ class Reviews extends Component
   }
 
   public $selectedReview;
+
   public function showViewModal($id)
   {
     $this->tryCatch(function () use ($id) {
@@ -120,6 +121,13 @@ class Reviews extends Component
 
       $this->showModal("edit-review");
     });
+  }
+
+  public function afterModalClosed($modalName)
+  {
+    if ($modalName == "view-review") {
+      $this->reset("selectedReview");
+    }
   }
 
   public function update()

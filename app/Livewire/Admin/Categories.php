@@ -69,6 +69,7 @@ class Categories extends Component
   }
 
   public $selectedCategory;
+
   public function showViewModal($id)
   {
     $this->tryCatch(function () use ($id) {
@@ -96,6 +97,13 @@ class Categories extends Component
 
       $this->showModal("edit-category");
     });
+  }
+
+  public function afterModalClosed($modalName)
+  {
+    if ($modalName == "view-category") {
+      $this->reset("selectedCategory");
+    }
   }
 
   public function updateCategoryIsPopular($checked = null)
