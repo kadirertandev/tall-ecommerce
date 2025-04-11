@@ -41,6 +41,8 @@ class ProductsByBrand extends Component
 
   public function mount($slug)
   {
+    $this->validateOrderByInputs();
+
     $this->slug = $slug;
     $this->orderFrontend = Lang::get("frontend.filters.newest");
     $this->breadcrumbs = [
@@ -74,6 +76,8 @@ class ProductsByBrand extends Component
     });
   }
 
+  public $allowedColumns = ["price", "most_liked", "created_at"];
+
   #[Computed()]
   public function products()
   {
@@ -86,8 +90,8 @@ class ProductsByBrand extends Component
       ->withReviewRatingAverageAndReviewCount()
       ->filterByCategory($this->selectedCategories)
       ->filterByprice($this->minPrice, $this->maxPrice)
-      ->when($this->orderBy === "most_liked", fn($query) => $query->sortByColumn("review_rating_average", $this->sortDir))
-      ->when($this->orderBy !== "most_liked", fn($query) => $query->sortByColumn($this->orderBy, $this->sortDir));
+      ->when($this->orderByColumn === "most_liked", fn($query) => $query->sortByColumn("review_rating_average", $this->orderByDirection))
+      ->when($this->orderByColumn !== "most_liked", fn($query) => $query->sortByColumn($this->orderByColumn, $this->orderByDirection));
 
     $total = $products->count();
 

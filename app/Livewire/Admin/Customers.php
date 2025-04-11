@@ -22,6 +22,11 @@ class Customers extends Component
   use WithInteractModal;
   use WithTableSortAndFilter;
 
+  public function mount()
+  {
+    $this->validateOrderByInputs();
+  }
+
   public function boot()
   {
     $this->refreshFlobwite();
@@ -36,8 +41,15 @@ class Customers extends Component
     "delete_request" => "Delete Request",
   ];
 
+  #[Computed()]
+  public function allowedColumns()
+  {
+    return array_keys($this->columns);
+  }
+
   #[Url()]
   public $onlyDeleteRequest = false;
+
   public function updatedonlyDeleteRequest()
   {
     if ($this->onlyDeleteRequest == true)
@@ -50,7 +62,7 @@ class Customers extends Component
     return User::where("is_admin", false)
       ->search($this->keyword)
       ->withoutColumns(["is_admin", "password", "deleted_by", "remember_token", "updated_at"])
-      ->sortByColumn($this->sortBy, $this->sortDir)
+      ->sortByColumn($this->orderByColumn, $this->orderByDirection)
       ->filterByDeleteRequest($this->onlyDeleteRequest)
       ->paginate(($this->perPage >= 5) ? $this->perPage : 5);
   }

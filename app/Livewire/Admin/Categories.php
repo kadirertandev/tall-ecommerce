@@ -43,12 +43,18 @@ class Categories extends Component
   public CategoryCreateForm $createForm;
   public CategoryEditForm $editForm;
 
+  public function mount()
+  {
+    $this->validateOrderByInputs();
+  }
+
   public function boot()
   {
     $this->refreshFlobwite();
   }
 
   public $onlyPopular = false;
+
   public $columns = [
     "name" => "Category",
     "is_popular" => "Is Popular",
@@ -56,11 +62,17 @@ class Categories extends Component
   ];
 
   #[Computed()]
+  public function allowedColumns()
+  {
+    return array_keys($this->columns);
+  }
+
+  #[Computed()]
   public function categories()
   {
     return Category::search($this->keyword)
       ->withoutColumns(["slug", "created_by", "updated_by", "created_at", "deleted_by"])
-      ->sortByColumn($this->sortBy, $this->sortDir)
+      ->sortByColumn($this->orderByColumn, $this->orderByDirection)
       ->filterByTrashed($this->withTrashed, $this->onlyTrashed)
       ->when($this->onlyPopular == true, function ($query) {
         $query->where("is_popular", true);

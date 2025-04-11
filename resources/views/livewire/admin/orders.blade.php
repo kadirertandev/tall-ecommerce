@@ -73,8 +73,8 @@
                                 @foreach ($columns as $key => $value)
                                     <th wire:key='heading-{{ $key }}-{{ $value }}'
                                         wire:click='setSortBy("{{ $key }}")' scope="col" class="px-4 py-3">
-                                        <x-sort-buttons :column="$key" :title="$value" :sortBy="$this->sortBy"
-                                            :sortDir="$this->sortDir" />
+                                        <x-sort-buttons :column="$key" :title="$value" :sortBy="$this->orderByColumn"
+                                            :sortDir="$this->orderByDirection" />
                                     </th>
                                 @endforeach
                                 <th scope="col" class="px-4 py-3"></th>

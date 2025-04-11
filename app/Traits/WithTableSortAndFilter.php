@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace App\Traits;
 
+use Livewire\Attributes\Url;
+
 trait WithTableSortAndFilter
 {
+  use HandlesOrderBy;
+
+  #[Url()]
   public $keyword = "";
+
   public $perPage = 10;
-  public $sortDir = "";
-  public $sortBy = "";
 
   public function setSortBy($column)
   {
-    $this->sortBy = $column;
-    $this->sortDir = $this->sortDir == "asc" ? "desc" : "asc";
+    $this->orderByColumn = $this->validateOrderByColumn($column);
+    $this->orderByDirection = $this->orderByDirection == "asc" ? "desc" : "asc";
   }
 }

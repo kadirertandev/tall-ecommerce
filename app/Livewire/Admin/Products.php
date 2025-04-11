@@ -45,6 +45,11 @@ class Products extends Component
   public ProductCreateForm $createForm;
   public ProductEditForm $editForm;
 
+  public function mount()
+  {
+    $this->validateOrderByInputs();
+  }
+
   public function boot()
   {
     $this->refreshFlobwite();
@@ -54,6 +59,7 @@ class Products extends Component
   public $brandsFilter = [];
   public $minPrice;
   public $maxPrice;
+
   public $columns = [
     "name" => "Product",
     "category_name" => "Category",
@@ -64,6 +70,12 @@ class Products extends Component
     "total_revenue" => "Revenue",
     "updated_at" => "Last Update",
   ];
+
+  #[Computed()]
+  public function allowedColumns()
+  {
+    return array_keys($this->columns);
+  }
 
   public function setPrices($minPrice, $maxPrice)
   {
@@ -89,7 +101,7 @@ class Products extends Component
       ->filterByCategory($this->categoriesFilter)
       ->filterByBrand($this->brandsFilter)
       ->filterByPrice($this->minPrice, $this->maxPrice)
-      ->sortByColumn($this->sortBy, $this->sortDir)
+      ->sortByColumn($this->orderByColumn, $this->orderByDirection)
       ->paginate(($this->perPage >= 5) ? $this->perPage : 5);
   }
 

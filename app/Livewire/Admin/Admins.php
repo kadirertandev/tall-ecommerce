@@ -22,6 +22,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 use Livewire\WithPagination;
@@ -42,18 +43,31 @@ class Admins extends Component
   public AdminCreateForm $createForm;
   public AdminEditForm $editForm;
 
+  public function mount()
+  {
+    $this->validateOrderByInputs();
+  }
+
   public function boot()
   {
     $this->refreshFlobwite();
   }
 
+  #[Url()]
   public $rolesFilter = [];
+
   public $columns = [
     "full_name" => "Admin",
     "email" => "Email",
     "phone_number" => "Phone Number",
     "role_name" => "Role"
   ];
+
+  #[Computed()]
+  public function allowedColumns()
+  {
+    return array_keys($this->columns);
+  }
 
   #[Computed()]
   public function authRole()
@@ -71,7 +85,7 @@ class Admins extends Component
       ->join("model_has_roles", "users.id", "model_has_roles.model_id")
       ->filterByTrashed($this->withTrashed, $this->onlyTrashed)
       ->filterByRole($this->rolesFilter)
-      ->sortByColumn($this->sortBy, $this->sortDir)
+      ->sortByColumn($this->orderByColumn, $this->orderByDirection)
       ->paginate(($this->perPage >= 5) ? $this->perPage : 5);
   }
 

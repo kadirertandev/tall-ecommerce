@@ -22,12 +22,18 @@ class Orders extends Component
   use WithInteractModal;
   use WithTableSortAndFilter;
 
+  public function mount()
+  {
+    $this->validateOrderByInputs();
+  }
+
   public function boot()
   {
     $this->refreshFlobwite();
   }
 
   public $statusFilter = [];
+
   public $columns = [
     "customer_name" => "Customer",
     "city" => "City",
@@ -40,13 +46,19 @@ class Orders extends Component
   ];
 
   #[Computed()]
+  public function allowedColumns()
+  {
+    return array_keys($this->columns);
+  }
+
+  #[Computed()]
   public function orders()
   {
     return Order::with("user")
       ->search($this->keyword)
       ->withCustomerName()
       ->withSubTotal()
-      ->sortByColumn($this->sortBy, $this->sortDir)
+      ->sortByColumn($this->orderByColumn, $this->orderByDirection)
       ->filterByStatus($this->statusFilter)
       ->paginate(($this->perPage >= 5) ? $this->perPage : 5);
   }

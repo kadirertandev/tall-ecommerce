@@ -39,6 +39,11 @@ class Brands extends Component
   public BrandCreateForm $createForm;
   public BrandEditForm $editForm;
 
+  public function mount()
+  {
+    $this->validateOrderByInputs();
+  }
+
   public function boot()
   {
     $this->refreshFlobwite();
@@ -51,11 +56,17 @@ class Brands extends Component
   ];
 
   #[Computed()]
+  public function allowedColumns()
+  {
+    return array_keys($this->columns);
+  }
+
+  #[Computed()]
   public function brands()
   {
     return Brand::search($this->keyword)
       ->withoutColumns(["slug", "created_by", "updated_by", "created_at", "deleted_by"])
-      ->sortByColumn($this->sortBy, $this->sortDir)
+      ->sortByColumn($this->orderByColumn, $this->orderByDirection)
       ->filterByTrashed($this->withTrashed, $this->onlyTrashed)
       ->paginate(($this->perPage >= 5) ? $this->perPage : 5);
   }

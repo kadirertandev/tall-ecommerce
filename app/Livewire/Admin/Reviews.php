@@ -41,6 +41,11 @@ class Reviews extends Component
     }
   }
 
+  public function mount()
+  {
+    $this->validateOrderByInputs();
+  }
+
   public function boot()
   {
     $this->refreshFlobwite();
@@ -57,6 +62,11 @@ class Reviews extends Component
     "created_at" => "Review Date",
   ];
 
+  #[Computed()]
+  public function allowedColumns()
+  {
+    return array_keys($this->columns);
+  }
 
   #[Computed()]
   public function reviews()
@@ -68,7 +78,7 @@ class Reviews extends Component
       ->search($this->keyword)
       ->withoutColumns(["updated_by", "updated_at", "deleted_by"])
       ->withSubQueryFields()
-      ->sortByColumn($this->sortBy, $this->sortDir)
+      ->sortByColumn($this->orderByColumn, $this->orderByDirection)
       ->filterByStatus($this->statusFilter)
       ->filterByTrashed($this->withTrashed, $this->onlyTrashed)
       ->paginate(($this->perPage >= 5) ? $this->perPage : 5);

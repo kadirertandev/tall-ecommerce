@@ -31,6 +31,8 @@ class UserProfileFavorites extends Component
 
   public function mount()
   {
+    $this->validateOrderByInputs();
+
     $this->orderFrontend = Lang::get("frontend.filters.newest");
   }
 
@@ -42,6 +44,8 @@ class UserProfileFavorites extends Component
       ->pluck("name", "id");
   }
 
+  public $allowedColumns = ["price", "most_liked", "created_at"];
+
   #[Computed()]
   public function favorites()
   {
@@ -52,10 +56,10 @@ class UserProfileFavorites extends Component
       ->search($this->search)
       ->join("user_product_favorites", "user_product_favorites.product_id", "=", "products.id")
       ->where("user_product_favorites.user_id", auth()->user()->id)
-      ->when($this->orderBy === "created_at", function ($query) {
+      ->when($this->orderByColumn === "created_at", function ($query) {
         return $query->orderBy("user_product_favorites.created_at", "desc");
       }, function ($query) {
-        return $query->sortByColumn($this->orderBy, $this->sortDir);
+        return $query->sortByColumn($this->orderByColumn, $this->orderByDirection);
       })
       ->select(["products.*"])
       ->filterByCategory($this->categoriesFilter)

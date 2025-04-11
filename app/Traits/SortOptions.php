@@ -5,17 +5,12 @@ declare(strict_types=1);
 namespace App\Traits;
 
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Url;
 use Illuminate\Support\Facades\Lang;
 
 
 trait SortOptions
 {
-  #[Url()]
-  public $orderBy = "created_at";
-
-  #[Url()]
-  public $sortDir = "desc";
+  use HandlesOrderBy;
 
   public $orderFrontend;
 
@@ -33,16 +28,16 @@ trait SortOptions
   public function withKeys(...$options)
   {
     return [
-      "orderBy" => $options[0],
-      "sortDir" => $options[1],
+      "orderByColumn" => $options[0],
+      "orderByDirection" => $options[1],
       "orderFrontend" => $options[2]
     ];
   }
 
   public function sortByOption($sortOption)
   {
-    $this->orderBy = $this->sortOptions[$sortOption]["orderBy"];
-    $this->sortDir = $this->sortOptions[$sortOption]["sortDir"];
+    $this->orderByColumn = $this->validateOrderByColumn($this->sortOptions[$sortOption]["orderByColumn"]);
+    $this->orderByDirection = $this->validateOrderByDirection($this->sortOptions[$sortOption]["orderByDirection"]);
     $this->orderFrontend = $this->sortOptions[$sortOption]["orderFrontend"];
   }
 }
