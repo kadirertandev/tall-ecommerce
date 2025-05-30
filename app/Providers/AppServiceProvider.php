@@ -8,6 +8,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\Category;
 use App\Models\DailyDealProduct;
 use App\Models\WeeklyDealProduct;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -27,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
    */
   public function boot(): void
   {
+    if (App::runningInConsole()) {
+      return;
+    }
+
     $categories = Cache::remember("categories", 60 * 5, function () {
       return Category::without("brands")
         ->select(["id", "slug", "name"])->get();
