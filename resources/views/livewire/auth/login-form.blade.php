@@ -66,6 +66,10 @@
                     </div>
                     <button wire:click.prevent='login' type="submit"
                         class="w-full text-white bg-teal-500 hover:bg-primary-700 focus:ring-2 focus:outline-hidden focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">{{ __('frontend.form.login-form.sign-in') }}</button>
+                    <button @click="$dispatch('open-modal', {name: 'demo-users'})" type="button"
+                        class="w-full text-white bg-purple-600 hover:bg-primary-700 focus:ring-2 focus:outline-hidden focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Click
+                        to see demo users</button>
+                    <x-modals.demo-users-modal />
                     <p class="text-sm font-light text-gray-500 dark:text-gray-400">
                         {{ __('frontend.form.login-form.dont-have-an-account-yet') }} <a href="{{ route('register') }}"
                             class="font-medium text-primary-600 hover:underline dark:text-primary-500">{{ __('frontend.form.login-form.sign-up') }}</a>
