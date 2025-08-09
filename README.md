@@ -1,3 +1,10 @@
+### Clone project and navigate into project folder
+
+```sh
+git clone https://github.com/kadirertandev/tall-ecommerce.git
+cd tall-ecommerce
+```
+
 ### Install dependencies
 
 ```sh
