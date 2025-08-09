@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://github.com/kadirertandev/tall-ecommerce/blob/a72ae69ee23f2074911ca29c0b59fbc9c5c46ffe/showcase/logo.png" />
+</p>
+
 ### Clone project and navigate into project folder
 
 ```sh
