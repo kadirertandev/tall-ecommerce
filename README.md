@@ -29,6 +29,28 @@
 </details>
 
 <details>
+  <summary>🖼️ Click to view login (demo user credentials included) and register pages screenshots</summary>
+  <table>
+    <tr>
+      <td valign="top">
+        <p align="center"><strong>Login</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/auth/login.png" width="100%" />
+      </td>
+      <td valign="top">
+        <p align="center"><strong>Demo Users</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/auth/demo_users.png" width="100%" />
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><strong>Register</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/auth/register.png" width="100%" />
+      </td>
+    </tr>
+  </table>
+</details>
+
+<details>
   <summary>🖼️ Click to view user profile, favorites, reviews and more related screenshots</summary>
   <table>
     <tr>
@@ -59,6 +81,42 @@
       <td valign="top">
         <p align="center"><strong>Change Password</strong></p>
         <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/user_profile/change_password.png" width="100%" />
+      </td>
+    </tr>
+  </table>
+</details>
+
+<details>
+  <summary>🖼️ Click to view cart screenshots</summary>
+  <table>
+    <tr>
+      <td valign="top">
+        <p align="center"><strong>Cart Step 1</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/cart/step1.png" width="100%" />
+      </td>
+      <td valign="top">
+        <p align="center"><strong>Cart Step 2</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/cart/step2.png" width="100%" />
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><strong>Cart Step 3</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/cart/step3.png" width="100%" />
+      </td>
+      <td valign="top">
+        <p align="center"><strong>Empty Cart</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/cart/empty.png" width="100%" />
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><strong>Sidebar Cart</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/cart/sidebar.png" width="100%" />
+      </td>
+      <td valign="top">
+        <p align="center"><strong>Empty Sidebar Cart</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/cart/sidebar_empty.png" width="100%" />
       </td>
     </tr>
   </table>
