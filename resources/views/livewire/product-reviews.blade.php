@@ -59,10 +59,13 @@
                     <div class="flex items-center mb-4">
                         @if ($review->user->profile_image)
                             <img class="rounded-full me-4 w-14 h-14"
-                                src="{{ asset('storage/' . $review->user->profile_image) }}" alt="Michael Gough">
+                                src="{{ asset('/storage/' . $review->user->profile_image) }}" alt="Michael Gough">
                         @else
-                            <img class="rounded-full me-4 w-14 h-14"
-                                src="https://flowbite.com/docs/images/people/profile-picture-2.jpg" alt="Michael Gough">
+                            <div
+                                class="relative inline-flex items-center justify-center me-4 w-14 h-14 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                                <span
+                                    class="font-medium text-gray-600 dark:text-gray-300">{{ $review->user->placeholder_initials() }}</span>
+                            </div>
                         @endif
                         <div class="font-medium" wire:key='popover-container-{{ $review->id }}'>
                             <p wire:key='popover-{{ $review->id }}'
@@ -89,25 +92,24 @@
 
                         </div>
                     </div>
-
-                    <div wire:key='dropdown-container-{{ $review->id }}'>
-                        <button id="dropdownComment{{ $review->id }}Button"
-                            data-dropdown-toggle="dropdownComment{{ $review->id }}"
-                            class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-500 bg-white rounded-lg dark:text-gray-400 hover:bg-gray-100 focus:ring-2 focus:outline-hidden focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                            type="button">
-                            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                fill="currentColor" viewBox="0 0 16 3">
-                                <path
-                                    d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
-                            </svg>
-                            <span class="sr-only">Comment settings</span>
-                        </button>
-                        <!-- Dropdown menu -->
-                        <div id="dropdownComment{{ $review->id }}"
-                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-sm shadow-sm w-36 dark:bg-gray-700 dark:divide-gray-600">
-                            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                aria-labelledby="dropdownMenuIconHorizontalButton">
-                                @can('edit reviews')
+                    @can('edit reviews')
+                        <div wire:key='dropdown-container-{{ $review->id }}'>
+                            <button id="dropdownComment{{ $review->id }}Button"
+                                data-dropdown-toggle="dropdownComment{{ $review->id }}"
+                                class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-500 bg-white rounded-lg dark:text-gray-400 hover:bg-gray-100 focus:ring-2 focus:outline-hidden focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                                type="button">
+                                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                    fill="currentColor" viewBox="0 0 16 3">
+                                    <path
+                                        d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
+                                </svg>
+                                <span class="sr-only">Comment settings</span>
+                            </button>
+                            <!-- Dropdown menu -->
+                            <div id="dropdownComment{{ $review->id }}"
+                                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-sm shadow-sm w-36 dark:bg-gray-700 dark:divide-gray-600">
+                                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                    aria-labelledby="dropdownMenuIconHorizontalButton">
                                     <li wire:click='edit({{ $review->id }})' class="cursor-pointer">
                                         <a
                                             class="inline-flex items-center w-full gap-2 px-4 py-2 hover:bg-blue-100 hover:text-black">
@@ -118,43 +120,20 @@
                                             </svg>
                                             <span>Edit</span></a>
                                     </li>
-                                @endcan
-                                <li>
-                                    <a href="#"
-                                        class="inline-flex items-center w-full gap-2 px-4 py-2 hover:bg-yellow-100 hover:text-black">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
-                                        </svg>
-                                        <span>Report</span>
-                                    </a>
-                                </li>
-                            </ul>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
+                    @endcan
                 </div>
                 <div class="flex items-center mb-1 space-x-1 rtl:space-x-reverse">
                     <x-stars :stars="$review->rating" />
-                    <h3 class="text-sm font-semibold text-gray-900 ms-2 dark:text-white">{{ $review->title }}</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 ms-2 dark:text-white">
+                        {{ $review->title }}</h3>
                 </div>
                 <footer class="mb-2 text-sm text-gray-500 dark:text-gray-400">
                     <p>Reviewed on {{ $review->created_at->toFormattedDateString() }}</p>
                 </footer>
                 <p class="mb-2 text-gray-500 dark:text-gray-400">{{ $review->comment }}</p>
-                <a href="#"
-                    class="block mb-5 text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">Read
-                    more</a>
-                <aside>
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">19 people found this helpful</p>
-                    <div class="flex items-center mt-3">
-                        <a href="#"
-                            class="px-2 py-1.5 text-xs font-medium text-gray-900 focus:outline-hidden bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Helpful</a>
-                        <a href="#"
-                            class="text-sm font-medium text-blue-600 border-gray-200 ps-4 hover:underline dark:text-blue-500 ms-4 border-s md:mb-0 dark:border-gray-600">Report
-                            abuse</a>
-                    </div>
-                </aside>
             </article>
         @endforeach
     </div>

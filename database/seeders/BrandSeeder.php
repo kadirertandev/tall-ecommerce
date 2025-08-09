@@ -27,6 +27,7 @@ class BrandSeeder extends Seeder
           "image" => "brand_images/gigabyte.png",
           'created_at' => now(),
           'updated_at' => now(),
+          'is_popular' => 1
         ],
         [
           "name" => "Asus",
@@ -34,6 +35,7 @@ class BrandSeeder extends Seeder
           "image" => "brand_images/asus.png",
           'created_at' => now(),
           'updated_at' => now(),
+          'is_popular' => 1
         ],
         [
           "name" => "Samsung",
@@ -41,6 +43,7 @@ class BrandSeeder extends Seeder
           "image" => "brand_images/samsung.png",
           'created_at' => now(),
           'updated_at' => now(),
+          'is_popular' => 0
         ],
         [
           "name" => "Toshiba",
@@ -48,6 +51,7 @@ class BrandSeeder extends Seeder
           "image" => "brand_images/toshiba.png",
           'created_at' => now(),
           'updated_at' => now(),
+          'is_popular' => 0
         ],
         [
           "name" => "Lenovo",
@@ -55,6 +59,7 @@ class BrandSeeder extends Seeder
           "image" => "brand_images/lenovo.png",
           'created_at' => now(),
           'updated_at' => now(),
+          'is_popular' => 0
         ],
         [
           "name" => "Logitech",
@@ -62,6 +67,7 @@ class BrandSeeder extends Seeder
           "image" => "brand_images/logitech.png",
           'created_at' => now(),
           'updated_at' => now(),
+          'is_popular' => 0
         ],
         [
           "name" => "Roborock",
@@ -69,6 +75,7 @@ class BrandSeeder extends Seeder
           "image" => "brand_images/roborock.png",
           'created_at' => now(),
           'updated_at' => now(),
+          'is_popular' => 0
         ],
         [
           "name" => "Apple",
@@ -76,6 +83,7 @@ class BrandSeeder extends Seeder
           "image" => "brand_images/apple.png",
           'created_at' => now(),
           'updated_at' => now(),
+          'is_popular' => 0
         ],
         [
           "name" => "Xiaomi",
@@ -83,6 +91,7 @@ class BrandSeeder extends Seeder
           "image" => "brand_images/xiaomi.png",
           'created_at' => now(),
           'updated_at' => now(),
+          'is_popular' => 0
         ],
         [
           "name" => "Philips",
@@ -90,6 +99,7 @@ class BrandSeeder extends Seeder
           "image" => "brand_images/philips.png",
           'created_at' => now(),
           'updated_at' => now(),
+          'is_popular' => 0
         ],
         [
           "name" => "Dell",
@@ -97,6 +107,7 @@ class BrandSeeder extends Seeder
           "image" => "brand_images/dell.png",
           'created_at' => now(),
           'updated_at' => now(),
+          'is_popular' => 1
         ],
         [
           "name" => "MSI",
@@ -104,6 +115,7 @@ class BrandSeeder extends Seeder
           "image" => "brand_images/msi.png",
           'created_at' => now(),
           'updated_at' => now(),
+          'is_popular' => 0
         ],
         [
           "name" => "HP",
@@ -111,6 +123,7 @@ class BrandSeeder extends Seeder
           "image" => "brand_images/hp.png",
           'created_at' => now(),
           'updated_at' => now(),
+          'is_popular' => 0
         ],
         [
           "name" => "Casper",
@@ -118,6 +131,7 @@ class BrandSeeder extends Seeder
           "image" => "brand_images/casper.png",
           'created_at' => now(),
           'updated_at' => now(),
+          'is_popular' => 0
         ],
       ];
     Brand::insert($brands);
