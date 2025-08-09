@@ -4,7 +4,6 @@
 
 <details>
   <summary>🖼️ Click to view home, single product, category and brand pages screenshots</summary>
-
   <table>
     <tr>
       <td valign="top">
@@ -27,7 +26,42 @@
       </td>
     </tr>
   </table>
+</details>
 
+<details>
+  <summary>🖼️ Click to view user profile, favorites, reviews and more related screenshots</summary>
+  <table>
+    <tr>
+      <td valign="top">
+        <p align="center"><strong>Profile</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/user_profile/profile.png" width="100%" />
+      </td>
+      <td valign="top">
+        <p align="center"><strong>Favorites</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/user_profile/favorites.png" width="100%" />
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><strong>Orders</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/user_profile/orders.png" width="100%" />
+      </td>
+      <td valign="top">
+        <p align="center"><strong>Reviews</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/user_profile/reviews.png" width="100%" />
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><strong>Addresses</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/user_profile/addresses.png" width="100%" />
+      </td>
+      <td valign="top">
+        <p align="center"><strong>Change Password</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/user_profile/change_password.png" width="100%" />
+      </td>
+    </tr>
+  </table>
 </details>
 
 ### Clone project and navigate into project folder
