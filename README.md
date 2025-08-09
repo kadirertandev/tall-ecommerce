@@ -2,6 +2,33 @@
   <img src="https://github.com/kadirertandev/tall-ecommerce/blob/a72ae69ee23f2074911ca29c0b59fbc9c5c46ffe/showcase/logo.png" />
 </p>
 
+## About This Project
+
+This project was developed using Tailwind CSS, Alpine.js, Laravel and Livewire and inspired by sites like Hepsiburada and Incehesap.
+
+### Key Features
+
+-   Registration, login, password reset, change password, delete account
+-   Product listing, search and filtering
+-   Add products to cart and favorites, create orders and view past orders
+-   Guest cart synchronization after login
+-   Profile page with customer information, favorites, orders, reviews and addresses
+-   Multi-language support in certain parts of the project
+-   Role-based management panel via spatie/laravel-permission package
+    -   Owner, Super Admin, Admin, Product Editor, Review Editor...
+    -   Dashboard, Products, Orders, Reviews...
+-   Scheduled Tasks
+    -   Deletes customer records that have a deletion request for a week every 30 minutes.
+    -   Updates daily deal products
+    -   Updates weekly deals every Sunday at 00:00.
+    -   Updates popular brands and categories every Sunday at 00:00.
+    -   Deletes expired email verification code records.
+
+#### Tech Details
+
+-   **Backend:** Laravel, Livewire
+-   **Frontend:** Tailwind CSS, Alpine.js, Flowbite, Swiper
+
 <details>
   <summary>🖼️ Click to view home, single product, category and brand pages screenshots</summary>
   <table>
