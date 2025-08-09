@@ -122,6 +122,68 @@
   </table>
 </details>
 
+<details>
+  <summary>🖼️ Click to view admin panel screenshots (authenticated admin has owner role)</summary>
+  <table>
+    <tr>
+      <td valign="top">
+        <p align="center"><strong>Dashboard</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/admin/dashboard.png" width="100%" />
+      </td>
+    </tr>
+    <tr>
+    <td valign="top">
+        <p align="center"><strong>Admins</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/admin/admins.png" width="100%" />
+      </td>
+      <td valign="top">
+        <p align="center"><strong>Admins v2</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/admin/adminsv2.png" width="100%" />
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><strong>Products</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/admin/products.png" width="100%" />
+      </td>
+      <td valign="top">
+        <p align="center"><strong>Products v2</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/admin/productsv2.png" width="100%" />
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><strong>Categories</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/admin/categories.png" width="100%" />
+      </td>
+      <td valign="top">
+        <p align="center"><strong>Brands</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/admin/brands.png" width="100%" />
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><strong>Customers</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/admin/customers.png" width="100%" />
+      </td>
+      <td valign="top">
+        <p align="center"><strong>Reviews</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/admin/reviews.png" width="100%" />
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><strong>Orders</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/admin/orders.png" width="100%" />
+      </td>
+      <td valign="top">
+        <p align="center"><strong>Orders v2</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/admin/ordersv2.png" width="100%" />
+      </td>
+    </tr>
+  </table>
+</details>
+
 ### Clone project and navigate into project folder
 
 ```sh
