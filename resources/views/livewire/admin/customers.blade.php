@@ -20,7 +20,7 @@
                         {{-- show x entries --}}
                         <div class="flex flex-col gap-2 shrink-0 md:flex-row md:items-center lg:justify-end">
                             <x-dropdown-filter>
-                                @can('force delete customers')
+                                @can('view customers')
                                     <x-slot:toggles>
                                         <x-toggle toggle="onlyDeleteRequest" text="Only Delete Request" />
                                     </x-slot:toggles>
