@@ -2,6 +2,34 @@
   <img src="https://github.com/kadirertandev/tall-ecommerce/blob/a72ae69ee23f2074911ca29c0b59fbc9c5c46ffe/showcase/logo.png" />
 </p>
 
+<details>
+  <summary>🖼️ Click to view home, single product, category and brand pages screenshots</summary>
+
+  <table>
+    <tr>
+      <td valign="top">
+        <p align="center"><strong>Home</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/landing/home.png" width="100%" />
+      </td>
+      <td valign="top">
+        <p align="center"><strong>Single Product</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/landing/product.png" width="100%" />
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="center"><strong>Category</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/landing/category.png" width="100%" />
+      </td>
+      <td valign="top">
+        <p align="center"><strong>Brand</strong></p>
+        <img src="https://github.com/kadirertandev/tall-ecommerce/blob/6f3ce261c0251e0810807399db1cce8fad381fa5/showcase/landing/brand.png" width="100%" />
+      </td>
+    </tr>
+  </table>
+
+</details>
+
 ### Clone project and navigate into project folder
 
 ```sh
