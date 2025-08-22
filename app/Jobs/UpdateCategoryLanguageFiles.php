@@ -7,21 +7,22 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Stichoza\GoogleTranslate\GoogleTranslate;
+use Throwable;
 
 class UpdateCategoryLanguageFiles implements ShouldQueue
 {
   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-  private $name;
 
   /**
    * Create a new job instance.
    */
-  public function __construct($name)
+  public function __construct(private $slug, private $newSlug, private $newName)
   {
-    $this->name = $name;
   }
 
   /**
@@ -29,57 +30,50 @@ class UpdateCategoryLanguageFiles implements ShouldQueue
    */
   public function handle(): void
   {
-    $filePaths = ['en' => './lang/en/categories.php', 'tr' => './lang/tr/categories.php'];
-    foreach ($filePaths as $lang => $filePath) {
-      $content = include $filePath;
+    $this->updateTranslation("tr", $this->slug, $this->newSlug, $this->newName);
 
-      $categories = array_diff_key($content, array_flip(["dictionary"]));
-      $dictionary = $content["dictionary"];
+    $translated = $this->translateToEnglish($this->newName);
 
-      $tr = new GoogleTranslate();
-      $tr->setSource();
+    $this->updateTranslation("en", $this->slug, ...$translated);
+  }
 
-      if ($lang == "en") {
-        $tr->setTarget("en");
+  public function translateToEnglish($name)
+  {
+    $translator = new GoogleTranslate("en", "tr");
 
-        $name = Str::headline($tr->translate($this->name));
-        $slug = Str::slug($name);
+    try {
+      $nameEN = $translator->translate($name);
+    } catch (Throwable $e) {
+      Log::error("Translation failed for '{$name}': " . $e->getMessage());
 
-        $tr->setTarget("tr");
-        $dictionarySlug = Str::slug($tr->translate($slug));
-
-        $categories["{$dictionarySlug}"] = ["name" => "{$name}", "slug" => "{$slug}"];
-        $dictionary["{$slug}"] = "{$dictionarySlug}";
-      } else {
-        $tr->setTarget("tr");
-
-        $name = Str::headline($tr->translate($this->name));
-        $slug = Str::slug($name);
-
-        $tr->setTarget("en");
-        $dictionarySlug = $tr->translate($slug);
-
-        $categories["{$slug}"] = ["name" => "{$name}", "slug" => "{$slug}"];
-        $dictionary["{$dictionarySlug}"] = "{$slug}";
-      }
-
-      $content = "<?php\n\nreturn [\n";
-      foreach ($categories as $slug => $category) {
-        $content .= "  \"$slug\" => [\n";
-        $content .= "    \"name\" => \"" . $category['name'] . "\",\n";
-        $content .= "    \"slug\" => \"" . $category['slug'] . "\"\n";
-        $content .= "  ],\n";
-      }
-
-      $content .= "  \"dictionary\" => [\n";
-      foreach ($dictionary as $en => $tr) {
-        $content .= "    \"$en\" => \"" . $tr . "\",\n";
-      }
-      $content .= "  ]\n";
-
-      $content .= "];\n";
-
-      file_put_contents($filePath, $content);
+      $nameEN = $name;
     }
+    $slugEN = Str::slug($nameEN);
+
+    return [$slugEN, $nameEN];
+  }
+
+  public function updateTranslation($locale, $slug, $newSlug, $newName)
+  {
+    $file = base_path("lang/{$locale}/categories.php");
+
+    if (!File::exists($file))
+      return;
+
+    $translations = include $file;
+
+    if (array_key_exists($slug, $translations)) {
+      unset($translations[$slug]);
+      unset($translations[$this->newSlug]);
+    }
+
+    $translations[$this->newSlug] = [
+      "name" => Str::headline($newName),
+      "slug" => $newSlug
+    ];
+
+    $content = "<?php\nreturn " . var_export($translations, true) . ";";
+
+    File::put($file, $content);
   }
 }

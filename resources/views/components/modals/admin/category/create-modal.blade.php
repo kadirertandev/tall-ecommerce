@@ -1,6 +1,6 @@
 @props(['categories', 'brands'])
 <x-modal name="create-category" title="Create Category">
-    <form class="p-4 space-y-2" action="#">
+    <form class="p-4 space-y-2" novalidate>
         <div class="grid gap-4 mb-4 sm:grid-cols-2">
             <div class="col-span-2">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>

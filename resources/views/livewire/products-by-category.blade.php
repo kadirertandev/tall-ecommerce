@@ -9,9 +9,7 @@
                     <section aria-labelledby="products-heading" class="pt-6 pb-4">
                         <div class="grid grid-cols-4 mb-4 gap-x-8">
                             <h1 class="text-3xl font-thin font-roboto">
-                                {{ !Str::startsWith(__('categories.' . $this->slug . '.name'), 'categories.')
-                                    ? __('categories.' . $this->slug . '.name')
-                                    : __('categories.' . __('categories.dictionary.' . $this->slug) . '.name') }}
+                                {{ __('categories.' . $this->slug . '.name') }}
                             </h1>
                             <div class="flex items-center justify-between col-span-3">
                                 @if ($this->products['total'] > 0)

@@ -7,21 +7,21 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Stichoza\GoogleTranslate\GoogleTranslate;
+use Throwable;
 
 class InsertItemToCategoryLanguageFiles implements ShouldQueue
 {
   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-  private $name;
-
   /**
    * Create a new job instance.
    */
-  public function __construct($name)
+  public function __construct(private $name, private $slug)
   {
-    $this->name = $name;
   }
 
   /**
@@ -29,57 +29,44 @@ class InsertItemToCategoryLanguageFiles implements ShouldQueue
    */
   public function handle(): void
   {
-    $filePaths = ['en' => './lang/en/categories.php', 'tr' => './lang/tr/categories.php'];
-    foreach ($filePaths as $lang => $filePath) {
-      $content = include $filePath;
+    $this->addTranslation("tr", $this->slug, $this->name);
 
-      $categories = array_diff_key($content, array_flip(["dictionary"]));
-      $dictionary = $content["dictionary"];
+    $translated = $this->translateToEnglish($this->name);
+    $this->addTranslation("en", ...$translated);
+  }
 
-      $tr = new GoogleTranslate();
-      $tr->setSource();
+  public function translateToEnglish($name)
+  {
+    $translator = new GoogleTranslate("en", "tr");
 
-      if ($lang == "en") {
-        $tr->setTarget("en");
+    try {
+      $nameEN = $translator->translate($name);
+    } catch (Throwable $e) {
+      Log::error("Translation failed for '{$name}': " . $e->getMessage());
 
-        $name = Str::headline($tr->translate($this->name));
-        $slug = Str::slug($name);
-
-        $tr->setTarget("tr");
-        $dictionarySlug = Str::slug($tr->translate($slug));
-
-        $categories["{$dictionarySlug}"] = ["name" => "{$name}", "slug" => "{$slug}"];
-        $dictionary["{$slug}"] = "{$dictionarySlug}";
-      } else {
-        $tr->setTarget("tr");
-
-        $name = Str::headline($tr->translate($this->name));
-        $slug = Str::slug($name);
-
-        $tr->setTarget("en");
-        $dictionarySlug = $tr->translate($slug);
-
-        $categories["{$slug}"] = ["name" => "{$name}", "slug" => "{$slug}"];
-        $dictionary["{$dictionarySlug}"] = "{$slug}";
-      }
-
-      $content = "<?php\n\nreturn [\n";
-      foreach ($categories as $slug => $category) {
-        $content .= "  \"$slug\" => [\n";
-        $content .= "    \"name\" => \"" . $category['name'] . "\",\n";
-        $content .= "    \"slug\" => \"" . $category['slug'] . "\"\n";
-        $content .= "  ],\n";
-      }
-
-      $content .= "  \"dictionary\" => [\n";
-      foreach ($dictionary as $en => $tr) {
-        $content .= "    \"$en\" => \"" . $tr . "\",\n";
-      }
-      $content .= "  ]\n";
-
-      $content .= "];\n";
-
-      file_put_contents($filePath, $content);
+      $nameEN = $name;
     }
+    $slugEN = Str::slug($nameEN);
+
+    return [$slugEN, $nameEN];
+  }
+
+  public function addTranslation($locale, $slug, $name)
+  {
+    $file = base_path("lang/{$locale}/categories.php");
+
+    if (!File::exists($file))
+      return;
+
+    $translations = include $file;
+
+    $translations[$this->slug] = [
+      "name" => Str::headline($name),
+      "slug" => $slug
+    ];
+
+    $content = "<?php\nreturn " . var_export($translations, true) . ";";
+
+    File::put($file, $content);
   }
 }

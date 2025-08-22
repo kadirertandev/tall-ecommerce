@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Observers\CategoryObserver;
 use App\Traits\ScopeFilterByTrashed;
 use App\Traits\ScopeWithoutColumns;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[ObservedBy([CategoryObserver::class])]
 class Category extends Model
 {
   use HasFactory, SoftDeletes, ScopeFilterByTrashed, ScopeWithoutColumns;

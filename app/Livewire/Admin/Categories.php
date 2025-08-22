@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Jobs\InsertItemToCategoryLanguageFiles;
 use App\Jobs\RemoveItemFromCategoryLanguageFiles;
+use App\Jobs\UpdateCategoryLanguageFiles;
 use App\Traits\WithInteractModal;
 use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithRemoveFormImage;
@@ -160,7 +161,7 @@ class Categories extends Component
         "created_at" => Carbon::now(),
       ]);
 
-      dispatch(new InsertItemToCategoryLanguageFiles($this->createForm->name));
+      dispatch(new InsertItemToCategoryLanguageFiles($this->createForm->name, $this->createForm->slug));
 
       $this->closeModal("create-category");
 
@@ -180,6 +181,7 @@ class Categories extends Component
       }
 
       $category = Category::findOrFail($this->selectedCategory->id);
+      $oldSlug = $category->slug;
 
       if ($this->editForm->image) {
         $imageName = $this->editForm->image->store("category_images", "public");
@@ -197,6 +199,8 @@ class Categories extends Component
       ]);
 
       $this->selectedCategory = $category;
+
+      dispatch(new UpdateCategoryLanguageFiles($oldSlug, $this->editForm->slug, $this->editForm->name));
 
       $this->closeModal("edit-category");
 

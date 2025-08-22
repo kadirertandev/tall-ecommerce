@@ -15,8 +15,8 @@
             </button>
 
             <div id="dropdown-categories" wire:ignore
-                class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
-                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm min-w-44 dark:bg-gray-700">
+                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200 *:text-nowrap min-w-max"
                     aria-labelledby="dropdown-button dropdown-button2 dropdown-button3">
                     <li @click="$refs.btnToggle.click()">
                         <button @click="$wire.setSelectedCategory('All Categories',0)" type="button"
@@ -28,7 +28,7 @@
                             <button type="button"
                                 @click="$wire.setSelectedCategory('{{ __('categories.' . $category->slug . '.name') }}',{{ $category->id }})"
                                 class="inline-flex w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                {{ !Str::startsWith(__('categories.' . $category->slug . '.name'), 'categories.') ? __('categories.' . $category->slug . '.name') : __('categories.' . __('categories.dictionary.' . $category->slug) . '.name') }}
+                                {{ __('categories.' . $category->slug . '.name') }}
                             </button>
                         </li>
                     @endforeach

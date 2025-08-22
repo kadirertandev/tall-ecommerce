@@ -47,9 +47,7 @@ class ProductsByCategory extends Component
     $this->orderFrontend = Lang::get("frontend.filters.newest");
     $this->breadcrumbs = [
       [
-        "name" => !Str::startsWith(__('categories.' . $this->slug . '.name'), 'categories.')
-          ? __('categories.' . $this->slug . '.name')
-          : __('categories.' . __('categories.dictionary.' . $this->slug) . '.name'),
+        "name" => __("categories.{$this->slug}.name"),
         "url" => route("category-slug", ["slug" => $this->slug])
       ]
     ];
@@ -71,7 +69,6 @@ class ProductsByCategory extends Component
   {
     return Cache::remember("category_with_slug_{$this->slug}", 60 * 5, function () {
       return Category::with("brands")->where("slug", $this->slug)
-        ->orWhere("slug", __("categories.dictionary." . $this->slug))
         ->firstOrFail();
     });
   }

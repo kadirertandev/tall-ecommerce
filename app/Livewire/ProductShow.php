@@ -20,9 +20,7 @@ class ProductShow extends Component
     $this->product_slug = $product_slug;
     $this->breadcrumbs = [
       [
-        "name" => !Str::startsWith(__('categories.' . $this->category_slug . '.name'), 'categories.')
-          ? __('categories.' . $this->category_slug . '.name')
-          : __('categories.' . __('categories.dictionary.' . $this->category_slug) . '.name'),
+        "name" => __('categories.' . $this->category_slug . '.name'),
         "url" => route("category-slug", ["slug" => $this->category_slug])
       ],
       [
@@ -37,7 +35,6 @@ class ProductShow extends Component
   {
     $category = Category::without("brands")
       ->where("slug", $this->category_slug)
-      ->orWhere("slug", __("categories.dictionary." . $this->category_slug))
       ->firstOrFail();
 
     return $category->id;

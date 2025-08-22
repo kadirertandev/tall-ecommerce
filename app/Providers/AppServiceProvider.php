@@ -8,6 +8,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\Category;
 use App\Models\DailyDealProduct;
 use App\Models\WeeklyDealProduct;
+use App\Support\Cache\CategoryCache;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
@@ -32,12 +33,7 @@ class AppServiceProvider extends ServiceProvider
       return;
     }
 
-    $categories = Cache::remember("categories", 60 * 5, function () {
-      return Category::without("brands")
-        ->select(["id", "slug", "name"])->get();
-    });
-
-    View::share("categories", $categories);
+    View::share("categories", CategoryCache::get());
 
     View::composer("home", function ($view) {
       $view->with("popularCategories", Cache::remember("popularCategories", 60 * 60 * 24, function () {
