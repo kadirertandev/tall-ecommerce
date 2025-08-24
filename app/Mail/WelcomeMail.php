@@ -13,13 +13,11 @@ use Illuminate\Queue\SerializesModels;
 class WelcomeMail extends Mailable
 {
   use Queueable, SerializesModels;
-  private $user;
   /**
    * Create a new message instance.
    */
-  public function __construct(User $user)
+  public function __construct(public User $user)
   {
-    $this->user = $user;
   }
 
   /**

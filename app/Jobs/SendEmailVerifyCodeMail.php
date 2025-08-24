@@ -17,7 +17,7 @@ class SendEmailVerifyCodeMail implements ShouldQueue
   /**
    * Create a new job instance.
    */
-  public function __construct(private $code, private $email)
+  public function __construct(public $code, public $email)
   {
     //
   }

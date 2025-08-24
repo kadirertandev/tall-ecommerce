@@ -14,15 +14,11 @@ class SendResetPasswordMail implements ShouldQueue
 {
   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-  private $token;
-  private $email;
   /**
    * Create a new job instance.
    */
-  public function __construct($token, $email)
+  public function __construct(public $token, public $email)
   {
-    $this->token = $token;
-    $this->email = $email;
   }
 
   /**
