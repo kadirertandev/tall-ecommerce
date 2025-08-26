@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="grid grid-cols-2 gap-3">
-        @foreach ($this->addresses as $address)
+        @forelse ($this->addresses as $address)
             <div wire:key='address-{{ $address->id }}' @class([
                 'bg-gray-50 ring-2 ring-gray-100! rounded-lg shadow-xl p-3',
                 'order-first' => $this->defaultAddress?->id == $address->id,
@@ -51,7 +51,11 @@
                 </div>
 
             </div>
-        @endforeach
+        @empty
+            <div class="flex items-center justify-between w-full px-3 rounded-lg sm:w-7/12 lg:w-9/12">
+                <h1 class="my-2 text-xl">No address found.</h1>
+            </div>
+        @endforelse
     </div>
 
     <x-modals.address-modal name="new-address" type="add" />

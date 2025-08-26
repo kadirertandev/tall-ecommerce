@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div class="p-3">
-                @foreach ($order->items as $item)
+                @foreach ($order->orderItems as $item)
                     @php
                         $product = $item->product;
                     @endphp

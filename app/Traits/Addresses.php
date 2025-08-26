@@ -16,7 +16,7 @@ trait Addresses
 
   public UserProfileAddressForm $form;
 
-  #[Computed()]
+  #[Computed(cache: true)]
   public function data()
   {
     return json_decode(file_get_contents(storage_path("app/public/address.json")), (bool) JSON_PRETTY_PRINT);

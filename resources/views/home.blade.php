@@ -123,7 +123,7 @@
         <h1 class="mt-2 mb-4 text-4xl font-thin font-roboto">{{ __('frontend.popular-categories') }}</h1>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-2 *:text-white">
             @foreach ($popularCategories as $category)
-                <a href="{{ route('category-slug', ['slug' => __('categories.' . $category->slug . '.slug')]) }}"
+                <a href="{{ route('category-slug', ['slug' => $category->slug]) }}"
                     class="flex items-center justify-center gap-2 p-6 bg-neutral-300">
                     <img class="{{-- h-auto w-[100px] --}} w-[100px] max-w-[100px] h-auto rounded-lg"
                         src="{{ asset('/storage/' . $category->image) }}" alt="">

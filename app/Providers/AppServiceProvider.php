@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
    */
   public function boot(): void
   {
-    if (App::runningInConsole()) {
+    if (App::runningInConsole() && !App::environment("testing")) {
       return;
     }
 

@@ -1,0 +1,33 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Order;
+use App\Models\Product;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\OrderItem>
+ */
+class OrderItemFactory extends Factory
+{
+  /**
+   * Define the model's default state.
+   *
+   * @return array<string, mixed>
+   */
+  public function definition(): array
+  {
+    $product = Product::factory()->create();
+
+    return [
+      'order_id' => Order::factory(),
+      'product_id' => $product->id,
+      'product_name' => $product->name,
+      'product_image' => $product->image,
+      'price' => $product->price - $product->discount_amount,
+      'original_product_price' => $product->price,
+      'quantity' => $this->faker->numberBetween(1, 5),
+    ];
+  }
+}

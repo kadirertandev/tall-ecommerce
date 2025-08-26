@@ -137,11 +137,9 @@
                 id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
                 data-dropdown-placement="bottom">
                 <span class="sr-only">Open user menu</span>
-                @if (auth()->user()->profile_image)
-                    @if (Storage::disk('public')->exists(auth()->user()->profile_image))
-                        <img class="w-8 h-8 rounded-full" src="{{ asset('/storage/' . auth()->user()->profile_image) }}"
-                            alt="">
-                    @endif
+                @if (auth()->user()->profile_image && Storage::disk('public')->exists(auth()->user()->profile_image))
+                    <img class="w-8 h-8 rounded-full" src="{{ asset('/storage/' . auth()->user()->profile_image) }}"
+                        alt="">
                 @else
                     <div
                         class="relative inline-flex items-center justify-center w-8 h-8 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">

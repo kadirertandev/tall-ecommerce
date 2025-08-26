@@ -27,7 +27,7 @@ class UserFactory extends Factory
       'first_name' => fake()->firstName(),
       'last_name' => fake()->lastName(),
       'email' => fake()->unique()->safeEmail(),
-      'phone_number' => fake()->phoneNumber(),
+      'phone_number' => fake()->numerify("##########"),
       'date_of_birth' => fake()->dateTimeBetween(),
       'is_admin' => 0,
       'email_verified_at' => now(),

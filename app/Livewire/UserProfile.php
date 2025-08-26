@@ -42,6 +42,8 @@ class UserProfile extends Component
 
     auth()->user()->update($validated);
 
+    $this->dispatch("user-profile-update");
+
     $this->swalSuccess([
       "titleText" => "Profile updated!"
     ]);

@@ -27,21 +27,21 @@ class Order extends Model
   {
     return $this->belongsTo(User::class);
   }
-  public function items()
+  public function orderItems()
   {
     return $this->hasMany(OrderItem::class);
   }
 
   public function products()
   {
-    return $this->items->map(function ($item) {
+    return $this->orderItems->map(function ($item) {
       return $item->product;
     });
   }
 
   public function subtotal()
   {
-    return $this->items()->sum(DB::raw('price * quantity'));
+    return $this->orderItems()->sum(DB::raw('price * quantity'));
   }
 
   public function scopeSearch($query, $value)
