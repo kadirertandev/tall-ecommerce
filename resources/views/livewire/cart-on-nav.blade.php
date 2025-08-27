@@ -21,7 +21,7 @@
     </button>
 
     <!-- drawer component -->
-    <div id="cart-drawer-right" wire:ignore.self
+    <div id="cart-drawer-right" wire:ignore.self x-trap="isOpen === true" @keydown.escape="hideDrawer"
         class="fixed top-0 right-0 z-40 h-screen  overflow-y-auto transition-transform translate-x-full bg-white w-[405px] min-w-96 max-w-max dark:bg-gray-800"
         tabindex="-1" aria-labelledby="drawer-right-label">
         <div class="flex flex-col h-full overflow-y-scroll bg-white shadow-xl">
@@ -33,7 +33,7 @@
                                 {{ __('frontend.cart.shopping-cart') }}</h2>
                             <div class="flex items-center ml-3 h-7">
                                 <button @click="hideDrawer" type="button"
-                                    class="relative text-gray-400 hover:text-gray-500">
+                                    class="relative text-gray-400 hover:text-gray-500 btn-hide-drawer">
                                     <span class="absolute -inset-0.5"></span>
                                     <span class="sr-only">Close panel</span>
                                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -133,7 +133,7 @@
                             </h2>
                             <div class="flex items-center ml-3 h-7">
                                 <button @click="hideDrawer" type="button"
-                                    class="relative p-2 -m-2 text-gray-400 hover:text-gray-500">
+                                    class="relative p-2 -m-2 text-gray-400 hover:text-gray-500 btn-hide-drawer">
                                     <span class="absolute -inset-0.5"></span>
                                     <span class="sr-only">Close panel</span>
                                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -181,12 +181,20 @@
             bodyScrolling: false,
             edge: false,
             edgeOffset: '',
-            backdropClasses: 'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30',
+            backdropClasses: 'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30 drawer-backdrop',
             onHide: () => {
                 console.log('drawer is hidden');
+
+                //focus body after hiding drawer so it is navigatable
+                document.activeElement.blur()
+                document.body.focus()
             },
             onShow: () => {
                 console.log('drawer is shown');
+
+                let btnHideDrawer = document.querySelector('.btn-hide-drawer');
+                document.querySelector('.drawer-backdrop')
+                    ?.addEventListener('click', () => btnHideDrawer.click());
             },
             onToggle: () => {
                 console.log('drawer has been toggled');
@@ -199,21 +207,26 @@
             override: true
         };
         let drawer = new Drawer($targetEl, options, instanceOptions);
-        console.log(drawer)
+
         Alpine.data("cartDrawer", () => ({
             drawer,
-            deneme() {
-                alert("deneme")
+            isOpen: false,
+            init() {
+                this.$watch('isOpen', (isOpen) => {
+                    console.log("isOpen State: " + isOpen);
+                })
             },
             showDrawer() {
                 if (drawer.isHidden()) {
                     drawer.show()
                 }
+                this.isOpen = true;
             },
             hideDrawer() {
                 if (drawer.isVisible()) {
                     drawer.hide()
                 }
+                this.isOpen = false;
             }
         }))
     </script>

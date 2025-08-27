@@ -1,6 +1,6 @@
 <div class="flex-1 hidden md:block">
     <form class="max-w-lg mx-auto">
-        <div class="flex" x-data="">
+        <div class="flex">
             <label for="search-dropdown" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Your
                 Email</label>
             <button id="dropdown-button" x-ref="btnToggle" data-dropdown-toggle="dropdown-categories"
