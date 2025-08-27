@@ -1,5 +1,6 @@
 @props(['title' => '', 'name'])
 <div x-data="{ ...$store.modal, modalName: '{{ $name }}' }" x-show="visibleModals.has(modalName)" x-trap="visibleModals.size > 0"
+    @keydown.tab="$focus.wrap().next()" @keydown.shift.tab="$focus.wrap().previous()"
     x-on:open-modal.window="visibleModals.add($event.detail.name)"
     x-on:close-modal.window="closeModal($event.detail.name)"
     x-on:modal-closed.window="console.log(`${$event.detail.modalName} modal closed`)"
