@@ -10,6 +10,9 @@ let defaultOptions = {
     icon: "",
     title: '', //titleText
     htmlContainer: '', //text
+    confirmButton: "bg-[#60c733]!",
+    denyButton: "bg-[#ef4444]!",
+    cancelButton: "bg-[#7a7a7a]!"
   },
   toast: false,
   animation: true,
@@ -42,7 +45,11 @@ let defaultOptions = {
 window.addEventListener("swal-fire", function (event) {
   let eventDetails = event.detail;
 
-  let options = { ...defaultOptions, ...eventDetails }
+  let options = {
+    ...defaultOptions,
+    ...eventDetails,
+    customClass: { ...defaultOptions.customClass, ...eventDetails.customClass }
+  }
 
   console.log("default options:\n", defaultOptions)
   console.log("options:\n", options)
