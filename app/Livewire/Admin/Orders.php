@@ -70,7 +70,7 @@ class Orders extends Component
     $this->tryCatch(function () use ($id) {
       $this->selectedOrder = Order::with([
         "user",
-        "items" => fn($q) => $q->with([
+        "orderItems" => fn($q) => $q->with([
           "product" => fn($q) => $q->with([
             "category" => fn($q) => $q->select(["id", "name", "slug"])->without("brands"),
             "brand" => fn($q) => $q->select(["id", "name", "slug"])

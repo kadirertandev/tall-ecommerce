@@ -15,9 +15,6 @@ class CategoryCreateForm extends Form
   public $slug;
   public $image;
   public $is_popular;
-  #[Validate("required")]
-  public $language;
-
 
   public function rules(): array
   {

@@ -31,7 +31,7 @@
                 </div>
             </div>
         </div>
-        @foreach ($order?->items ?? [] as $item)
+        @foreach ($order?->orderItems ?? [] as $item)
             @php
                 $product = $item->product;
             @endphp

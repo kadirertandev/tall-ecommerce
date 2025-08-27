@@ -29,32 +29,6 @@
                         class="text-sm font-medium text-gray-900 ms-2 dark:text-gray-300">Is
                         Popular</label>
                 </div>
-                <div>
-                    <select data-popover-target="popover-hover-language" data-popover-trigger="hover"
-                        wire:model.blur='createForm.language'
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option value="" selected>Select language</option>
-                        <option value="en">EN</option>
-                        <option value="tr">TR</option>
-                    </select>
-                    <div data-popover id="popover-hover-language" role="tooltip"
-                        class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-xs opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
-                        <div
-                            class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
-                            <h3 class="font-semibold text-gray-900 dark:text-white">Category Language
-                            </h3>
-                        </div>
-                        <div class="px-3 py-2">
-                            <p>Select which language you are using right now to create this category.
-                            </p>
-                        </div>
-                        <div data-popper-arrow></div>
-                    </div>
-                    @error('createForm.language')
-                        <p id="standard_error_help" class="mt-2 text-xs text-red-600 dark:text-red-400">
-                            {{ $message }}</p>
-                    @enderror
-                </div>
             </div>
 
             <div class="flex items-end justify-between gap-2 sm:col-span-2">
