@@ -79,33 +79,17 @@
                                                 <div class="flex items-center justify-between flex-1 text-sm">
                                                     <p class="flex items-center gap-4 text-gray-500">
                                                         <span>{{ __('frontend.cart.quantity') }}</span>
-                                                        <button wire:click='decreaseQuantity({{ $item->id }})'
-                                                            class="p-4 rounded-full hover:bg-gray-50 group">
-                                                            <svg class="w-3 h-3 text-gray-800 group-hover:text-red-500! dark:text-white"
-                                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                                width="24" height="24" fill="none"
-                                                                viewBox="0 0 24 24">
-                                                                <path stroke="currentColor" stroke-linecap="round"
-                                                                    stroke-linejoin="round" stroke-width="2" d="M5 12h14" />
-                                                            </svg>
-                                                        </button>
+                                                        <livewire:cart.decrease-quantity-button :key="'decrease-' . $item->id"
+                                                            :cartItemId="$item->id" />
+
                                                         <span>{{ $item->quantity }}</span>
-                                                        <button wire:click='increaseQuantity({{ $item->id }})'
-                                                            class="p-4 rounded-full hover:bg-gray-50 group">
-                                                            <svg class="w-3 h-3 text-gray-800 group-hover:text-teal-500! dark:text-white"
-                                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                                width="24" height="24" fill="none"
-                                                                viewBox="0 0 24 24">
-                                                                <path stroke="currentColor" stroke-linecap="round"
-                                                                    stroke-linejoin="round" stroke-width="2"
-                                                                    d="M5 12h14m-7 7V5" />
-                                                            </svg>
-                                                        </button>
+
+                                                        <livewire:cart.increase-quantity-button :key="'increase-' . $item->id"
+                                                            :cartItemId="$item->id" />
                                                     </p>
                                                     <div class="flex">
-                                                        <button type="button"
-                                                            wire:click='askRemoveFromCart({{ $item->id }})'
-                                                            class="font-medium text-red-400! hover:bg-gray-100 hover:text-red-600! p-2 rounded-lg">{{ __('frontend.cart.remove') }}</button>
+                                                        <livewire:cart.remove-from-cart-button :key="'remove-' . $item->id"
+                                                            :cartItemId="$item->id" />
                                                     </div>
                                                 </div>
                                             </div>

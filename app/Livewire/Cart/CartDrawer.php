@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Cart;
 
 use App\Traits\CartData;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class CartStepOne extends Component
+class CartDrawer extends Component
 {
   use CartData;
 
-  #[On("refresh-cart")]
   #[On("added-to-cart")]
+  #[On("refresh-cart")]
   public function render()
   {
-    return view('livewire.cart-step-one');
+    return view('livewire.cart.cart-drawer');
   }
 }

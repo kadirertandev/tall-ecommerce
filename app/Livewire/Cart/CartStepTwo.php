@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Cart;
 
 use App\Traits\Addresses;
 use App\Traits\CartData;
@@ -35,6 +35,6 @@ class CartStepTwo extends Component
   #[On("added-to-cart")]
   public function render()
   {
-    return view('livewire.cart-step-two');
+    return view('livewire.cart.cart-step-two');
   }
 }

@@ -14,13 +14,13 @@
         </ul>
 
         @if ($step == 1)
-            <livewire:cart-step-one />
+            <livewire:cart.cart-step-one />
         @endif
         @if ($step == 2)
-            <livewire:cart-step-two />
+            <livewire:cart.cart-step-two />
         @endif
         @if ($step == 3)
-            <livewire:cart-step-three />
+            <livewire:cart.cart-step-three />
         @endif
 
 

@@ -50,7 +50,7 @@
                         </div>
 
                         <div class="mt-6 sm:gap-4 sm:items-center sm:flex sm:mt-8">
-                            <livewire:add-to-cart-button :productId="$this->product->id" :svg='true'
+                            <livewire:cart.add-to-cart-button :productId="$this->product->id" :svg='true'
                                 class="text-gray-900 mt-4 hover:text-white sm:mt-0 bg-white hover:bg-teal-500! border-2 border-gray-200 font-medium rounded-lg shadow-xl text-sm px-5 py-2.5 dark:bg-primary-600 focus:outline-hidden flex items-center justify-center" />
                             <livewire:add-to-favorites-button :productId="$this->product->id" type="show" />
                         </div>

@@ -130,7 +130,7 @@
         </div>
         {{-- favorites --}}
 
-        <livewire:cart-on-nav />
+        <livewire:cart.cart-drawer />
 
         @auth
             <button type="button" class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-2 focus:ring-red-300 "

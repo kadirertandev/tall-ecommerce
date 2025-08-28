@@ -14,42 +14,18 @@
                         <div class="flex items-center gap-4">
                             <livewire:add-to-favorites-button :key='$item->product->id' :productId="$item->product->id" type="cart" />
 
-                            <button type="button" wire:click="$parent.traitAskRemoveFromCart('{{ $item->id }}')"
-                                class="inline-flex items-center text-sm font-medium text-red-600 hover:underline dark:text-red-500">
-                                <svg class="me-1.5 h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                    width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6" />
-                                </svg>
-                                <span>Remove</span>
-                            </button>
+                            <livewire:cart.remove-from-cart-button :key="'remove-' . $item->id" :cartItemId="$item->id"
+                                type="cart_step_one" />
                         </div>
                     </div>
                     <div class="flex items-center justify-between md:justify-end">
 
                         <p class="flex items-center gap-4 text-gray-500">
-
-                            <button wire:click="$parent.traitDecreaseQuantity('{{ $item->id }}')"
-                                class="p-4 rounded-full bg-gray-50 hover:bg-gray-100 group">
-                                <svg class="w-3 h-3 text-gray-800 group-hover:text-red-500! dark:text-white"
-                                    aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    fill="none" viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="M5 12h14" />
-                                </svg>
-                            </button>
+                            <livewire:cart.decrease-quantity-button :key="'decrease-' . $item->id" :cartItemId="$item->id" />
 
                             <span>{{ $item->quantity }}</span>
 
-                            <button wire:click="$parent.traitIncreaseQuantity('{{ $item->id }}')"
-                                class="p-4 rounded-full bg-gray-50 hover:bg-gray-100 group">
-                                <svg class="w-3 h-3 text-gray-800 group-hover:text-teal-500! dark:text-white"
-                                    aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    fill="none" viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="M5 12h14m-7 7V5" />
-                                </svg>
-                            </button>
+                            <livewire:cart.increase-quantity-button :key="'increase-' . $item->id" :cartItemId="$item->id" />
                         </p>
                         <div class="text-end md:order-4 md:w-32">
                             <p class="text-base font-bold text-gray-900 dark:text-white">

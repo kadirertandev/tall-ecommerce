@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Cart;
 
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -87,6 +87,6 @@ class CartStepThree extends Component
 
   public function render()
   {
-    return view('livewire.cart-step-three');
+    return view('livewire.cart.cart-step-three');
   }
 }

@@ -4,7 +4,7 @@ use App\Livewire\Auth\ForgotPassword;
 use App\Livewire\Auth\LoginForm;
 use App\Livewire\Auth\RegisterForm;
 use App\Livewire\Auth\ResetPassword;
-use App\Livewire\Cart;
+use App\Livewire\Cart\Cart;
 use App\Livewire\UserProfileAddresses;
 use App\Livewire\UserProfileChangePasswordForm;
 use App\Livewire\UserProfileFavorites;
