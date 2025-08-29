@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\UserProfile;
 
 use App\Livewire\Forms\ProductReviewForm;
 use App\Models\Order;
@@ -94,7 +94,7 @@ class UserProfileOrders extends Component
 
   public function render()
   {
-    return view('livewire.user-profile-orders')
+    return view('livewire.user-profile.user-profile-orders')
       ->layout("components.profile-layout", ["title" => "Orders"])
       ->section("content");
   }

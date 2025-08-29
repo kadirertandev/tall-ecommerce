@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\UserProfile;
 
 use App\Livewire\Forms\UserProfileAddressForm;
 use App\Models\UserAddress;
@@ -130,7 +130,7 @@ class UserProfileAddresses extends Component
   #[On("address-deleted")]
   public function render()
   {
-    return view('livewire.user-profile-addresses')
+    return view('livewire.user-profile.user-profile-addresses')
       ->layout("components.profile-layout", ["title" => "Addresses"])
       ->section("content");
   }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\UserProfile;
 
 use App\Models\ProductReview;
 use App\Traits\WithRefreshFlowbite;
@@ -33,7 +33,7 @@ class UserProfileReviews extends Component
 
   public function render()
   {
-    return view('livewire.user-profile-reviews')
+    return view('livewire.user-profile.user-profile-reviews')
       ->layout("components.profile-layout", ["title" => "Reviews"])
       ->section("content");
   }

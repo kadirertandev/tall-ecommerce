@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\UserProfile;
 
 use App\Models\Category;
 use App\Models\Product;
@@ -69,7 +69,7 @@ class UserProfileFavorites extends Component
   #[On("removed-from-favorites")]
   public function render()
   {
-    return view('livewire.user-profile-favorites')
+    return view('livewire.user-profile.user-profile-favorites')
       ->layout("components.profile-layout", ["title" => "Favorites"])
       ->section("content");
   }

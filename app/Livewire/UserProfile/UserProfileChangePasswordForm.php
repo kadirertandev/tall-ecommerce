@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\UserProfile;
 
 use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Validate;
@@ -34,7 +34,7 @@ class UserProfileChangePasswordForm extends Component
   }
   public function render()
   {
-    return view('livewire.user-profile-change-password-form')
+    return view('livewire.user-profile.user-profile-change-password-form')
       ->layout("components.profile-layout", ["title" => "Change Password"])
       ->section("content");
   }

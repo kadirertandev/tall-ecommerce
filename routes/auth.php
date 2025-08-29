@@ -5,12 +5,12 @@ use App\Livewire\Auth\LoginForm;
 use App\Livewire\Auth\RegisterForm;
 use App\Livewire\Auth\ResetPassword;
 use App\Livewire\Cart\Cart;
-use App\Livewire\UserProfileAddresses;
-use App\Livewire\UserProfileChangePasswordForm;
-use App\Livewire\UserProfileFavorites;
-use App\Livewire\UserProfileOrders;
-use App\Livewire\UserProfileReviews;
-use App\Livewire\UserProfile;
+use App\Livewire\UserProfile\UserProfileAddresses;
+use App\Livewire\UserProfile\UserProfileChangePasswordForm;
+use App\Livewire\UserProfile\UserProfileFavorites;
+use App\Livewire\UserProfile\UserProfileOrders;
+use App\Livewire\UserProfile\UserProfileReviews;
+use App\Livewire\UserProfile\UserProfile;
 use Illuminate\Support\Facades\Route;
 
 /*

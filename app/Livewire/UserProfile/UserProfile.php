@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\UserProfile;
 
 use App\Livewire\Forms\UserProfileUpdateForm;
 use App\Traits\WithSweetAlert;
@@ -101,7 +101,7 @@ class UserProfile extends Component
 
   public function render()
   {
-    return view('livewire.user-profile')
+    return view('livewire.user-profile.user-profile')
       ->layout("components.profile-layout", ["title" => "Profile"])
       ->section("content");
   }
