@@ -103,9 +103,7 @@ class RemoveFromCartButton extends Component
           return $this->swalError([
             "titleText" => "THIS ACTION IS UNAUTHORIZED!"
           ]);
-        },
-        ModelNotFoundException::class => fn($e) => dd($e),
-        Throwable::class => fn($e) => dd($e),
+        }
       ]
     );
   }
