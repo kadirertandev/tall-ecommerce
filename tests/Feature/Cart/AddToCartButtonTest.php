@@ -11,6 +11,7 @@ use App\Models\User;
 use Spatie\Permission\PermissionRegistrar;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Session;
 use Livewire\Livewire;
 
 class AddToCartButtonTest extends TestCase
@@ -38,6 +39,44 @@ class AddToCartButtonTest extends TestCase
       "class" => "class",
       "svg" => "svg",
     ];
+  }
+
+  public function test_component_exists_on_the_product_show_page()
+  {
+    $this->get(route("products.show", [
+      "category_slug" => $this->product->category->slug,
+      "product_slug" => $this->product->slug
+    ]))
+      ->assertSeeLivewire(AddToCartButton::class);
+  }
+
+  public function test_component_exists_on_the_products_by_category_page()
+  {
+    $this->get(route("category-slug", [
+      "slug" => $this->product->category->slug
+    ]))
+      ->assertSeeLivewire(AddToCartButton::class);
+  }
+
+  public function test_component_exists_on_the_products_by_brand_page()
+  {
+    $this->get(route("brand-slug", [
+      "slug" => $this->product->brand->slug,
+    ]))
+      ->assertSeeLivewire(AddToCartButton::class);
+  }
+
+  public function test_component_exists_on_the_cart_page()
+  {
+    $last_viewed_products[$this->product->id] =
+      [
+        "id" => $this->product->id,
+        "count" => 1
+      ];
+    Session::put("last_viewed_products", $last_viewed_products);
+
+    $this->actingAS($this->user)->get(route("auth.user.cart"))
+      ->assertSeeLivewire(AddToCartButton::class);
   }
 
   public function test_admins_can_not_add_product_to_cart()

@@ -14,7 +14,6 @@ use App\Livewire\Cart\RemoveFromCartButton;
 use App\Models\Cart;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 
 class RemoveFromCartButtonTest extends TestCase
 {
@@ -39,12 +38,41 @@ class RemoveFromCartButtonTest extends TestCase
     $this->product = Product::factory()->create();
 
     $this->cartItem = CartItem::factory()
+      ->for(Cart::factory()->for($this->user), "cart")
       ->for($this->product, "product")
       ->create();
     $this->initProperties = [
       "cartItemId" => $this->cartItem->id,
       "type" => "nav"
     ];
+  }
+
+  public function test_component_exists_on_the_cart_drawer()
+  {
+    $this->actingAs($this->user);
+    $this->cartItem = CartItem::factory()
+      ->for(Cart::factory()->for($this->user), "cart")
+      ->for($this->product, "product")
+      ->create([
+        "quantity" => 1
+      ]);
+
+    $this->actingAS($this->user)->get(route("home"))
+      ->assertSeeLivewire(RemoveFromCartButton::class);
+  }
+
+  public function test_component_exists_on_the_cart_page()
+  {
+    $this->actingAs($this->user);
+    $this->cartItem = CartItem::factory()
+      ->for(Cart::factory()->for($this->user), "cart")
+      ->for($this->product, "product")
+      ->create([
+        "quantity" => 1
+      ]);
+
+    $this->get(route("auth.user.cart"))
+      ->assertSeeLivewire(RemoveFromCartButton::class);
   }
 
   public function test_admins_can_not_remove_cart_item()
@@ -77,10 +105,9 @@ class RemoveFromCartButtonTest extends TestCase
 
     CartItem::truncate();
 
-    $cart = Cart::factory()->create();
     $this->cartItem = CartItem::factory()
+      ->for(Cart::factory()->for($this->user), "cart")
       ->for($this->product, "product")
-      ->for($cart, "cart")
       ->create();
 
     Livewire::test(RemoveFromCartButton::class, [
@@ -103,10 +130,9 @@ class RemoveFromCartButtonTest extends TestCase
 
     CartItem::truncate();
 
-    $cart = Cart::factory()->create();
     $this->cartItem = CartItem::factory()
+      ->for(Cart::factory()->for($this->user), "cart")
       ->for($this->product, "product")
-      ->for($cart, "cart")
       ->create();
 
     Livewire::test(RemoveFromCartButton::class, [

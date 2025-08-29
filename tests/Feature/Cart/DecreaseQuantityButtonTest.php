@@ -7,6 +7,7 @@ use Tests\TestCase;
 use Livewire\Livewire;
 use App\Models\Product;
 use App\Livewire\Cart\DecreaseQuantityButton;
+use App\Models\Cart;
 use App\Models\User;
 use Spatie\Permission\PermissionRegistrar;
 use Database\Seeders\RolesPermissionsSeeder;
@@ -37,10 +38,39 @@ class DecreaseQuantityButtonTest extends TestCase
 
     $this->cartItem = CartItem::factory()
       ->for($this->product, "product")
+      ->for(Cart::factory()->for($this->user), "cart")
       ->create();
     $this->initProperties = [
       "cartItemId" => $this->cartItem->id,
     ];
+  }
+
+  public function test_component_exists_on_the_cart_drawer()
+  {
+    $this->actingAs($this->user);
+    $this->cartItem = CartItem::factory()
+      ->for(Cart::factory()->for($this->user), "cart")
+      ->for($this->product, "product")
+      ->create([
+        "quantity" => 1
+      ]);
+
+    $this->actingAS($this->user)->get(route("home"))
+      ->assertSeeLivewire(DecreaseQuantityButton::class);
+  }
+
+  public function test_component_exists_on_the_cart_page()
+  {
+    $this->actingAs($this->user);
+    $this->cartItem = CartItem::factory()
+      ->for(Cart::factory()->for($this->user), "cart")
+      ->for($this->product, "product")
+      ->create([
+        "quantity" => 1
+      ]);
+
+    $this->get(route("auth.user.cart"))
+      ->assertSeeLivewire(DecreaseQuantityButton::class);
   }
 
   public function test_admins_can_not_decrease_cart_item_quantity()
@@ -71,6 +101,7 @@ class DecreaseQuantityButtonTest extends TestCase
   {
     $this->actingAs($this->user);
     $this->cartItem = CartItem::factory()
+      ->for(Cart::factory()->for($this->user), "cart")
       ->for($this->product, "product")
       ->create([
         "quantity" => 2
@@ -92,6 +123,7 @@ class DecreaseQuantityButtonTest extends TestCase
   {
     $this->actingAs($this->user);
     $this->cartItem = CartItem::factory()
+      ->for(Cart::factory()->for($this->user), "cart")
       ->for($this->product, "product")
       ->create([
         "quantity" => 1
