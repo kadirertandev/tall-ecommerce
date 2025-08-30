@@ -228,6 +228,43 @@ class UserProfileAddressesTest extends TestCase
 
   }
 
+  public function test_users_can_not_update_addresses_do_not_belong_to_them()
+  {
+    $this->actingAs($this->user);
+    $anotherUser = $this->createUser();
+
+    $address = UserAddress::factory()
+      ->for($anotherUser)
+      ->create();
+
+    Livewire::test(UserProfileAddresses::class)
+      ->call("edit", $address->id)
+      ->assertDispatched("swal-fire", titleText: "This action is unauthorized.");
+
+    Livewire::test(UserProfileAddresses::class)
+      ->set("selectedAddressId", $address->id)
+      ->set("form.addressTitle", "Home")
+      ->set("form.selectedCity", "Some City")
+      ->set("form.selectedDistrict", "Some District")
+      ->set("form.selectedNeighborhood", "Some Neighborhood")
+      ->set("form.addressLine", "Some address line...")
+      ->set("form.makeDefault", true)
+      ->call("update")
+      ->assertDispatched("swal-fire", titleText: "This action is unauthorized.");
+
+    $this->assertDatabaseCount("user_addresses", 1);
+    $this->assertDatabaseHas("user_addresses", [
+      "id" => $address->id,
+      "user_id" => $anotherUser->id,
+      "title" => $address->title,
+      "city" => $address->city,
+      "district" => $address->district,
+      "neighborhood" => $address->neighborhood,
+      "address_line" => $address->address_line,
+      "is_default" => false,
+    ]);
+  }
+
   public function test_users_can_not_update_address__with_invalid_fields()
   {
     $this->actingAs($this->user);
@@ -312,6 +349,35 @@ class UserProfileAddressesTest extends TestCase
       ->assertDispatched("address-deleted");
 
     $this->assertDatabaseCount("user_addresses", 0);
+  }
+
+  public function test_users_can_not_delete_addresses_do_not_belong_to_them()
+  {
+    $this->actingAs($this->user);
+
+    $anotherUser = $this->createUser();
+
+    $address = UserAddress::factory()
+      ->for($anotherUser)
+      ->create();
+
+    $this->assertDatabaseCount("user_addresses", 1);
+
+    Livewire::test(UserProfileAddresses::class)
+      ->call("delete", $address->id)
+      ->assertDispatched("swal-fire", titleText: "This action is unauthorized.");
+
+    $this->assertDatabaseCount("user_addresses", 1);
+    $this->assertDatabaseHas("user_addresses", [
+      "id" => $address->id,
+      "user_id" => $anotherUser->id,
+      "title" => $address->title,
+      "city" => $address->city,
+      "district" => $address->district,
+      "neighborhood" => $address->neighborhood,
+      "address_line" => $address->address_line,
+      "is_default" => false,
+    ]);
   }
 
   public function test_handles_model_not_found_exception_and_dispatches_error_when_trying_to_delete_non_existing_address()

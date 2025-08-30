@@ -8,6 +8,7 @@ use App\Traits\Addresses;
 use App\Traits\WithInteractModal;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
+use Illuminate\Auth\Access\AuthorizationException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -39,6 +40,8 @@ class UserProfileAddresses extends Component
     $this->tryCatch(function () use ($id) {
       $address = UserAddress::findOrFail($id);
 
+      $this->authorize("update", $address);
+
       $this->selectedAddressId = $id;
       $this->form->addressTitle = $address->title;
       $this->form->selectedCity = $address->city;
@@ -48,7 +51,13 @@ class UserProfileAddresses extends Component
       $this->form->makeDefault = (bool) $address->is_default;
 
       $this->showModal("edit-address");
-    });
+    }, [
+      AuthorizationException::class => function ($e) {
+        $this->swalError([
+          "titleText" => $e->getMessage()
+        ]);
+      }
+    ]);
   }
   public function update()
   {
@@ -56,6 +65,8 @@ class UserProfileAddresses extends Component
 
     $this->tryCatch(function () use ($validated) {
       $address = UserAddress::findOrFail($this->selectedAddressId);
+
+      $this->authorize("update", $address);
 
       # if makeDefault checkbox is checked
       # set all existing addresses of user to non-default before making selected address the default
@@ -81,7 +92,13 @@ class UserProfileAddresses extends Component
       $this->swalToast([
         "titleText" => "Address updated successfully!"
       ]);
-    });
+    }, [
+      AuthorizationException::class => function ($e) {
+        $this->swalError([
+          "titleText" => $e->getMessage()
+        ]);
+      }
+    ]);
   }
 
   #[On("address-modal-closed")]
@@ -115,6 +132,8 @@ class UserProfileAddresses extends Component
     $this->tryCatch(function () use ($addressId) {
       $address = UserAddress::findOrFail($addressId);
 
+      $this->authorize("update", $address);
+
       $address->delete();
 
       $this->swalToast([
@@ -122,7 +141,13 @@ class UserProfileAddresses extends Component
       ]);
 
       $this->dispatch("address-deleted");
-    });
+    }, [
+      AuthorizationException::class => function ($e) {
+        $this->swalError([
+          "titleText" => $e->getMessage()
+        ]);
+      }
+    ]);
   }
 
   #[On("address-created")]

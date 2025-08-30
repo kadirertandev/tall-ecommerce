@@ -10,7 +10,7 @@
             <ul
                 class="md:sticky md:top-0 flex-column space-y space-y-4 text-sm font-medium text-gray-500 dark:text-gray-400 md:me-4 mb-4 md:mb-0">
                 <li>
-                    <a wire:navigate {{-- href="{{ !request()->routeIs('auth.user.profile') ? route('auth.user.profile') : 'javascript:void(0);' }}" --}} href="{{ route('auth.user.profile') }}"
+                    <a wire:navigate href="{{ route('auth.user.profile') }}"
                         class="inline-flex items-center px-4 py-3 rounded-lg w-full {{ request()->routeIs('auth.user.profile') ? 'bg-blue-700 text-white' : 'bg-gray-50 hover:text-gray-900  hover:bg-gray-100' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor"
@@ -22,7 +22,7 @@
                     </a>
                 </li>
                 <li>
-                    <a wire:navigate {{-- href="{{ !request()->routeIs('auth.user.favorites') ? route('auth.user.favorites') : 'javascript:void(0);' }}" --}} href="{{ route('auth.user.favorites') }}"
+                    <a wire:navigate href="{{ route('auth.user.favorites') }}"
                         class="inline-flex items-center px-4 py-3 rounded-lg w-full {{ request()->routeIs('auth.user.favorites') ? 'bg-blue-700 text-white' : 'bg-gray-50 hover:text-gray-900  hover:bg-gray-100' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor"
@@ -34,7 +34,7 @@
                     </a>
                 </li>
                 <li>
-                    <a wire:navigate {{-- href="{{ !request()->routeIs('auth.user.orders') ? route('auth.user.orders') : 'javascript:void(0);' }}" --}} href="{{ route('auth.user.orders') }}"
+                    <a wire:navigate href="{{ route('auth.user.orders') }}"
                         class="inline-flex items-center px-4 py-3 rounded-lg w-full {{ request()->routeIs('auth.user.orders') ? 'bg-blue-700 text-white' : 'bg-gray-50 hover:text-gray-900  hover:bg-gray-100' }}">
                         <svg xmlns="http://www.w3.org/2000/svg"
                             class="w-5 h-5 me-2 {{ request()->routeIs('auth.user.orders') ? 'text-white' : 'text-gray-500 dark:text-gray-400' }}"
@@ -46,7 +46,7 @@
                     </a>
                 </li>
                 <li>
-                    <a wire:navigate {{-- href="{{ !request()->routeIs('auth.user.reviews') ? route('auth.user.reviews') : 'javascript:void(0);' }}" --}} href="{{ route('auth.user.reviews') }}"
+                    <a wire:navigate href="{{ route('auth.user.reviews') }}"
                         class="inline-flex items-center px-4 py-3 rounded-lg w-full {{ request()->routeIs('auth.user.reviews') ? 'bg-blue-700 text-white' : 'bg-gray-50 hover:text-gray-900  hover:bg-gray-100' }}">
                         <svg xmlns="http://www.w3.org/2000/svg"
                             class="w-5 h-5 me-2 {{ request()->routeIs('auth.user.reviews') ? 'text-white' : 'text-gray-500 dark:text-gray-400' }}"
@@ -60,8 +60,7 @@
                     </a>
                 </li>
                 <li>
-                    <a wire:navigate
-                        href="{{ !request()->routeIs('auth.user.addresses') ? route('auth.user.addresses') : 'javascript:void(0);' }}"
+                    <a wire:navigate href="{{ route('auth.user.addresses') }}"
                         class="inline-flex items-center px-4 py-3 rounded-lg w-full {{ request()->routeIs('auth.user.addresses') ? 'bg-blue-700 text-white' : 'bg-gray-50 hover:text-gray-900  hover:bg-gray-100' }}">
                         <svg class="w-5 h-5 me-2 {{ request()->routeIs('auth.user.addresses') ? 'text-white' : 'text-gray-500 dark:text-gray-400' }}"
                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -74,8 +73,7 @@
                     </a>
                 </li>
                 <li>
-                    <a wire:navigate
-                        href="{{ !request()->routeIs('auth.user.change-password') ? route('auth.user.change-password') : 'javascript:void(0);' }}"
+                    <a wire:navigate href="{{ route('auth.user.change-password') }}"
                         class="inline-flex items-center px-4 py-3 rounded-lg w-full text-nowrap {{ request()->routeIs('auth.user.change-password') ? 'bg-blue-700 text-white' : 'bg-gray-50 hover:text-gray-900  hover:bg-gray-100' }}">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor"
