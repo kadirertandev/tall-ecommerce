@@ -5,7 +5,7 @@ namespace Tests\Feature\Profile;
 use App\Models\UserAddress;
 use Tests\TestCase;
 use Livewire\Livewire;
-use App\Livewire\UserProfileAddresses;
+use App\Livewire\UserProfile\UserProfileAddresses;
 use App\Models\User;
 use Spatie\Permission\PermissionRegistrar;
 use Database\Seeders\RolesPermissionsSeeder;
@@ -41,6 +41,12 @@ class UserProfileAddressesTest extends TestCase
       ->get($this->endPoint)
       ->assertOk()
       ->assertSeeLivewire(UserProfileAddresses::class);
+  }
+
+  public function test_it_redirects_to_login_page_when_unauthenticated_users_try_to_access_user_profile_addresses_page()
+  {
+    $this->get($this->endPoint)
+      ->assertRedirect(route("login"));
   }
 
   public function test_admins_can_not_access()

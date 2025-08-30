@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Profile;
 
-use App\Livewire\UserProfileReviews;
+use App\Livewire\UserProfile\UserProfileReviews;
 use App\Models\ProductReview;
 use App\Models\User;
 use Database\Seeders\RolesPermissionsSeeder;
@@ -40,6 +40,12 @@ class UserProfileReviewsTest extends TestCase
       ->get($this->endPoint)
       ->assertOk()
       ->assertSeeLivewire(UserProfileReviews::class);
+  }
+
+  public function test_it_redirects_to_login_page_when_unauthenticated_users_try_to_access_user_profile_reviews_page()
+  {
+    $this->get($this->endPoint)
+      ->assertRedirect(route("login"));
   }
 
   public function test_admins_can_not_access()

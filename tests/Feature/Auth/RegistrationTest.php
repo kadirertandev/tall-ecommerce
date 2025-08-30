@@ -26,6 +26,14 @@ class RegistrationTest extends TestCase
       ->assertSee(__("frontend.form.register-form.create-an-account"));
   }
 
+  public function test_it_redirects_to_home_page_when_authenticated_users_try_to_access_register_page()
+  {
+    $user = $this->createUser();
+
+    $this->actingAs($user)->get(route("register"))
+      ->assertRedirect(route("home"));
+  }
+
   public function test_users_can_register_and_recieve_welcome_email()
   {
     Bus::fake();

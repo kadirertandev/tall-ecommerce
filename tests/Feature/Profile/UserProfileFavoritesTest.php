@@ -3,7 +3,7 @@
 namespace Tests\Feature\Profile;
 
 use App\Livewire\AddToFavoritesButton;
-use App\Livewire\UserProfileFavorites;
+use App\Livewire\UserProfile\UserProfileFavorites;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
@@ -41,6 +41,12 @@ class UserProfileFavoritesTest extends TestCase
       ->get($this->endPoint)
       ->assertOk()
       ->assertSeeLivewire(UserProfileFavorites::class);
+  }
+
+  public function test_it_redirects_to_login_page_when_unauthenticated_users_try_to_access_user_profile_favorites_page()
+  {
+    $this->get($this->endPoint)
+      ->assertRedirect(route("login"));
   }
 
   public function test_admins_can_not_access()

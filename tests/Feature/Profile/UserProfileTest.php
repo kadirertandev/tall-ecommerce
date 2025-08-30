@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Profile;
 
-use App\Livewire\UserProfile;
+use App\Livewire\UserProfile\UserProfile;
 use App\Models\User;
 use Database\Seeders\RolesPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -41,6 +41,12 @@ class UserProfileTest extends TestCase
       ->get($this->endPoint)
       ->assertOk()
       ->assertSeeLivewire(UserProfile::class);
+  }
+
+  public function test_it_redirects_to_login_page_when_unauthenticated_users_try_to_access_user_profile_page()
+  {
+    $this->get($this->endPoint)
+      ->assertRedirect(route("login"));
   }
 
   public function test_admins_can_not_access()

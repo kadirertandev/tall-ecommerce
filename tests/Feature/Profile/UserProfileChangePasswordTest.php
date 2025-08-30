@@ -3,7 +3,7 @@
 namespace Tests\Feature\Profile;
 
 use App\Livewire\Auth\LoginForm;
-use App\Livewire\UserProfileChangePasswordForm;
+use App\Livewire\UserProfile\UserProfileChangePasswordForm;
 use Tests\TestCase;
 use Livewire\Livewire;
 use App\Models\User;
@@ -39,6 +39,12 @@ class UserProfileChangePasswordTest extends TestCase
       ->get($this->endPoint)
       ->assertOk()
       ->assertSeeLivewire(UserProfileChangePasswordForm::class);
+  }
+
+  public function test_it_redirects_to_login_page_when_unauthenticated_users_try_to_access_user_profile_change_password_page()
+  {
+    $this->get($this->endPoint)
+      ->assertRedirect(route("login"));
   }
 
   public function test_admins_can_not_access()

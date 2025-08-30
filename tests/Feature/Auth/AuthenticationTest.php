@@ -37,6 +37,12 @@ class AuthenticationTest extends TestCase
       ->assertSee(__("frontend.form.login-form.sign-in-to-your-account"));
   }
 
+  public function test_it_redirects_to_home_page_when_authenticated_users_try_to_access_login_page()
+  {
+    $this->actingAs($this->user)->get(route("login"))
+      ->assertRedirect(route("home"));
+  }
+
   public function test_users_can_authenticate_using_login_screen()
   {
     Livewire::test(LoginForm::class)

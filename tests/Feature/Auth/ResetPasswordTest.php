@@ -12,7 +12,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -27,6 +29,37 @@ class ResetPasswordTest extends TestCase
     parent::setUp();
 
     $this->user = $this->createUser();
+  }
+
+  public function test_forgot_password_component_exists_on_the_page()
+  {
+    $this->get(route("forgot-password"))
+      ->assertSeeLivewire(ForgotPassword::class)
+      ->assertSee(__('frontend.form.login-form.forgot-password'));
+  }
+  public function test_reset_password_component_exists_on_the_page()
+  {
+    DB::table("password_reset_tokens")->insert([
+      "email" => $this->user->email,
+      "token" => $token = Str::random(64),
+      "created_at" => now()
+    ]);
+
+    $this->get(route("reset-password", ["token" => $token]))
+      ->assertSeeLivewire(ResetPassword::class, ["token" => $token])
+      ->assertSee(__('frontend.form.reset-password-form.set-a-new-password'));
+  }
+
+  public function test_it_redirects_to_home_page_when_authenticated_users_try_to_access_forgot_password_page()
+  {
+    $this->actingAs($this->user)->get(route("forgot-password"))
+      ->assertRedirect(route("home"));
+  }
+
+  public function test_it_redirects_to_home_page_when_authenticated_users_try_to_access_reset_password_page()
+  {
+    $this->actingAs($this->user)->get(route("reset-password", ["token" => Str::random(64)]))
+      ->assertRedirect(route("home"));
   }
 
   public function test_users_can_reset_password()
