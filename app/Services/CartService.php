@@ -11,33 +11,25 @@ use Illuminate\Auth\Access\AuthorizationException;
 
 class CartService
 {
-  public function add($productId, $quantity, \Closure|null $callback = null)
+  public function add(Product $product, $quantity, \Closure|null $callback = null)
   {
-    if (!auth()->user()) {
-      return $this->addToGuestCart($productId);
-    }
-
     if (Gate::denies("customer")) {
-      throw new AuthorizationException("This action is unauthorized!");
+      throw new AuthorizationException();
     }
-
-    $product = Product::findOrFail($productId);
 
     DB::beginTransaction();
 
-    $cart = auth()->user()->cart()->firstOrCreate([
-      "user_id" => auth()->user()->id
-    ]);
+    $cart = auth()->user()->cart()->firstOrCreate();
 
-    if ($cart->products()->contains($productId)) {
-      $item = CartItem::where("product_id", $productId)
+    if ($cart->items()->where("product_id", $product->id)->exists()) {
+      $item = CartItem::where("product_id", $product->id)
         ->where("cart_id", $cart->id)
         ->firstOrFail();
       $item->increment("quantity", $quantity);
     } else {
       CartItem::create([
         "cart_id" => $cart->id,
-        "product_id" => $productId,
+        "product_id" => $product->id,
         "quantity" => $quantity
       ]);
     }
@@ -45,7 +37,7 @@ class CartService
     DB::commit();
 
     if (is_callable($callback))
-      $callback();
+      $callback($product);
   }
 
   public function addToGuestCart($productId)
@@ -69,38 +61,26 @@ class CartService
   public function syncCart($guestCartProducts)
   {
     foreach ($guestCartProducts as $productId => $data) {
-      $this->add($productId, $data["quantity"]);
+      $product = Product::find($productId);
+
+      if ($product) {
+        $this->add($product, $data["quantity"]);
+      }
     }
   }
 
   public function remove(CartItem $cartItem)
   {
-    if (Gate::denies("customer")) {
-      throw new AuthorizationException("This action is unauthorized!");
-    }
-
     $cartItem->delete();
   }
 
-  public function increaseQuantity($cartItemId)
+  public function increaseQuantity(CartItem $cartItem)
   {
-    if (Gate::denies("customer")) {
-      throw new AuthorizationException("This action is unauthorized!");
-    }
-
-    $cartItem = CartItem::findOrFail($cartItemId);
-
     $cartItem->increment("quantity", 1);
   }
 
-  public function decreaseQuantity($cartItemId)
+  public function decreaseQuantity(CartItem $cartItem)
   {
-    if (Gate::denies("customer")) {
-      throw new AuthorizationException("This action is unauthorized!");
-    }
-
-    $cartItem = CartItem::findOrFail($cartItemId);
-
     if ($cartItem->quantity > 1) {
       $cartItem->decrement("quantity", 1);
     } else {

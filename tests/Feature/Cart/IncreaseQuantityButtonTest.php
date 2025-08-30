@@ -90,7 +90,7 @@ class IncreaseQuantityButtonTest extends TestCase
 
     Livewire::actingAs($this->order_editor)->test(IncreaseQuantityButton::class, $this->initProperties)
       ->call("increaseQuantity")
-      ->assertDispatched("swal-fire", titleText: "THIS ACTION IS UNAUTHORIZED!");
+      ->assertDispatched("swal-fire", titleText: "This action is unauthorized.");
     $this->assertDatabaseHas("cart_items", [
       "product_id" => $this->product->id,
       "quantity" => $this->cartItem->quantity
@@ -108,6 +108,32 @@ class IncreaseQuantityButtonTest extends TestCase
     $this->assertDatabaseHas("cart_items", [
       "product_id" => $this->product->id,
       "quantity" => $this->cartItem->quantity + 1
+    ]);
+  }
+
+  public function test_users_can_not_increase_quantity_of_cart_item_does_not_belong_to_them()
+  {
+    $this->actingAs($this->user);
+
+    $anotherUser = $this->createUser();
+    $cart = Cart::factory()->for($anotherUser)->create();
+    $this->cartItem = CartItem::factory()
+      ->for($cart, "cart")
+      ->for($this->product, "product")
+      ->create([
+        "quantity" => 1
+      ]);
+
+    Livewire::test(IncreaseQuantityButton::class, [
+      "cartItemId" => $this->cartItem->id,
+    ])
+      ->call("increaseQuantity")
+      ->assertDispatched("swal-fire", titleText: "This action is unauthorized.");
+
+    $this->assertDatabaseHas("cart_items", [
+      "cart_id" => $cart->id,
+      "product_id" => $this->product->id,
+      "quantity" => $this->cartItem->quantity
     ]);
   }
 }

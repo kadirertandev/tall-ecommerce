@@ -92,7 +92,7 @@ class RemoveFromCartButtonTest extends TestCase
 
     Livewire::actingAs($this->order_editor)->test(RemoveFromCartButton::class, $this->initProperties)
       ->call("removeFromCart", $this->cartItem->id, false)
-      ->assertDispatched("swal-fire", titleText: "THIS ACTION IS UNAUTHORIZED!");
+      ->assertDispatched("swal-fire", titleText: "This action is unauthorized.");
     $this->assertDatabaseHas("cart_items", [
       "product_id" => $this->product->id,
       "quantity" => $this->cartItem->quantity
@@ -149,5 +149,33 @@ class RemoveFromCartButtonTest extends TestCase
 
     $this->assertDatabaseCount("cart_items", 0);
     $this->assertTrue($this->user->fresh()->favorites->contains($this->product->id));
+  }
+
+  public function test_users_can_not_remove_cart_item_does_not_belong_to_them()
+  {
+    $this->actingAs($this->user);
+
+    CartItem::truncate();
+
+    $anotherUser = $this->createUser();
+    $cart = Cart::factory()->for($anotherUser)->create();
+    $this->cartItem = CartItem::factory()
+      ->for($cart, "cart")
+      ->for($this->product, "product")
+      ->create([
+        "quantity" => 1
+      ]);
+
+    Livewire::test(RemoveFromCartButton::class, [
+      "cartItemId" => $this->cartItem->id,
+      "type" => "nav"
+    ])->call("removeFromCart", $this->cartItem->id, false)
+      ->assertDispatched("swal-fire", titleText: "This action is unauthorized.");
+
+    $this->assertDatabaseHas("cart_items", [
+      "cart_id" => $cart->id,
+      "product_id" => $this->product->id,
+      "quantity" => $this->cartItem->quantity
+    ]);
   }
 }

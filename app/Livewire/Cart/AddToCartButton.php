@@ -31,7 +31,12 @@ class AddToCartButton extends Component
   {
     $this->tryCatch(function () use ($quantity, $cartService) {
       $product = Product::findOrFail($this->productId);
-      $cartService->add($this->productId, $quantity, function () use ($cartService, $product) {
+
+      if (!auth()->user()) {
+        return $cartService->addToGuestCart($product->id);
+      }
+
+      $cartService->add($product, $quantity, function ($product) use ($cartService) {
         $this->swalToast([
           "titleText" => $product->name,
           "text" => __('frontend.cart.added-to-cart'),

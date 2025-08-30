@@ -7,6 +7,7 @@ use Livewire\Component;
 use App\Services\CartService;
 use Illuminate\Auth\Access\AuthorizationException;
 use App\Exceptions\CartItemQuantityReachedMinimumException;
+use App\Models\CartItem;
 use Illuminate\Support\Facades\Gate;
 
 class IncreaseQuantityButton extends Component
@@ -23,7 +24,15 @@ class IncreaseQuantityButton extends Component
   public function increaseQuantity(CartService $cartService)
   {
     $this->tryCatch(function () use ($cartService) {
-      $cartService->increaseQuantity($this->cartItemId);
+      if (Gate::denies("customer")) {
+        throw new AuthorizationException();
+      }
+
+      $cartItem = CartItem::findOrFail($this->cartItemId);
+
+      $this->authorize("update", $cartItem);
+
+      $cartService->increaseQuantity($cartItem);
 
       $this->dispatch("refresh-cart");
     }, [
@@ -32,11 +41,8 @@ class IncreaseQuantityButton extends Component
           return to_route("admin.products.index");
         }
         return $this->swalError([
-          "titleText" => "THIS ACTION IS UNAUTHORIZED!"
+          "titleText" => $e->getMessage()
         ]);
-      },
-      CartItemQuantityReachedMinimumException::class => function ($e) {
-        $this->dispatch("ask-remove-from-cart", cartItemId: $this->cartItemId);
       }
     ]);
   }

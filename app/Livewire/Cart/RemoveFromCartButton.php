@@ -63,7 +63,13 @@ class RemoveFromCartButton extends Component
   {
     $this->tryCatch(
       function () use ($cartService, $cartItemId, $addToFavorites) {
+        if (Gate::denies("customer")) {
+          throw new AuthorizationException();
+        }
+
         $cartItem = CartItem::findOrFail($cartItemId);
+
+        $this->authorize("delete", $cartItem);
 
         $cartService->remove($cartItem);
 
@@ -101,7 +107,7 @@ class RemoveFromCartButton extends Component
             return to_route("admin.products.index");
           }
           return $this->swalError([
-            "titleText" => "THIS ACTION IS UNAUTHORIZED!"
+            "titleText" => $e->getMessage()
           ]);
         }
       ]
