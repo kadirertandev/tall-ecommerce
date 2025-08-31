@@ -13,9 +13,7 @@ use App\Traits\WithInteractModal;
 use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithTryCatch;
 use App\Traits\WithUpdateFormSlug;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
-use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -85,9 +83,7 @@ class Brands extends Component
   public function showEditModal($id)
   {
     $this->tryCatch(function () use ($id) {
-      if (!Gate::allows("edit brands")) {
-        throw new UnauthorizedException("can not edit brand");
-      }
+      $this->authorize("edit brands");
 
       $brand = Brand::findOrFail($id);
 
@@ -112,9 +108,7 @@ class Brands extends Component
     $this->createForm->validate();
 
     $this->tryCatch(function () {
-      if (!Gate::allows("create brands")) {
-        throw new UnauthorizedException("can not create brand");
-      }
+      $this->authorize("create brands");
 
       $imageName = $this->createForm->image->store("brand_images", "public");
 
@@ -139,9 +133,7 @@ class Brands extends Component
     $this->editForm->validate();
 
     $this->tryCatch(function () {
-      if (!Gate::allows("edit brands")) {
-        throw new UnauthorizedException("can not edit brand");
-      }
+      $this->authorize("edit brands");
 
       $brand = Brand::findOrFail($this->selectedBrand->id);
 
@@ -191,9 +183,7 @@ class Brands extends Component
   public function delete($brandId)
   {
     $this->tryCatch(function () use ($brandId) {
-      if (!Gate::allows("delete brands")) {
-        throw new UnauthorizedException("can not delete brand");
-      }
+      $this->authorize("delete brands");
 
       $brand = Brand::findOrFail($brandId);
 
@@ -221,9 +211,7 @@ class Brands extends Component
   public function forceDelete($brandId)
   {
     $this->tryCatch(function () use ($brandId) {
-      if (!Gate::allows("force delete brands")) {
-        throw new UnauthorizedException("you cant delete brand permanently");
-      }
+      $this->authorize("force delete brands");
 
       $brand = Brand::withTrashed()->findOrFail($brandId);
       $brand->forceDelete();
@@ -237,9 +225,7 @@ class Brands extends Component
   public function restore($brandId)
   {
     $this->tryCatch(function () use ($brandId) {
-      if (!Gate::allows("force delete brands")) {
-        throw new UnauthorizedException("you cant restore brand");
-      }
+      $this->authorize("force delete brands");
 
       $brand = Brand::withTrashed()->findOrFail($brandId);
       $brand->restore();

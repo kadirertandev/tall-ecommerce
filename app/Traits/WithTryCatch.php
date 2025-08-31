@@ -2,9 +2,9 @@
 
 namespace App\Traits;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
-use Illuminate\Validation\UnauthorizedException;
 use Throwable;
 
 trait WithTryCatch
@@ -14,9 +14,9 @@ trait WithTryCatch
   public function defaultExceptionHandlers()
   {
     return [
-      UnauthorizedException::class => function ($e) {
+      AuthorizationException::class => function ($e) {
         $this->swalError([
-          "titleText" => "THIS ACTION IS UNAUTHORIZED!"
+          "titleText" => $e->getMessage()
         ]);
       },
       ModelNotFoundException::class => function ($e) {

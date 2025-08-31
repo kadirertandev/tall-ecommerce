@@ -92,7 +92,7 @@ class RemoveFromCartButtonTest extends TestCase
 
     Livewire::actingAs($this->order_editor)->test(RemoveFromCartButton::class, $this->initProperties)
       ->call("removeFromCart", $this->cartItem->id, false)
-      ->assertDispatched("swal-fire", titleText: "This action is unauthorized.");
+      ->assertDispatched("swal-fire", titleText: self::$authorizationExceptionMessage);
     $this->assertDatabaseHas("cart_items", [
       "product_id" => $this->product->id,
       "quantity" => $this->cartItem->quantity
@@ -170,7 +170,7 @@ class RemoveFromCartButtonTest extends TestCase
       "cartItemId" => $this->cartItem->id,
       "type" => "nav"
     ])->call("removeFromCart", $this->cartItem->id, false)
-      ->assertDispatched("swal-fire", titleText: "This action is unauthorized.");
+      ->assertDispatched("swal-fire", titleText: self::$authorizationExceptionMessage);
 
     $this->assertDatabaseHas("cart_items", [
       "cart_id" => $cart->id,

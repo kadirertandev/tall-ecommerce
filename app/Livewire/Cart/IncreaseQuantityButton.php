@@ -6,7 +6,6 @@ use App\Traits\WithTryCatch;
 use Livewire\Component;
 use App\Services\CartService;
 use Illuminate\Auth\Access\AuthorizationException;
-use App\Exceptions\CartItemQuantityReachedMinimumException;
 use App\Models\CartItem;
 use Illuminate\Support\Facades\Gate;
 
@@ -24,9 +23,7 @@ class IncreaseQuantityButton extends Component
   public function increaseQuantity(CartService $cartService)
   {
     $this->tryCatch(function () use ($cartService) {
-      if (Gate::denies("customer")) {
-        throw new AuthorizationException();
-      }
+      $this->authorize("customer");
 
       $cartItem = CartItem::findOrFail($this->cartItemId);
 

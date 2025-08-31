@@ -14,7 +14,7 @@ class ProductPolicy
     #check if user is customer
     #if now dont allow review
     if (!$user->isCustomer()) {
-      throw new AuthorizationException('This action is unauthorized!');
+      throw new AuthorizationException();
     }
 
     #check if user has review for that product

@@ -90,7 +90,7 @@ class DecreaseQuantityButtonTest extends TestCase
 
     Livewire::actingAs($this->order_editor)->test(DecreaseQuantityButton::class, $this->initProperties)
       ->call("decreaseQuantity")
-      ->assertDispatched("swal-fire", titleText: "This action is unauthorized.");
+      ->assertDispatched("swal-fire", titleText: self::$authorizationExceptionMessage);
     $this->assertDatabaseHas("cart_items", [
       "product_id" => $this->product->id,
       "quantity" => $this->cartItem->quantity
@@ -136,7 +136,7 @@ class DecreaseQuantityButtonTest extends TestCase
       "cartItemId" => $this->cartItem->id,
     ])
       ->call("decreaseQuantity")
-      ->assertDispatched("swal-fire", titleText: "This action is unauthorized.");
+      ->assertDispatched("swal-fire", titleText: self::$authorizationExceptionMessage);
 
     $this->assertDatabaseHas("cart_items", [
       "cart_id" => $cart->id,

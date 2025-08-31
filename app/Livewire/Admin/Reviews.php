@@ -13,8 +13,6 @@ use App\Traits\WithTableSortAndFilter;
 use App\Traits\WithTryCatch;
 use Exception;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -119,9 +117,7 @@ class Reviews extends Component
   public function showEditModal($id, $referred = false)
   {
     $this->tryCatch(function () use ($id, $referred) {
-      if (!Gate::allows("edit reviews")) {
-        throw new UnauthorizedException("can not edit review");
-      }
+      $this->authorize("edit reviews");
 
       $review = ProductReview::findOrFail($id);
 
@@ -145,9 +141,7 @@ class Reviews extends Component
     $this->editForm->validate();
 
     $this->tryCatch(function () {
-      if (!Gate::allows("edit reviews")) {
-        throw new UnauthorizedException("can not edit review");
-      }
+      $this->authorize("edit reviews");
 
       $review = ProductReview::findOrFail($this->selectedReview->id);
 
@@ -171,9 +165,7 @@ class Reviews extends Component
   public function changeStatus($reviewId, $statusValue)
   {
     $this->tryCatch(function () use ($reviewId, $statusValue) {
-      if (!Gate::allows("edit reviews")) {
-        throw new UnauthorizedException("can not edit review");
-      }
+      $this->authorize("edit reviews");
 
       ProductReview::findOrFail($reviewId)->update([
         "status" => ReviewStatusType::from($statusValue)->value
@@ -202,9 +194,7 @@ class Reviews extends Component
   public function delete($reviewId)
   {
     $this->tryCatch(function () use ($reviewId) {
-      if (!Gate::allows("delete reviews")) {
-        throw new UnauthorizedException("can not delete review");
-      }
+      $this->authorize("delete reviews");
 
       $review = ProductReview::findOrFail($reviewId);
 
@@ -237,9 +227,7 @@ class Reviews extends Component
   public function forceDelete($reviewId)
   {
     $this->tryCatch(function () use ($reviewId) {
-      if (!Gate::allows("force delete reviews")) {
-        throw new UnauthorizedException("you cant delete review permanently");
-      }
+      $this->authorize("force delete reviews");
 
       ProductReview::withTrashed()->findOrFail($reviewId)->forceDelete();
 
@@ -252,9 +240,7 @@ class Reviews extends Component
   public function restore($reviewId)
   {
     $this->tryCatch(function () use ($reviewId) {
-      if (!Gate::allows("force delete reviews")) {
-        throw new UnauthorizedException("you cant restore review");
-      }
+      $this->authorize("force delete reviews");
 
       $review = ProductReview::withTrashed()->findOrFail($reviewId);
       $review->restore();

@@ -24,9 +24,7 @@ class DecreaseQuantityButton extends Component
   public function decreaseQuantity(CartService $cartService)
   {
     $this->tryCatch(function () use ($cartService) {
-      if (Gate::denies("customer")) {
-        throw new AuthorizationException();
-      }
+      $this->authorize("customer");
 
       $cartItem = CartItem::findOrFail($this->cartItemId);
 

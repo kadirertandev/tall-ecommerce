@@ -15,11 +15,9 @@ use App\Traits\WithTableSortAndFilter;
 use App\Traits\WithTryCatch;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
@@ -112,9 +110,7 @@ class Admins extends Component
   public function showEditModal($id)
   {
     $this->tryCatch(function () use ($id) {
-      if (!Gate::allows("edit admins") || !Gate::allows("assign role")) {
-        throw new UnauthorizedException("can not edit admin");
-      }
+      $this->authorize("edit admins");
 
       $admin = User::findOrFail($id);
 
@@ -144,9 +140,7 @@ class Admins extends Component
 
     $this->tryCatch(
       function () {
-        if (!Gate::allows("create admins") || !Gate::allows("assign role")) {
-          throw new UnauthorizedException("can not create admin");
-        }
+        $this->authorize("create admins");
 
         if ($this->createForm->image) {
           $imageName = $this->createForm->image->store("profile_images", "public");
@@ -196,9 +190,7 @@ class Admins extends Component
     $this->editForm->validate();
 
     $this->tryCatch(function () {
-      if (!Gate::allows("edit admins") || !Gate::allows("assign role")) {
-        throw new UnauthorizedException("can not edit admin");
-      }
+      $this->authorize("edit admins");
 
       $admin = User::findOrFail($this->selectedAdmin->id);
 
@@ -254,9 +246,7 @@ class Admins extends Component
         $admin = User::findOrFail($adminId);
         $role = Role::findOrFail($roleId);
 
-        if (!Gate::allows("assignRole", [$admin, $role])) {
-          throw new UnauthorizedException("can not assign role");
-        }
+        $this->authorize("assignRole", [$admin, $role]);
 
         $admin->syncRoles($role->name);
 
@@ -288,9 +278,9 @@ class Admins extends Component
   public function delete($adminId)
   {
     $this->tryCatch(function () use ($adminId) {
-      if (!Gate::allows("delete admins") || auth()->user()->id == $adminId) {
-        throw new UnauthorizedException("can not delete admin");
-      }
+      $admin = User::findOrFail($adminId);
+
+      $this->authorize("deleteAdmin", $admin);
 
       $admin = User::findOrFail($adminId);
 
@@ -309,9 +299,7 @@ class Admins extends Component
   public function forceDelete($adminId)
   {
     $this->tryCatch(function () use ($adminId) {
-      if (!Gate::allows("force delete admins")) {
-        throw new UnauthorizedException("you cant delete admins permanently");
-      }
+      $this->authorize("force delete admins");
 
       $admin = User::withTrashed()->findOrFail($adminId);
 
@@ -326,9 +314,7 @@ class Admins extends Component
   public function restore($adminId)
   {
     $this->tryCatch(function () use ($adminId) {
-      if (!Gate::allows("force delete admins")) {
-        throw new UnauthorizedException("you cant restore admin");
-      }
+      $this->authorize("force delete admins");
 
       $admin = User::withTrashed()->findOrFail($adminId);
       $admin->restore();

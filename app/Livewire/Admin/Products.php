@@ -20,9 +20,7 @@ use App\Traits\WithTryCatch;
 use App\Traits\WithUpdateFormSlug;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -139,9 +137,7 @@ class Products extends Component
   public function showEditModal($id)
   {
     $this->tryCatch(function () use ($id) {
-      if (!Gate::allows("edit products")) {
-        throw new UnauthorizedException("can not edit product");
-      }
+      $this->authorize("edit products");
 
       $product = Product::findOrFail($id);
 
@@ -171,9 +167,7 @@ class Products extends Component
     $this->createForm->validate();
 
     $this->tryCatch(function () {
-      if (!Gate::allows("create products")) {
-        throw new UnauthorizedException("can not create product");
-      }
+      $this->authorize("create products");
 
       $imageName = $this->createForm->image->store("product_images", "public");
 
@@ -202,9 +196,7 @@ class Products extends Component
     $this->editForm->validate();
 
     $this->tryCatch(function () {
-      if (!Gate::allows("edit products")) {
-        throw new UnauthorizedException("can not edit product");
-      }
+      $this->authorize("edit products");
 
       $product = Product::findOrFail($this->selectedProduct->id);
 
@@ -258,9 +250,7 @@ class Products extends Component
   public function delete($productId)
   {
     $this->tryCatch(function () use ($productId) {
-      if (!Gate::allows("delete products")) {
-        throw new UnauthorizedException("can not delete product");
-      }
+      $this->authorize("delete products");
 
       $product = Product::findOrFail($productId);
 
@@ -295,9 +285,7 @@ class Products extends Component
   public function forceDelete($productId)
   {
     $this->tryCatch(function () use ($productId) {
-      if (!Gate::allows("force delete products")) {
-        throw new UnauthorizedException("you cant delete product permanently");
-      }
+      $this->authorize("force delete products");
 
       Product::withTrashed()->findOrFail($productId)->forceDelete();
 
@@ -310,9 +298,7 @@ class Products extends Component
   public function restore($productId)
   {
     $this->tryCatch(function () use ($productId) {
-      if (!Gate::allows("force delete products")) {
-        throw new UnauthorizedException("you cant restore product");
-      }
+      $this->authorize("force delete products");
 
       $product = Product::withTrashed()->findOrFail($productId);
       $product->restore();

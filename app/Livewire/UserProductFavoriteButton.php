@@ -6,7 +6,6 @@ use App\Helpers\IconHelper;
 use App\Services\UserProductFavoriteService;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
-use Illuminate\Auth\Access\AuthorizationException;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\Attributes\On;
@@ -47,9 +46,7 @@ class UserProductFavoriteButton extends Component
           "icon" => "border-0!"
         ]
       ]);
-    }, [
-      AuthorizationException::class => fn($e) => $this->swalError(["titleText" => $e->getMessage()])
-    ]);
+    });
   }
 
   public function removeFromFavorites(UserProductFavoriteService $userProductFavoriteService)

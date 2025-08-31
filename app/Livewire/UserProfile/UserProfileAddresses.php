@@ -8,7 +8,6 @@ use App\Traits\Addresses;
 use App\Traits\WithInteractModal;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
-use Illuminate\Auth\Access\AuthorizationException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -51,13 +50,7 @@ class UserProfileAddresses extends Component
       $this->form->makeDefault = (bool) $address->is_default;
 
       $this->showModal("edit-address");
-    }, [
-      AuthorizationException::class => function ($e) {
-        $this->swalError([
-          "titleText" => $e->getMessage()
-        ]);
-      }
-    ]);
+    });
   }
   public function update()
   {
@@ -92,13 +85,7 @@ class UserProfileAddresses extends Component
       $this->swalToast([
         "titleText" => "Address updated successfully!"
       ]);
-    }, [
-      AuthorizationException::class => function ($e) {
-        $this->swalError([
-          "titleText" => $e->getMessage()
-        ]);
-      }
-    ]);
+    });
   }
 
   #[On("address-modal-closed")]
@@ -132,7 +119,7 @@ class UserProfileAddresses extends Component
     $this->tryCatch(function () use ($addressId) {
       $address = UserAddress::findOrFail($addressId);
 
-      $this->authorize("update", $address);
+      $this->authorize("delete", $address);
 
       $address->delete();
 
@@ -141,13 +128,7 @@ class UserProfileAddresses extends Component
       ]);
 
       $this->dispatch("address-deleted");
-    }, [
-      AuthorizationException::class => function ($e) {
-        $this->swalError([
-          "titleText" => $e->getMessage()
-        ]);
-      }
-    ]);
+    });
   }
 
   #[On("address-created")]

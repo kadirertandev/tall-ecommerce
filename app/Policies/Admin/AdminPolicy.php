@@ -11,16 +11,30 @@ class AdminPolicy
 {
   public function assignRole(User $user, User $target, Role $role): bool
   {
+    #if user is target, deny
+    if ($user->is($target)) {
+      return false;
+    }
+
     # if target is owner or role is owner, deny
     if ($target->getRoleName() === "owner" || $role->name === "owner") {
-      throw new AuthorizationException('This action is unauthorized!');
+      return false;
     }
 
     # if non-owner admins try assigning super_admin role, deny
     if ($user->getRoleName() !== "owner" && $role->name === "super_admin") {
-      throw new AuthorizationException('This action is unauthorized!');
+      return false;
     }
 
     return $user->can("assign role");
+  }
+
+  public function deleteAdmin(User $user, User $target)
+  {
+    if ($user->is($target)) {
+      return false;
+    }
+
+    return $user->hasPermissionTo("delete admins");
   }
 }

@@ -34,9 +34,7 @@ class CartStepThree extends Component
   {
     if (
       !$this->tryCatch(function () {
-        if (Gate::denies("customer")) {
-          throw new UnauthorizedException("This action is unauthorized!");
-        }
+        $this->authorize("customer");
       })
     ) {
       return;

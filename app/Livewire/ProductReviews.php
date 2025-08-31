@@ -113,6 +113,8 @@ class ProductReviews extends Component
   public function edit($id)
   {
     $this->tryCatch(function () use ($id) {
+      $this->authorize("edit reviews");
+
       $review = ProductReview::findOrFail($id);
 
       session()->put("review_id_to_edit", $review->id);

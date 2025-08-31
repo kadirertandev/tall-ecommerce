@@ -93,7 +93,7 @@ class AddToCartButtonTest extends TestCase
 
     Livewire::actingAs($this->order_editor)->test(AddToCartButton::class, $this->initProperties)
       ->call("addToCart")
-      ->assertDispatched("swal-fire", titleText: "THIS ACTION IS UNAUTHORIZED!");
+      ->assertDispatched("swal-fire", titleText: self::$authorizationExceptionMessage);
     $this->assertDatabaseCount("carts", 0);
   }
 

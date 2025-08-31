@@ -8,8 +8,6 @@ use App\Traits\WithInteractModal;
 use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithTableSortAndFilter;
 use App\Traits\WithTryCatch;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Validation\UnauthorizedException;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -90,9 +88,7 @@ class Orders extends Component
   public function changeStatus($orderId, $statusValue)
   {
     $this->tryCatch(function () use ($orderId, $statusValue) {
-      if (!Gate::allows("edit orders")) {
-        throw new UnauthorizedException("can not edit order");
-      }
+      $this->authorize("edit orders");
 
       Order::findOrFail($orderId)->update([
         "status" => OrderStatusType::from($statusValue)->value

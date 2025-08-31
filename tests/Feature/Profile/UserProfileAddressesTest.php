@@ -239,7 +239,7 @@ class UserProfileAddressesTest extends TestCase
 
     Livewire::test(UserProfileAddresses::class)
       ->call("edit", $address->id)
-      ->assertDispatched("swal-fire", titleText: "This action is unauthorized.");
+      ->assertDispatched("swal-fire", titleText: self::$authorizationExceptionMessage);
 
     Livewire::test(UserProfileAddresses::class)
       ->set("selectedAddressId", $address->id)
@@ -250,7 +250,7 @@ class UserProfileAddressesTest extends TestCase
       ->set("form.addressLine", "Some address line...")
       ->set("form.makeDefault", true)
       ->call("update")
-      ->assertDispatched("swal-fire", titleText: "This action is unauthorized.");
+      ->assertDispatched("swal-fire", titleText: self::$authorizationExceptionMessage);
 
     $this->assertDatabaseCount("user_addresses", 1);
     $this->assertDatabaseHas("user_addresses", [
@@ -365,7 +365,7 @@ class UserProfileAddressesTest extends TestCase
 
     Livewire::test(UserProfileAddresses::class)
       ->call("delete", $address->id)
-      ->assertDispatched("swal-fire", titleText: "This action is unauthorized.");
+      ->assertDispatched("swal-fire", titleText: self::$authorizationExceptionMessage);
 
     $this->assertDatabaseCount("user_addresses", 1);
     $this->assertDatabaseHas("user_addresses", [

@@ -5,17 +5,16 @@ namespace App\Services;
 use App\Exceptions\CartItemQuantityReachedMinimumException;
 use App\Models\Product;
 use App\Models\CartItem;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Auth\Access\AuthorizationException;
 
 class CartService
 {
+  use AuthorizesRequests;
+
   public function add(Product $product, $quantity, \Closure|null $callback = null)
   {
-    if (Gate::denies("customer")) {
-      throw new AuthorizationException();
-    }
+    $this->authorize("customer");
 
     DB::beginTransaction();
 

@@ -20,12 +20,10 @@ use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Computed;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use App\Livewire\Forms\Admin\CategoryEditForm;
 use App\Livewire\Forms\Admin\CategoryCreateForm;
 use App\Traits\WithUpdateFormSlug;
-use Illuminate\Validation\UnauthorizedException;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class Categories extends Component
@@ -95,9 +93,7 @@ class Categories extends Component
   public function showEditModal($id)
   {
     $this->tryCatch(function () use ($id) {
-      if (!Gate::allows("edit categories")) {
-        throw new UnauthorizedException("can not edit category");
-      }
+      $this->authorize("edit categories");
 
       $category = Category::findOrFail($id);
 
@@ -122,6 +118,8 @@ class Categories extends Component
   public function updateCategoryIsPopular($checked = null)
   {
     $this->tryCatch(function () use ($checked) {
+      $this->authorize("edit categories");
+
       $category = Category::findOrFail($this->selectedCategory->id);
 
       $category->update(["is_popular" => $checked === true ? 1 : 0]);
@@ -131,6 +129,8 @@ class Categories extends Component
   public function updateCategoryBrands($brandId = null, $checked = null)
   {
     $this->tryCatch(function () use ($brandId, $checked) {
+      $this->authorize("edit categories");
+
       $category = Category::findOrFail($this->selectedCategory->id);
 
       if ($checked == true) {
@@ -146,9 +146,7 @@ class Categories extends Component
     $this->createForm->validate();
 
     $this->tryCatch(function () {
-      if (!Gate::allows("create categories")) {
-        throw new UnauthorizedException("can not create category");
-      }
+      $this->authorize("create categories");
 
       $imageName = $this->createForm->image->store("category_images", "public");
 
@@ -176,9 +174,7 @@ class Categories extends Component
     $this->editForm->validate();
 
     $this->tryCatch(function () {
-      if (!Gate::allows("edit categories")) {
-        throw new UnauthorizedException("can not edit category");
-      }
+      $this->authorize("edit categories");
 
       $category = Category::findOrFail($this->selectedCategory->id);
       $oldSlug = $category->slug;
@@ -231,9 +227,7 @@ class Categories extends Component
   public function delete($categoryId)
   {
     $this->tryCatch(function () use ($categoryId) {
-      if (!Gate::allows("delete categories")) {
-        throw new UnauthorizedException("can not delete category");
-      }
+      $this->authorize("delete categories");
 
       $category = Category::findOrFail($categoryId);
 
@@ -261,9 +255,7 @@ class Categories extends Component
   public function forceDelete($categoryId)
   {
     $this->tryCatch(function () use ($categoryId) {
-      if (!Gate::allows("force delete categories")) {
-        throw new UnauthorizedException("you cant delete category permanently");
-      }
+      $this->authorize("force delete categories");
 
       $category = Category::withTrashed()->findOrFail($categoryId);
       $category->forceDelete();
@@ -279,9 +271,7 @@ class Categories extends Component
   public function restore($categoryId)
   {
     $this->tryCatch(function () use ($categoryId) {
-      if (!Gate::allows("force delete categories")) {
-        throw new UnauthorizedException("you cant restore category");
-      }
+      $this->authorize("force delete categories");
 
       $category = Category::withTrashed()->findOrFail($categoryId);
       $category->restore();

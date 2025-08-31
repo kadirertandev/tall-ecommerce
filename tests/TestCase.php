@@ -24,4 +24,6 @@ abstract class TestCase extends BaseTestCase
 
     return $admin;
   }
+
+  public static $authorizationExceptionMessage = "This action is unauthorized.";
 }

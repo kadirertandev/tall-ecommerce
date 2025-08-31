@@ -9,7 +9,6 @@ use App\Services\UserProductFavoriteService;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -65,9 +64,7 @@ class RemoveFromCartButton extends Component
   {
     $this->tryCatch(
       function () use ($cartService, $userProductFavoriteService, $cartItemId, $addToFavorites) {
-        if (Gate::denies("customer")) {
-          throw new AuthorizationException();
-        }
+        $this->authorize("customer");
 
         $cartItem = CartItem::findOrFail($cartItemId);
 

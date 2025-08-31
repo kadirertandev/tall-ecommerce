@@ -59,7 +59,7 @@ class AddToCartButton extends Component
           return to_route("admin.products.index");
         }
         return $this->swalError([
-          "titleText" => "THIS ACTION IS UNAUTHORIZED!"
+          "titleText" => $e->getMessage()
         ]);
       },
       Throwable::class => function ($e) {
