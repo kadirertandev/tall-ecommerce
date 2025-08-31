@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Cart;
 
+use App\Helpers\IconHelper;
 use App\Models\CartItem;
 use App\Services\CartService;
+use App\Services\UserProductFavoriteService;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -59,10 +61,10 @@ class RemoveFromCartButton extends Component
     ];
   }
 
-  public function removeFromCart(CartService $cartService, $cartItemId, $addToFavorites)
+  public function removeFromCart(CartService $cartService, UserProductFavoriteService $userProductFavoriteService, $cartItemId, $addToFavorites)
   {
     $this->tryCatch(
-      function () use ($cartService, $cartItemId, $addToFavorites) {
+      function () use ($cartService, $userProductFavoriteService, $cartItemId, $addToFavorites) {
         if (Gate::denies("customer")) {
           throw new AuthorizationException();
         }
@@ -74,16 +76,14 @@ class RemoveFromCartButton extends Component
         $cartService->remove($cartItem);
 
         if ($addToFavorites) {
-          if (!auth()->user()->favorites->contains($cartItem->product->id)) {
-            auth()->user()->favorites()->attach($cartItem->product->id);
-          }
+          $userProductFavoriteService->add($cartItem->product->id);
 
           $this->dispatch("added-to-favorites");
 
           $this->swalToast([
             "titleText" => $cartItem->product->name,
             "text" => __('frontend.cart.removed-from-cart-and-added-to-favorites'),
-            "iconHtml" => $cartService->svgRemoveFromCartAddToFavorites,
+            "iconHtml" => IconHelper::$svgRemoveFromCartAddToFavorites,
             "customClass" => [
               "icon" => "border-0! text-red-500!"
             ]
@@ -92,7 +92,7 @@ class RemoveFromCartButton extends Component
           $this->swalToast([
             "titleText" => $cartItem->product->name,
             "text" => __('frontend.cart.removed-from-cart'),
-            "iconHtml" => $cartService->svgRemoveFromCart,
+            "iconHtml" => IconHelper::$svgRemoveFromCart,
             "customClass" => [
               "icon" => "border-0! text-red-500!"
             ],

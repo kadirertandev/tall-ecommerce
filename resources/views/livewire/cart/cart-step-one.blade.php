@@ -12,7 +12,7 @@
                         <a class="text-base font-medium text-gray-900 hover:underline dark:text-white"
                             href="{{ route('products.show', ['category_slug' => $item->product->category->slug, 'product_slug' => $item->product->slug]) }}">{{ $item->product->name }}</a>
                         <div class="flex items-center gap-4">
-                            <livewire:add-to-favorites-button :key='$item->product->id' :productId="$item->product->id" type="cart" />
+                            <livewire:user-product-favorite-button :key='$item->product->id' :productId="$item->product->id" type="cart" />
 
                             <livewire:cart.remove-from-cart-button :key="'remove-' . $item->id" :cartItemId="$item->id"
                                 type="cart_step_one" />

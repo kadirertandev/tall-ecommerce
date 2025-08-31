@@ -2,14 +2,13 @@
 
 namespace Tests\Feature\Profile;
 
-use App\Livewire\AddToFavoritesButton;
+use App\Livewire\UserProductFavoriteButton;
 use App\Livewire\UserProfile\UserProfileFavorites;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Database\Seeders\RolesPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Str;
 use Livewire\Livewire;
 use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
@@ -255,7 +254,7 @@ class UserProfileFavoritesTest extends TestCase
     $this->user->favorites()->attach($products);
 
     $this->get($this->endPoint)
-      ->assertSeeLivewire(AddToFavoritesButton::class);
+      ->assertSeeLivewire(UserProductFavoriteButton::class);
   }
 
   public function test_users_can_remove_products_from_favorites()
@@ -267,7 +266,7 @@ class UserProfileFavoritesTest extends TestCase
     $this->user->favorites()->attach($products);
     $this->assertEquals(3, $this->user->favorites()->count());
 
-    Livewire::test(AddToFavoritesButton::class, [
+    Livewire::test(UserProductFavoriteButton::class, [
       "productId" => $products[0]->id,
       "type" => "profile",
       "showLabel" => false

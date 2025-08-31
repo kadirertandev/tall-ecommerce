@@ -66,6 +66,7 @@ class UserProfileFavorites extends Component
       ->paginate($this->perPage);
   }
 
+  #[On("added-to-favorites")]
   #[On("removed-from-favorites")]
   public function render()
   {

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Cart;
 
+use App\Helpers\IconHelper;
 use Livewire\Component;
 use App\Models\Product;
 use App\Services\CartService;
@@ -40,7 +41,7 @@ class AddToCartButton extends Component
         $this->swalToast([
           "titleText" => $product->name,
           "text" => __('frontend.cart.added-to-cart'),
-          "iconHtml" => $cartService->svgAddToCart,
+          "iconHtml" => IconHelper::$svgAddToCart,
           "customClass" => [
             "icon" => "border-0!"
           ]

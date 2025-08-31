@@ -145,7 +145,7 @@
                         <a
                             href="{{ route('products.show', ['category_slug' => $favorite->category->slug, 'product_slug' => $favorite->slug]) }}">{!! $favorite->title() !!}</a>
                     </div>
-                    <livewire:add-to-favorites-button :key="$favorite->id" :productId="$favorite->id" type="profile"
+                    <livewire:user-product-favorite-button :key="$favorite->id" :productId="$favorite->id" type="profile"
                         :showLabel="false" />
                 </div>
             </div>
