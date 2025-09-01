@@ -49,7 +49,7 @@
         </form>
 
         <div id="reviews-pagination">
-            {{ $this->reviews()->links(data: ['scrollTo' => '#reviews-pagination']) }}
+            {{ $this->reviews()->links(data: ['scrollTo' => '#reviews-pagination', 'pageName' => 'reviews-page']) }}
         </div>
 
         @foreach ($this->reviews() as $review)

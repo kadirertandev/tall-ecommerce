@@ -11,6 +11,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Cache;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Rule;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -30,10 +31,20 @@ class ProductReviews extends Component
   public $reviewCount;
 
   public $rating;
+
   #[Rule("required|min:5|max:50")]
   public $title;
+
   #[Rule("required|min:5|max:200")]
   public $comment;
+
+  #[Url(as: "reviews-page", keep: true)]
+  public $reviewsPage = 1;
+
+  public function updatedReviewsPage($newReviewsPage)
+  {
+    $this->reviewsPage = $newReviewsPage;
+  }
 
   public $svgReview = '<svg xmlns="http://www.w3.org/2000/svg" class="w-24 h-24" viewBox="0 0 24 24">
 	<path fill="currentColor" d="M6 14h3.075L15.1 7.95l-3-3.075l-6.1 6.05zm6.05-5.1l-.95-.925l.975-.975l.925.95zM11.2 14H18v-2h-4.8zM2 22V2h20v16H6z" />
@@ -46,7 +57,27 @@ class ProductReviews extends Component
 
     if (session()->has("reviewId")) {
       $reviewId = session()->get("reviewId");
-      $this->js("document.getElementById('review-" . $reviewId . "').style.backgroundColor = '#efefef'");
+
+      $review = ProductReview::where("product_id", $this->productId)
+        ->where("status", \App\Enums\ReviewStatusType::APPROVED)
+        ->find($reviewId);
+
+      #decides which reviews page to navigate and highlights review
+      if ($review) {
+        $newerReviewsCount = ProductReview::where("product_id", $this->productId)
+          ->where("status", \App\Enums\ReviewStatusType::APPROVED)
+          ->where("created_at", ">", $review->created_at)
+          ->count();
+
+        $perPage = 3;
+        $page = floor($newerReviewsCount / $perPage) + 1;
+
+        $this->setPage(page: $page, pageName: "reviews-page");
+        $this->reviewsPage = $page;
+
+        $this->js("document.getElementById('review-" . $reviewId . "').style.backgroundColor = '#efefef'");
+      }
+
       session()->remove("reviewId");
     }
   }
@@ -54,7 +85,7 @@ class ProductReviews extends Component
   #[Computed()]
   public function reviews()
   {
-    return Cache::remember("product_with_id_{$this->productId}_reviews_page_{$this->getPage()}", 60 * 5, function () {
+    return Cache::remember("product_with_id_{$this->productId}_reviews_page_{$this->getPage(pageName: 'reviews-page')}", 60 * 5, function () {
       return ProductReview::with([
         "user" => fn($q) => $q->select(["id", "first_name", "last_name", "profile_image", "created_at"])
       ])
@@ -62,7 +93,7 @@ class ProductReviews extends Component
         ->where("product_id", $this->productId)
         ->where("status", \App\Enums\ReviewStatusType::APPROVED)
         ->latest()
-        ->paginate(3);
+        ->paginate(3, pageName: 'reviews-page');
     });
   }
 
