@@ -2,38 +2,36 @@
 
 namespace App\Livewire\UserProfile;
 
+use App\DTOs\UserAddress\UpdateUserAddressDto;
+use App\DTOs\UserAddress\UserAddressForm;
 use App\Livewire\Forms\UserProfileAddressForm;
+use App\Livewire\Shared\HandlesUserAddressCreation;
 use App\Models\UserAddress;
-use App\Traits\Addresses;
+use App\Services\UserAddressService;
+use App\Traits\AddressData;
+use App\Traits\UserAddressesData;
 use App\Traits\WithInteractModal;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
-use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
-use Livewire\Component;
 
-class UserProfileAddresses extends Component
+class UserProfileAddresses extends HandlesUserAddressCreation
 {
-  use Addresses;
   use WithTryCatch;
   use WithSweetAlert;
   use WithInteractModal;
+  use AddressData;
+  use UserAddressesData;
+
+  public $selectedAddressId;
 
   public UserProfileAddressForm $form;
 
-  #[Computed()]
-  public function addresses()
+  protected function getForm(): UserProfileAddressForm
   {
-    return auth()->user()->addresses;
+    return $this->form;
   }
 
-  #[Computed()]
-  public function defaultAddress()
-  {
-    return auth()->user()->defaultAddress();
-  }
-
-  public $selectedAddressId;
   public function edit($id)
   {
     $this->tryCatch(function () use ($id) {
@@ -42,49 +40,37 @@ class UserProfileAddresses extends Component
       $this->authorize("update", $address);
 
       $this->selectedAddressId = $id;
-      $this->form->addressTitle = $address->title;
-      $this->form->selectedCity = $address->city;
-      $this->form->selectedDistrict = $address->district;
-      $this->form->selectedNeighborhood = $address->neighborhood;
-      $this->form->addressLine = $address->address_line;
-      $this->form->makeDefault = (bool) $address->is_default;
+
+      $this->form = UserAddressForm::fillFromModel($this->form, $address);
 
       $this->showModal("edit-address");
     });
   }
-  public function update()
+
+  public function update(UserAddressService $userAddressService)
   {
     $validated = $this->form->validate();
 
-    $this->tryCatch(function () use ($validated) {
+    $this->tryCatch(function () use ($validated, $userAddressService) {
       $address = UserAddress::findOrFail($this->selectedAddressId);
 
       $this->authorize("update", $address);
 
-      # if makeDefault checkbox is checked
-      # set all existing addresses of user to non-default before making selected address the default
-      if ($this->form->makeDefault) {
-        UserAddress::where("user_id", auth()->user()->id)
-          ->update(["is_default" => 0]);
-      }
+      $newUserAddressDto = UpdateUserAddressDto::fromArray(
+        [
+          "userId" => auth()->user()->id,
+          ...$validated
+        ]
+      );
 
-      $address->update([
-        "title" => $validated["addressTitle"],
-        "city" => $validated["selectedCity"],
-        "district" => $validated["selectedDistrict"],
-        "neighborhood" => $validated["selectedNeighborhood"],
-        "address_line" => $validated["addressLine"],
-        "is_default" => $this->form->makeDefault
-      ]);
+      $userAddressService->update($address, $newUserAddressDto);
 
       $this->closeModal("edit-address");
-
-      $this->form->reset();
       $this->dispatch("address-updated");
-
       $this->swalToast([
         "titleText" => "Address updated successfully!"
       ]);
+      $this->form->reset();
     });
   }
 
@@ -114,19 +100,18 @@ class UserProfileAddresses extends Component
   }
 
   #[On("delete-address-confirmed")]
-  public function delete($addressId)
+  public function delete(UserAddressService $userAddressService, $addressId)
   {
-    $this->tryCatch(function () use ($addressId) {
+    $this->tryCatch(function () use ($userAddressService, $addressId) {
       $address = UserAddress::findOrFail($addressId);
 
       $this->authorize("delete", $address);
 
-      $address->delete();
+      $userAddressService->delete($address);
 
       $this->swalToast([
         "titleText" => "Address deleted successfully!"
       ]);
-
       $this->dispatch("address-deleted");
     });
   }

@@ -4,7 +4,7 @@
             <ul class="grid w-full gap-6 md:grid-cols-2">
                 @foreach ($this->addresses as $address)
                     <li wire:key='address-radio-{{ $address->id }}' @class([
-                        'order-first' => $this->defaultAddress?->id == $address->id,
+                        'order-first' => $address->is_default,
                     ])>
                         <input wire:model.live='selectedAddressId' type="radio" id="hosting-small-{{ $address->id }}"
                             name="hosting" value="{{ $address->id }}" class="hidden peer" required />
@@ -16,7 +16,7 @@
                                     <h1 class="w-full text-lg font-semibold">
                                         {{ $address->title }}
                                     </h1>
-                                    @if ($this->defaultAddress?->id == $address->id)
+                                    @if ($address->is_default)
                                         <h1 class="font-semibold text-orange-400 uppercase text-nowrap">
                                             Default
                                             Address</h1>

@@ -15,9 +15,9 @@
         @forelse ($this->addresses as $address)
             <div wire:key='address-{{ $address->id }}' @class([
                 'bg-gray-50 ring-2 ring-gray-100! rounded-lg shadow-xl p-3',
-                'order-first' => $this->defaultAddress?->id == $address->id,
+                'order-first' => $address->is_default,
             ])>
-                @if ($this->defaultAddress?->id == $address->id)
+                @if ($address->is_default)
                     <div class="flex items-center justify-between">
                         <h1 class="text-2xl font-semibold font-roboto">{{ $address->title }}</h1>
                         <h1 class="font-semibold text-orange-400 uppercase">Default Address</h1>

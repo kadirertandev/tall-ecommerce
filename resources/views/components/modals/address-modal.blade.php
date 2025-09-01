@@ -91,7 +91,7 @@
         </div>
 
         @if ($type == 'add')
-            <button type="button" wire:click.prevent='add'
+            <button type="button" wire:click.prevent='create'
                 class="w-full text-white bg-linear-to-r! from-teal-400! via-teal-500! to-teal-600! hover:bg-linear-to-br! focus:ring-2 focus:outline-hidden focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg shadow-teal-500/50 dark:shadow-lg dark:shadow-teal-800/80 font-medium rounded-lg text-md px-5 py-2.5 text-center me-2 mb-2">Add
                 to my addresses</button>
         @else

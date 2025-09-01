@@ -136,7 +136,7 @@ class UserProfileAddressesTest extends TestCase
       ->set("form.selectedNeighborhood", "Some Neighborhood")
       ->set("form.addressLine", "Some address line...")
       ->set("form.makeDefault", true)
-      ->call("add")
+      ->call("create")
       ->assertDispatched("close-modal", name: "new-address")
       ->assertDispatched(
         "swal-fire",
@@ -166,7 +166,7 @@ class UserProfileAddressesTest extends TestCase
       ->set("form.selectedNeighborhood", "")
       ->set("form.addressLine", "Some ad.")
       ->set("form.makeDefault", false)
-      ->call("add")
+      ->call("create")
       ->assertHasErrors(["form.addressTitle" => "The address title field must be at least 3 characters."])
       ->assertHasErrors(["form.selectedCity" => "The selected city field is required."])
       ->assertHasErrors(["form.selectedDistrict" => "The selected district field is required."])

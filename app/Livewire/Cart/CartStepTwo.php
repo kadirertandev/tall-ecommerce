@@ -2,15 +2,31 @@
 
 namespace App\Livewire\Cart;
 
-use App\Traits\Addresses;
+use App\Livewire\Forms\UserProfileAddressForm;
+use App\Livewire\Shared\HandlesUserAddressCreation;
+use App\Traits\AddressData;
 use App\Traits\CartData;
+use App\Traits\UserAddressesData;
+use App\Traits\WithInteractModal;
+use App\Traits\WithSweetAlert;
+use App\Traits\WithTryCatch;
 use Livewire\Attributes\On;
-use Livewire\Component;
 
-class CartStepTwo extends Component
+class CartStepTwo extends HandlesUserAddressCreation
 {
+  use WithTryCatch;
+  use WithInteractModal;
+  use WithSweetAlert;
   use CartData;
-  use Addresses;
+  use AddressData;
+  use UserAddressesData;
+
+  public UserProfileAddressForm $form;
+
+  protected function getForm(): UserProfileAddressForm
+  {
+    return $this->form;
+  }
 
   public function mount()
   {
