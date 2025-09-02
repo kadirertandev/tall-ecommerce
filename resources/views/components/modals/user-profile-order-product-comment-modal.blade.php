@@ -2,7 +2,9 @@
 <x-modal name="user-profile-order-product-comment" title="Create Review">
     <div class="p-4 space-y-2 md:p-5">
         <div class="grid grid-cols-10 gap-4 mb-4">
-            <img class="w-24 h-auto col-span-2" src="{{ asset('storage/' . $product?->image) }}">
+            @if (Storage::disk('public')->exists($product?->image ?? 'null'))
+                <img class="w-24 h-auto col-span-2" src="{{ asset('storage/' . $product?->image) }}">
+            @endif
             <div class="col-span-8">
                 <h1 class="font-semibold text-md">{!! $product?->title() !!}</h1>
             </div>

@@ -8,3 +8,6 @@ Livewire.on('livewire:initialized', () => {
 window.addEventListener('livewire:navigated', () => {
   initFlowbite();
 });
+
+import { Datepicker } from 'flowbite-datepicker';
+window.Datepicker = Datepicker;

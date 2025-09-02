@@ -151,9 +151,7 @@
         </div>
     </div>
 </div>
-@assets
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-@endassets
+
 @script
     <script>
         let $targetEl = document.getElementById('cart-drawer-right');
