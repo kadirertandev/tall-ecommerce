@@ -218,12 +218,6 @@ git clone https://github.com/kadirertandev/tall-ecommerce.git
 cd tall-ecommerce
 ```
 
-### Install dependencies
-
-```sh
-composer install
-```
-
 ### Copy environment file
 
 ```sh
@@ -233,6 +227,12 @@ cp .env.example .env
 **Change the database name using .env file**
 
 **For a quick test, queue connection is set to database and default mail sender is set to log.**
+
+### Install dependencies
+
+```sh
+composer install
+```
 
 ### Generate application key
 
