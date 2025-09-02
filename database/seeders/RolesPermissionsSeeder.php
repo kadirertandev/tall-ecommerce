@@ -24,6 +24,8 @@ class RolesPermissionsSeeder extends Seeder
     $roleOrderEditor = Role::firstOrCreate(["name" => "order_editor"]);
     $roleReviewEditor = Role::firstOrCreate(["name" => "review_editor"]);
 
+    $permissionViewDashboard = Permission::firstOrCreate(["name" => "view dashboard"]);
+
     $permissionViewAdmins = Permission::firstOrCreate(["name" => "view admins"]);
     $permissionCreateAdmins = Permission::firstOrCreate(["name" => "create admins"]);
     $permissionEditAdmins = Permission::firstOrCreate(["name" => "edit admins"]);
@@ -80,6 +82,7 @@ class RolesPermissionsSeeder extends Seeder
     ]));
 
     $roleProductEditor->syncPermissions([
+      $permissionViewDashboard,
       $permissionViewProducts,
       $permissionCreateProducts,
       $permissionEditProducts,
@@ -87,6 +90,7 @@ class RolesPermissionsSeeder extends Seeder
     ]);
 
     $roleCategoryEditor->syncPermissions([
+      $permissionViewDashboard,
       $permissionViewCategories,
       $permissionCreateCategories,
       $permissionEditCategories,
@@ -94,6 +98,7 @@ class RolesPermissionsSeeder extends Seeder
     ]);
 
     $roleBrandEditor->syncPermissions([
+      $permissionViewDashboard,
       $permissionViewBrands,
       $permissionCreateBrands,
       $permissionEditBrands,
@@ -101,11 +106,13 @@ class RolesPermissionsSeeder extends Seeder
     ]);
 
     $roleOrderEditor->syncPermissions([
+      $permissionViewDashboard,
       $permissionViewOrders,
       $permissionEditOrders,
     ]);
 
     $roleReviewEditor->syncPermissions([
+      $permissionViewDashboard,
       $permissionViewReviews,
       $permissionEditReviews,
       $permissionDeleteReviews,

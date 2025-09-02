@@ -125,6 +125,7 @@ class CreateAdminTest extends TestCase
   public function test_creates_admin_with_product_editor_role_and_related_permissions()
   {
     $allowedPermissions = [
+      "view dashboard",
       "view products",
       "create products",
       "edit products",
@@ -152,6 +153,7 @@ class CreateAdminTest extends TestCase
   public function test_creates_admin_with_category_editor_role_and_related_permissions()
   {
     $allowedPermissions = [
+      "view dashboard",
       "view categories",
       "create categories",
       "edit categories",
@@ -179,6 +181,7 @@ class CreateAdminTest extends TestCase
   public function test_creates_admin_with_brand_editor_role_and_related_permissions()
   {
     $allowedPermissions = [
+      "view dashboard",
       "view brands",
       "create brands",
       "edit brands",
@@ -206,6 +209,7 @@ class CreateAdminTest extends TestCase
   public function test_creates_admin_with_order_editor_role_and_related_permissions()
   {
     $allowedPermissions = [
+      "view dashboard",
       "view orders",
       "edit orders"
     ];
@@ -231,6 +235,7 @@ class CreateAdminTest extends TestCase
   public function test_creates_admin_with_review_editor_role_and_related_permissions()
   {
     $allowedPermissions = [
+      "view dashboard",
       "view reviews",
       "edit reviews",
       "delete reviews",

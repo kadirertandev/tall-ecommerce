@@ -9,7 +9,6 @@ use App\Models\CartItem;
 use Spatie\Permission\PermissionRegistrar;
 use Database\Seeders\RolesPermissionsSeeder;
 use Illuminate\Foundation\Testing\WithFaker;
-use App\Livewire\Cart\DecreaseQuantityButton;
 use App\Livewire\Cart\RemoveFromCartButton;
 use App\Models\Cart;
 use App\Models\User;
@@ -38,9 +37,10 @@ class RemoveFromCartButtonTest extends TestCase
     $this->product = Product::factory()->create();
 
     $this->cartItem = CartItem::factory()
-      ->for(Cart::factory()->for($this->user), "cart")
+      ->for(Cart::factory()->for($this->user, "user"), "cart")
       ->for($this->product, "product")
       ->create();
+
     $this->initProperties = [
       "cartItemId" => $this->cartItem->id,
       "type" => "nav"
@@ -50,26 +50,14 @@ class RemoveFromCartButtonTest extends TestCase
   public function test_component_exists_on_the_cart_drawer()
   {
     $this->actingAs($this->user);
-    $this->cartItem = CartItem::factory()
-      ->for(Cart::factory()->for($this->user), "cart")
-      ->for($this->product, "product")
-      ->create([
-        "quantity" => 1
-      ]);
 
-    $this->actingAS($this->user)->get(route("home"))
+    $this->get(route("home"))
       ->assertSeeLivewire(RemoveFromCartButton::class);
   }
 
   public function test_component_exists_on_the_cart_page()
   {
     $this->actingAs($this->user);
-    $this->cartItem = CartItem::factory()
-      ->for(Cart::factory()->for($this->user), "cart")
-      ->for($this->product, "product")
-      ->create([
-        "quantity" => 1
-      ]);
 
     $this->get(route("auth.user.cart"))
       ->assertSeeLivewire(RemoveFromCartButton::class);
@@ -103,13 +91,6 @@ class RemoveFromCartButtonTest extends TestCase
   {
     $this->actingAs($this->user);
 
-    CartItem::truncate();
-
-    $this->cartItem = CartItem::factory()
-      ->for(Cart::factory()->for($this->user), "cart")
-      ->for($this->product, "product")
-      ->create();
-
     Livewire::test(RemoveFromCartButton::class, [
       "cartItemId" => $this->cartItem->id,
       "type" => "nav"
@@ -127,13 +108,6 @@ class RemoveFromCartButtonTest extends TestCase
   public function test_users_can_remove_cart_item_and_add_to_favorites()
   {
     $this->actingAs($this->user);
-
-    CartItem::truncate();
-
-    $this->cartItem = CartItem::factory()
-      ->for(Cart::factory()->for($this->user), "cart")
-      ->for($this->product, "product")
-      ->create();
 
     Livewire::test(RemoveFromCartButton::class, [
       "cartItemId" => $this->cartItem->id,
@@ -155,16 +129,12 @@ class RemoveFromCartButtonTest extends TestCase
   {
     $this->actingAs($this->user);
 
-    CartItem::truncate();
-
     $anotherUser = $this->createUser();
     $cart = Cart::factory()->for($anotherUser)->create();
     $this->cartItem = CartItem::factory()
       ->for($cart, "cart")
       ->for($this->product, "product")
-      ->create([
-        "quantity" => 1
-      ]);
+      ->create();
 
     Livewire::test(RemoveFromCartButton::class, [
       "cartItemId" => $this->cartItem->id,

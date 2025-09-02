@@ -6,6 +6,8 @@ use App\Helpers\IconHelper;
 use App\Services\UserProductFavoriteService;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\Attributes\On;
@@ -29,7 +31,7 @@ class UserProductFavoriteButton extends Component
   #[Computed()]
   public function isInFavorites()
   {
-    return auth()->user()->favorites()->where("product_id", $this->productId)->exists();
+    return auth()->user()?->favorites()->where("product_id", $this->productId)->exists();
   }
 
   public function addToFavorites(UserProductFavoriteService $userProductFavoriteService)
@@ -46,7 +48,18 @@ class UserProductFavoriteButton extends Component
           "icon" => "border-0!"
         ]
       ]);
-    });
+    }, [
+      AuthorizationException::class => function ($e) {
+        if (Gate::allows("view dashboard")) {
+          return to_route("admin.dashboard");
+        }
+        return $this->swalError([
+          'titleText' => 'Please log in.',
+          'text' => 'You can add product to your favorites after logging in.'
+        ]);
+        ;
+      }
+    ]);
   }
 
   public function removeFromFavorites(UserProductFavoriteService $userProductFavoriteService)
@@ -64,14 +77,6 @@ class UserProductFavoriteButton extends Component
         ]
       ]);
     });
-  }
-
-  public function guestError()
-  {
-    $this->swalError([
-      'titleText' => 'Please log in.',
-      'text' => 'You can add product to your favorites after logging in.'
-    ]);
   }
 
   #[On("added-to-favorites")]
