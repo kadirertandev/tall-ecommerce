@@ -54,7 +54,10 @@
 
         @foreach ($this->reviews() as $review)
             <article wire:key='review-{{ $review->id }}' id="review-{{ $review->id }}"
-                class="py-4 my-4 border-b-2 border-red-200 shadow-xs border-s-2 ps-4 shadow-red-300">
+                @class([
+                    'py-4 my-4 border-b-2 border-red-200 shadow-xs border-s-2 ps-4 shadow-red-300',
+                    'bg-[#efefef] animate-pulse' => $highlightReviewId === $review->id,
+                ])>
                 <div class="flex items-start justify-between mb-4">
                     <div class="flex items-center mb-4">
                         @if ($review->user->profile_image)

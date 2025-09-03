@@ -2,8 +2,11 @@
 
 namespace App\Livewire;
 
+use App\DTOs\ProductReview\NewProductReviewDto;
+use App\Helpers\IconHelper;
 use App\Models\Product;
 use App\Models\ProductReview;
+use App\Services\ProductReviewService;
 use App\Traits\WithRefreshFlowbite;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
@@ -46,9 +49,7 @@ class ProductReviews extends Component
     $this->reviewsPage = $newReviewsPage;
   }
 
-  public $svgReview = '<svg xmlns="http://www.w3.org/2000/svg" class="w-24 h-24" viewBox="0 0 24 24">
-	<path fill="currentColor" d="M6 14h3.075L15.1 7.95l-3-3.075l-6.1 6.05zm6.05-5.1l-.95-.925l.975-.975l.925.95zM11.2 14H18v-2h-4.8zM2 22V2h20v16H6z" />
-</svg>';
+  public $highlightReviewId = null;
 
   public function mount($productId, $reviewCount)
   {
@@ -56,29 +57,38 @@ class ProductReviews extends Component
     $this->reviewCount = $reviewCount;
 
     if (session()->has("reviewId")) {
-      $reviewId = session()->get("reviewId");
+      $this->highlightReviewId = session()->get("reviewId");
 
-      $review = ProductReview::where("product_id", $this->productId)
-        ->where("status", \App\Enums\ReviewStatusType::APPROVED)
-        ->find($reviewId);
-
-      #decides which reviews page to navigate and highlights review
-      if ($review) {
-        $newerReviewsCount = ProductReview::where("product_id", $this->productId)
-          ->where("status", \App\Enums\ReviewStatusType::APPROVED)
-          ->where("created_at", ">", $review->created_at)
-          ->count();
-
-        $perPage = 3;
-        $page = floor($newerReviewsCount / $perPage) + 1;
-
-        $this->setPage(page: $page, pageName: "reviews-page");
-        $this->reviewsPage = $page;
-
-        $this->js("document.getElementById('review-" . $reviewId . "').style.backgroundColor = '#efefef'");
-      }
+      $this->changeReviewsPageForHighlightedReview();
 
       session()->remove("reviewId");
+    }
+  }
+
+  public function changeReviewsPageForHighlightedReview()
+  {
+    if (is_null($this->highlightReviewId)) {
+      return;
+    }
+
+    $review = ProductReview::where("product_id", $this->productId)
+      ->where("status", \App\Enums\ReviewStatusType::APPROVED)
+      ->find($this->highlightReviewId);
+
+    #decides which reviews page to navigate and highlights review
+    if ($review) {
+      $newerReviewsCount = ProductReview::where("product_id", $this->productId)
+        ->where("status", \App\Enums\ReviewStatusType::APPROVED)
+        ->where("created_at", ">", $review->created_at)
+        ->count();
+
+      $perPage = 3;
+      $page = (int) floor($newerReviewsCount / $perPage) + 1;
+
+      $this->setPage(page: $page, pageName: "reviews-page");
+      $this->reviewsPage = $page;
+
+      // $this->js("document.getElementById('review-" . $this->highlightReviewId . "').style.backgroundColor = '#efefef'");
     }
   }
 
@@ -97,48 +107,54 @@ class ProductReviews extends Component
     });
   }
 
-  public function create()
+  public function create(ProductReviewService $productReviewService)
   {
-    if (!auth()->user()) {
-      return $this->swalError([
-        "titleText" => "Please log in.",
-        "text" => "You can evaluate the product after logging in."
+    $validated = $this->validate();
+
+    $this->tryCatch(function () use ($validated, $productReviewService) {
+      if (!auth()->check()) {
+        throw new AuthorizationException(message: 'guest error', code: 401);
+      }
+
+      $product = Product::findOrFail($this->productId);
+
+      $this->authorize("canReview", $product);
+
+      $newProductReviewDto = NewProductReviewDto::fromArray([
+        ...$validated,
+        "rating" => $this->rating ?? 0,
+        "userId" => auth()->user()->id,
+        "productId" => $this->productId
       ]);
-    } else {
 
-      $validated = $this->validate();
+      $productReviewService->create($newProductReviewDto);
 
-      $this->tryCatch(function () use ($validated) {
-        $product = Product::findOrFail($this->productId);
+      $this->swalSuccess([
+        "titleText" => "Review submitted successfully!",
+        "text" => "Your review will be visible after approval.",
+        "iconHtml" => IconHelper::$svgReview,
+        "customClass" => [
+          "icon" => "border-0! text-gray-500!"
+        ]
+      ]);
 
-        $this->authorize("canReview", $product);
-
-        $validated["rating"] = $this->rating ?? 0;
-        $validated["user_id"] = auth()->user()->id;
-        $validated["product_id"] = $this->productId;
-        ProductReview::create($validated);
-
-        $this->swalSuccess([
-          "titleText" => "Review submitted successfully!",
-          "text" => "Your review will be visible after approval.",
-          "iconHtml" => $this->svgReview,
-          "customClass" => [
-            "icon" => "border-0! text-gray-500!"
-          ]
-        ]);
-
-        $this->resetPage();
-        $this->reset(["rating", "title", "comment"]);
-      }, [
-        AuthorizationException::class => function ($e) {
-          $this->swalError([
-            "titleText" => "You can not evaluate this product",
-            "text" => $e->getMessage()
+      $this->resetPage();
+      $this->reset(["rating", "title", "comment"]);
+    }, [
+      AuthorizationException::class => function ($e) {
+        if ($e->getCode() === 401 && $e->getMessage() === "guest error") {
+          return $this->swalError([
+            "titleText" => "Please log in.",
+            "text" => "You can evaluate the product after logging in."
           ]);
         }
-      ]);
-    }
 
+        $this->swalError([
+          "titleText" => "You can not evaluate this product",
+          "text" => $e->getMessage()
+        ]);
+      }
+    ]);
   }
 
   public function edit($id)
