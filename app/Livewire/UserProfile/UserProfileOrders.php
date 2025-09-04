@@ -2,10 +2,11 @@
 
 namespace App\Livewire\UserProfile;
 
+use App\DTOs\ProductReview\NewProductReviewDto;
 use App\Livewire\Forms\ProductReviewForm;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\ProductReview;
+use App\Services\ProductReviewService;
 use App\Traits\WithInteractModal;
 use App\Traits\WithSweetAlert;
 use App\Traits\WithTryCatch;
@@ -50,27 +51,30 @@ class UserProfileOrders extends Component
 
   public $rating = 0;
   public $productToComment;
-  public function openCommentModalForProduct($id)
+  public function openReviewModalForProduct($id)
   {
     $this->tryCatch(function () use ($id) {
       $this->productToComment = Product::findOrFail($id);
 
-      $this->showModal("user-profile-order-product-comment");
+      $this->showModal("user-profile-order-product-review");
     });
   }
 
-  public function createComment()
+  public function createProductReview(ProductReviewService $productReviewService)
   {
-    $this->tryCatch(function () {
+    $this->tryCatch(function () use ($productReviewService) {
       $validated = $this->reviewForm->validate();
 
       $this->authorize("canReview", $this->productToComment);
 
-      $validated["rating"] = $this->rating ?? 0;
-      $validated["user_id"] = auth()->user()->id;
-      $validated["product_id"] = $this->productToComment->id;
+      $newProductReviewDto = NewProductReviewDto::fromArray([
+        ...$validated,
+        "rating" => $this->rating ?? 0,
+        "userId" => auth()->user()->id,
+        "productId" => $this->productToComment->id
+      ]);
 
-      ProductReview::create($validated);
+      $productReviewService->create($newProductReviewDto);
 
       $this->swalSuccess([
         "titleText" => "Review submitted successfully!",

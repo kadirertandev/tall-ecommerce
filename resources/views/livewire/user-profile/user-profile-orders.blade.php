@@ -87,7 +87,7 @@
                         </div>
                         <div class="w-3/12 flex flex-col items-start">
                             @if ($product !== null)
-                                <button wire:click='openCommentModalForProduct({{ $product->id }})'
+                                <button wire:click='openReviewModalForProduct({{ $product->id }})'
                                     class="px-4 py-2 border-2 rounded-lg shadow-xl border-zinc-400 hover:bg-gray-200">Ürün
                                     Yorumu
                                     Yazın</button>
@@ -107,5 +107,5 @@
         {{ $this->orders->links(data: ['scrollTo' => '#orders-heading']) }}
     </div>
 
-    <x-modals.user-profile-order-product-comment-modal :product="$productToComment" :rating="$rating" />
+    <x-modals.user-profile-order-product-review-modal :product="$productToComment" :rating="$rating" />
 </div>

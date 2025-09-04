@@ -1,5 +1,5 @@
 @props(['product', 'rating'])
-<x-modal name="user-profile-order-product-comment" title="Create Review">
+<x-modal name="user-profile-order-product-review" title="Create Review">
     <div class="p-4 space-y-2 md:p-5">
         <div class="grid grid-cols-10 gap-4 mb-4">
             @if (Storage::disk('public')->exists($product?->image ?? 'null'))
@@ -46,7 +46,7 @@
                     <span class="font-medium">{{ $message }}</span>
                 </div>
             @enderror
-            <button wire:click.prevent='createComment' type="submit"
+            <button wire:click.prevent='createProductReview' type="submit"
                 class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-teal-500! rounded-lg focus:ring-2 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-teal-600!">
                 {{ __('frontend.post-comment') }}
             </button>
