@@ -61,9 +61,9 @@ class UserProfileOrders extends Component
 
   public function createComment()
   {
-    $validated = $this->reviewForm->validate();
+    $this->tryCatch(function () {
+      $validated = $this->reviewForm->validate();
 
-    $this->tryCatch(function () use ($validated) {
       $this->authorize("canReview", $this->productToComment);
 
       $validated["rating"] = $this->rating ?? 0;

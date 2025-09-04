@@ -109,12 +109,12 @@ class ProductReviews extends Component
 
   public function create(ProductReviewService $productReviewService)
   {
-    $validated = $this->validate();
-
-    $this->tryCatch(function () use ($validated, $productReviewService) {
+    $this->tryCatch(function () use ($productReviewService) {
       if (!auth()->check()) {
         throw new AuthorizationException(message: 'guest error', code: 401);
       }
+
+      $validated = $this->validate();
 
       $product = Product::findOrFail($this->productId);
 

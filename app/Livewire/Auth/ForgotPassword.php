@@ -19,9 +19,9 @@ class ForgotPassword extends Component
 
   public function resetPassword()
   {
-    $this->validate();
-
     $this->tryCatch(function () {
+      $this->validate();
+
       $token = Str::random(64);
 
       DB::table("password_reset_tokens")->insert([

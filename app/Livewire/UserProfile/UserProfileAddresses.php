@@ -49,9 +49,9 @@ class UserProfileAddresses extends HandlesUserAddressCreation
 
   public function update(UserAddressService $userAddressService)
   {
-    $validated = $this->form->validate();
+    $this->tryCatch(function () use ($userAddressService) {
+      $validated = $this->form->validate();
 
-    $this->tryCatch(function () use ($validated, $userAddressService) {
       $address = UserAddress::findOrFail($this->selectedAddressId);
 
       $this->authorize("update", $address);

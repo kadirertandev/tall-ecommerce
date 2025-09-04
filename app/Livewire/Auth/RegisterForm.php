@@ -54,13 +54,13 @@ class RegisterForm extends Component
 
   public function register()
   {
-    $validated = $this->form->validate();
+    $this->tryCatch(function () {
+      $validated = $this->form->validate();
 
-    if (!$this->emailVerified) {
-      return $this->addError("form.email", "Verify your email");
-    }
+      if (!$this->emailVerified) {
+        return $this->addError("form.email", "Verify your email");
+      }
 
-    $this->tryCatch(function () use ($validated) {
       $validated["email_verified_at"] = now();
 
       $user = User::create($validated);
@@ -79,9 +79,9 @@ class RegisterForm extends Component
       return;
     }
 
-    $email = $this->form->validate()["email"];
+    $this->tryCatch(function () {
+      $email = $this->form->validate()["email"];
 
-    $this->tryCatch(function () use ($email) {
       $code = Str::random(6);
 
       DB::table("verify_email_codes")->insert([

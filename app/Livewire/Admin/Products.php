@@ -164,9 +164,9 @@ class Products extends Component
 
   public function create()
   {
-    $this->createForm->validate();
-
     $this->tryCatch(function () {
+      $this->createForm->validate();
+
       $this->authorize("create products");
 
       $imageName = $this->createForm->image->store("product_images", "public");
@@ -193,9 +193,9 @@ class Products extends Component
 
   public function update()
   {
-    $this->editForm->validate();
-
     $this->tryCatch(function () {
+      $this->editForm->validate();
+
       $this->authorize("edit products");
 
       $product = Product::findOrFail($this->selectedProduct->id);

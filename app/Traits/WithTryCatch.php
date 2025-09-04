@@ -5,6 +5,7 @@ namespace App\Traits;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 trait WithTryCatch
@@ -23,6 +24,9 @@ trait WithTryCatch
         $this->swalError([
           "titleText" => Str::singular(Str::ucfirst(app($e->getModel())->getTable())) . " not found!"
         ]);
+      },
+      ValidationException::class => function ($e) {
+        throw $e;
       },
       Throwable::class => function ($e) {
         $this->swalTemplateSomethingWentWrong();

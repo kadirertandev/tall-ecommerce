@@ -138,9 +138,9 @@ class Reviews extends Component
 
   public function update()
   {
-    $this->editForm->validate();
-
     $this->tryCatch(function () {
+      $this->editForm->validate();
+
       $this->authorize("edit reviews");
 
       $review = ProductReview::findOrFail($this->selectedReview->id);

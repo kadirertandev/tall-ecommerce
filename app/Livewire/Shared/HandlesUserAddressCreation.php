@@ -20,9 +20,9 @@ abstract class HandlesUserAddressCreation extends Component
 
   public function create(UserAddressService $userAddressService)
   {
-    $validated = $this->getForm()->validate();
+    $this->tryCatch(function () use ($userAddressService) {
+      $validated = $this->getForm()->validate();
 
-    $this->tryCatch(function () use ($validated, $userAddressService) {
       $newUserAddressDto = NewUserAddressDto::fromArray(
         [
           "userId" => auth()->user()->id,

@@ -143,9 +143,9 @@ class Categories extends Component
 
   public function create()
   {
-    $this->createForm->validate();
-
     $this->tryCatch(function () {
+      $this->createForm->validate();
+
       $this->authorize("create categories");
 
       $imageName = $this->createForm->image->store("category_images", "public");
@@ -171,9 +171,9 @@ class Categories extends Component
 
   public function update()
   {
-    $this->editForm->validate();
-
     $this->tryCatch(function () {
+      $this->editForm->validate();
+
       $this->authorize("edit categories");
 
       $category = Category::findOrFail($this->selectedCategory->id);

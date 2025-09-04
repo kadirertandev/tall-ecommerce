@@ -136,10 +136,10 @@ class Admins extends Component
 
   public function create()
   {
-    $this->createForm->validate();
-
     $this->tryCatch(
       function () {
+        $this->createForm->validate();
+
         $this->authorize("create admins");
 
         if ($this->createForm->image) {
@@ -187,9 +187,9 @@ class Admins extends Component
 
   public function update()
   {
-    $this->editForm->validate();
-
     $this->tryCatch(function () {
+      $this->editForm->validate();
+
       $this->authorize("edit admins");
 
       $admin = User::findOrFail($this->selectedAdmin->id);
